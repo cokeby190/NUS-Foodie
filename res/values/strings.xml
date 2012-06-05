@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, NUSFoodieActivity!</string>
+    <string name="app_name">NUS Foodie</string>
+
+    <string name="search">Search</string>
+    <string name="directory">Directory</string>
+    <string name="crowd">Crowd</string>
+    <string name="nearby">Nearby</string>
+
+</resources>
