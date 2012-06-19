@@ -8,5 +8,17 @@
     <string name="directory">Directory</string>
     <string name="crowd">Crowd</string>
     <string name="nearby">Nearby</string>
+    
+    <string name="menu">Menu</string>
+    <string name="view">View</string>
+    <string name="review">Review</string>
+    
+    
+    
+    <string name="cd">College Dining App</string>
+    <string name="cd_sitting">Sitting Area</string>
+    <string name="cd_asian">Asian Cuisine</string>
+    <string name="cd_diy">DIY Station</string>
+    <string name="cd_western">Western</string>
 
 </resources>

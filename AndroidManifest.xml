@@ -5,6 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk android:minSdkVersion="10" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -22,6 +23,27 @@
             android:name=".search_act"
             android:label="@string/search" >
         </activity>
+        
+        <activity
+            android:name=".xml_act"
+            android:label="@string/search" >
+        </activity>
+        
+        <activity
+            android:name=".CopyOfsearch_act"
+            android:label="@string/cd" >
+        </activity>
+        
+        <activity
+            android:name=".cd_menu_act"
+            android:label="@string/cd" >
+        </activity>
+        
+        <activity
+            android:name=".cd_view_act"
+            android:label="@string/cd" >
+        </activity>
+        
     </application>
 
 </manifest>

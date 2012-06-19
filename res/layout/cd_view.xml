@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp" >
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:paddingTop="15dp"
+            android:drawableTop="@drawable/camera"
+            android:text="@string/cd_sitting"/>
+
+        <Button
+            android:id="@+id/directory"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:paddingTop="15dp"
+            android:drawableTop="@drawable/camera"
+            android:text="@string/cd_asian" />
+        
+        <Button
+            android:id="@+id/crowd"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="15dp"
+            android:drawableTop="@drawable/camera"
+            android:text="@string/cd_diy" />
+
+        <Button
+            android:id="@+id/nearby"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:paddingTop="15dp"
+            android:drawableTop="@drawable/camera"
+            android:text="@string/cd_western"  />
+
+    </RelativeLayout>
+
+</LinearLayout>

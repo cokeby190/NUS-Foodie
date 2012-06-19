@@ -18,11 +18,11 @@ public class NUSFoodieActivity extends Activity {
 
         searchButton.setOnClickListener(new OnClickListener() {
         	
-		@Override
-		public void onClick(View view) {
-			Intent open_search = new Intent(NUSFoodieActivity.this, search_act.class);
-			startActivity(open_search);
-		}
+			@Override
+			public void onClick(View view) {
+				Intent open_search = new Intent(NUSFoodieActivity.this, search_act.class);
+				startActivity(open_search);
+			}
 
         });
         
