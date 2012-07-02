@@ -23,41 +23,64 @@ public final class R {
         public static final int search=0x7f020009;
     }
     public static final class id {
-        public static final int adv_search_bar=0x7f05001f;
-        public static final int adv_search_button=0x7f050020;
-        public static final int adv_search_tab=0x7f05001e;
-        public static final int aircon_checkbox=0x7f050005;
-        public static final int breakfast_tab=0x7f05000d;
-        public static final int checkBox1=0x7f050010;
-        public static final int crowd=0x7f050015;
-        public static final int cuisine_text=0x7f05000a;
-        public static final int dinner_tab=0x7f050011;
-        public static final int directory=0x7f050014;
-        public static final int faculty_text=0x7f050006;
-        public static final int filter_text=0x7f050003;
-        public static final int halal_checkbox=0x7f050004;
-        public static final int imageButton1=0x7f050002;
-        public static final int imageButton2=0x7f050018;
-        public static final int imageButton3=0x7f050019;
-        public static final int imageButton4=0x7f05001a;
-        public static final int imageView1=0x7f050017;
-        public static final int list_text=0x7f050022;
-        public static final int nearby=0x7f050016;
-        public static final int search=0x7f050013;
-        public static final int search_bar=0x7f050001;
-        public static final int search_box=0x7f050021;
-        public static final int search_button=0x7f05000f;
-        public static final int search_label=0x7f050000;
-        public static final int search_tab=0x7f05001d;
-        public static final int spinner1=0x7f050007;
-        public static final int spinner2=0x7f050009;
-        public static final int spinner3=0x7f05000b;
-        public static final int store_text=0x7f050008;
-        public static final int tab3=0x7f050012;
-        public static final int tabhost=0x7f05000c;
-        public static final int textView1=0x7f05000e;
-        public static final int textView2=0x7f05001b;
-        public static final int textView3=0x7f05001c;
+        public static final int adv_search_tab=0x7f060025;
+        public static final int aircon_checkbox=0x7f060005;
+        public static final int b_main_crowd=0x7f06001a;
+        public static final int b_main_dir=0x7f060019;
+        public static final int b_main_nearby=0x7f06001b;
+        public static final int b_main_search=0x7f060018;
+        public static final int b_menu=0x7f060036;
+        public static final int breakfast_tab=0x7f06000d;
+        public static final int cb_search_adv_aircon=0x7f06002b;
+        public static final int cb_search_adv_halal=0x7f06002a;
+        public static final int cb_search_basic=0x7f060023;
+        public static final int checkBox1=0x7f060010;
+        public static final int content=0x7f060033;
+        public static final int crowd=0x7f060015;
+        public static final int cuisine_text=0x7f06000a;
+        public static final int dinner_tab=0x7f060011;
+        public static final int directory=0x7f060014;
+        public static final int et_search_adv_bar=0x7f060027;
+        public static final int et_search_bar=0x7f060021;
+        public static final int faculty_text=0x7f060006;
+        public static final int filter_text=0x7f060003;
+        public static final int halal_checkbox=0x7f060004;
+        public static final int handle=0x7f060034;
+        public static final int ib_search_adv=0x7f060028;
+        public static final int ib_search_basic=0x7f060022;
+        public static final int imageButton1=0x7f060002;
+        public static final int imageView1=0x7f06001c;
+        public static final int iv_linus_logo=0x7f060017;
+        public static final int list_text=0x7f060039;
+        public static final int nearby=0x7f060016;
+        public static final int scrollView1=0x7f060024;
+        public static final int sd_list=0x7f060035;
+        public static final int search=0x7f060013;
+        public static final int search_bar=0x7f060001;
+        public static final int search_box=0x7f060038;
+        public static final int search_button=0x7f06000f;
+        public static final int search_label=0x7f060000;
+        public static final int search_tab=0x7f06001f;
+        public static final int slidingDrawer1=0x7f060032;
+        public static final int sp_search_adv_cuisine=0x7f060031;
+        public static final int sp_search_adv_fac=0x7f06002d;
+        public static final int sp_search_adv_store=0x7f06002f;
+        public static final int spinner1=0x7f060007;
+        public static final int spinner2=0x7f060009;
+        public static final int spinner3=0x7f06000b;
+        public static final int store_text=0x7f060008;
+        public static final int tab3=0x7f060012;
+        public static final int tabhost=0x7f06000c;
+        public static final int textView1=0x7f06000e;
+        public static final int textView2=0x7f06001d;
+        public static final int textView3=0x7f06001e;
+        public static final int tv_search_adv_cuisine=0x7f060030;
+        public static final int tv_search_adv_fac=0x7f06002c;
+        public static final int tv_search_adv_filter=0x7f060029;
+        public static final int tv_search_adv_label=0x7f060026;
+        public static final int tv_search_adv_store=0x7f06002e;
+        public static final int tv_search_label=0x7f060020;
+        public static final int tv_title=0x7f060037;
     }
     public static final class layout {
         public static final int adv_search_page=0x7f030000;
@@ -66,9 +89,12 @@ public final class R {
         public static final int main=0x7f030003;
         public static final int row_view=0x7f030004;
         public static final int search_page=0x7f030005;
-        public static final int store_page=0x7f030006;
-        public static final int test=0x7f030007;
-        public static final int xml_display=0x7f030008;
+        public static final int slider=0x7f030006;
+        public static final int store_page=0x7f030007;
+        public static final int test=0x7f030008;
+        public static final int titlebar=0x7f030009;
+        public static final int titlebar_simple=0x7f03000a;
+        public static final int xml_display=0x7f03000b;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
@@ -85,5 +111,10 @@ public final class R {
         public static final int review=0x7f040008;
         public static final int search=0x7f040002;
         public static final int view=0x7f040007;
+    }
+    public static final class style {
+        public static final int CodeFont=0x7f050002;
+        public static final int CustomTheme=0x7f050001;
+        public static final int CustomWindowTitleBackground=0x7f050000;
     }
 }

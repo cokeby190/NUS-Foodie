@@ -4,12 +4,13 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="7" />
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/CustomTheme" >
         <activity
             android:name=".NUSFoodieActivity"
             android:label="@string/app_name" >
@@ -20,12 +21,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".search_act"
+            android:name=".SearchAct"
             android:label="@string/search" >
         </activity>
         
         <activity
-            android:name=".xml_act"
+            android:name=".TitleBar"
+            android:label="@string/cd" >
+        </activity>
+        
+        
+        <activity
+            android:name=".XmlAct"
             android:label="@string/search" >
         </activity>
         

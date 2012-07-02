@@ -1,0 +1,8 @@
+NUS Foodie Changelog
+
+Version 1.0
+
+	02/07/2012
+	
+	- Added sliding drawer for menu
+	- 

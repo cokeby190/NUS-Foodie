@@ -19,12 +19,11 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
-public class xml_act extends ListActivity implements TextWatcher{
+public class XmlAct extends ListActivity implements TextWatcher{
 
     //stating the URL
-    static final String URL = "http://172.18.101.125:8080/wte/wte?";
+    static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
     // XML node keys
     static final String FOOD_STALL = "food_stall"; // parent node
     static final String CANTEEN_NAME = "canteen_name";
@@ -42,6 +41,7 @@ public class xml_act extends ListActivity implements TextWatcher{
     //SimpleAdapter filter_adapter;
     ListAdapter filter_adapter;
     EditText filterText = null;
+    String getMsg;
     
     listener onclick_obj;
  
@@ -50,12 +50,15 @@ public class xml_act extends ListActivity implements TextWatcher{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xml_display);
         lv = (ListView) findViewById(android.R.id.list);
+        
+        String search_string = getData();
  
         ArrayList<HashMap<String, String>> menuItems = new ArrayList<HashMap<String, String>>();
  
         //creating new parser class
         xml_functions parser = new xml_functions();
-        String xml = parser.getXML(URL); // getting XML
+        //String xml = parser.getXML(URL_base); // getting XML
+        String xml = parser.getXML(URL_base + "search=basic&search_string=" + search_string); // getting XML
         Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
  
         //Returns a NodeList of all the Elements with a given tag name in the order in which 
@@ -89,12 +92,6 @@ public class xml_act extends ListActivity implements TextWatcher{
         filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
         		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
         
-        //filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-        //		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1});
-        
-        
-        //filter_adapter = new SimpleAdapter(this, menuItems, R.layout.xml_display, 
-        //		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.list_text});
         setListAdapter(filter_adapter);
         
         onclick_obj = new listener();
@@ -102,29 +99,15 @@ public class xml_act extends ListActivity implements TextWatcher{
         lv.setTextFilterEnabled(true);
         lv.setOnItemClickListener(onclick_obj);
         
-//        // listening to single listitem click
-//        lv.setOnItemClickListener(new OnItemClickListener() {
-// 
-//            //@Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            	
-//                // getting values from selected ListItem
-//                //String store_name = ((TextView) view.findViewById(R.id.textView1)).getText().toString();
-//                //String location = ((TextView) view.findViewById(R.id.textView2)).getText().toString();
-//                //String canteen_name = ((TextView) view.findViewById(R.id.textView3)).getText().toString();
-// 
-//                // Starting new intent
-//                Intent in = new Intent(getApplicationContext(), sensor_act.class);
-//                //in.putExtra(STORE_NAME, store_name);
-//                //in.putExtra(LOCATION, location);
-//                //in.putExtra(CANTEEN_NAME, canteen_name);
-//                startActivity(in);
-// 
-//            }
-//        });
-        
-        
     }
+    
+    //function to receive data from intent from search page
+    private String getData() {
+		Bundle getMessage = getIntent().getExtras();
+		getMsg = getMessage.getString("search_intent");
+		
+		return getMsg;
+	}
     
     public class listener implements OnItemClickListener {
 
@@ -132,9 +115,6 @@ public class xml_act extends ListActivity implements TextWatcher{
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// Starting new intent
             Intent in = new Intent(getApplicationContext(), NUSFoodieActivity.class);
-            //in.putExtra(STORE_NAME, store_name);
-            //in.putExtra(LOCATION, location);
-            //in.putExtra(CANTEEN_NAME, canteen_name);
             startActivity(in);
 		}
     	
