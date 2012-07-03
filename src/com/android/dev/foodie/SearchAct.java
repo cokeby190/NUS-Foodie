@@ -8,7 +8,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,13 +24,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
-import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnDrawerOpenListener, OnItemClickListener{
+public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener, OnTabChangeListener{
 	
 	//stating the BASE URL
 	static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
@@ -57,6 +59,10 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private ImageButton search, search_adv;
 	private EditText et_search, et_search_adv;
 	
+	private int fac_pos, store_pos, cuisine_pos;
+	
+	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine;
+	
 	//sliding drawer
 	private SlidingDrawer sd;
 	private ListView sd_content;
@@ -67,7 +73,10 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	Button menu;
 	
 	//menu list
-	private String[] menu_list = {"Search" , "Directory" , "Crowd" , "Nearby"}; 
+	private String[] menu_list = {"Search" , "Directory" , "Crowd" , "Nearby"};
+	
+	//loading bar
+    long start = 0, stop = 0;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,14 +125,14 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		menu.setOnClickListener(this);
 	}
 
+//------SEARCH TAB--------------------------------------------------------------------------//
+	
 	/*FUNCTION* =============================================================================//
 	 *  INITIALISE UI ELEMENTS
 	 */
 	private void initialise() {
 		tabs = (TabHost)findViewById(R.id.tabhost);
-		fac = (Spinner)findViewById(R.id.sp_search_adv_fac);
-		store = (Spinner)findViewById(R.id.sp_search_adv_store);
-		cuisine = (Spinner)findViewById(R.id.sp_search_adv_cuisine);
+		tabs.setOnTabChangedListener(this);
 		
 		search = (ImageButton)findViewById(R.id.ib_search_basic);
 		search_adv = (ImageButton)findViewById(R.id.ib_search_adv);
@@ -135,106 +144,24 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		et_search_adv = (EditText) findViewById(R.id.et_search_adv_bar);
 		
 		//sliding drawer initialisation
-		sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
-		sd.setOnDrawerOpenListener(this);
-		sd_content = (ListView) findViewById(R.id.sd_list);
-		//list for menu
-			//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
-		ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_list_item_1, menu_list);
-		sd_content.setAdapter(adapter_sd);
-		sd_content.setOnItemClickListener(this);
-		
-		
-//------INITIALISE AND POPULATE SPINNER FROM DATABASE---------------------------------------//
-		
-		ArrayAdapter <String> adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location")); 
-		fac.setAdapter(adapter_fac);
-		fac.setOnItemSelectedListener(this);
+			sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
+			sd_content = (ListView) findViewById(R.id.sd_list);
+			//list for menu
+				//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
+			ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_list_item_1, menu_list);
+			sd_content.setAdapter(adapter_sd);
+			sd_content.setOnItemClickListener(this);
 
-		ArrayAdapter <String> adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type")); 
-		store.setAdapter(adapter_store);
-		store.setOnItemSelectedListener(this);
-
-		ArrayAdapter <String> adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine")); 
-		cuisine.setAdapter(adapter_cuisine);
-		cuisine.setOnItemSelectedListener(this);
-		
-	}
-	
-	
-	/*FUNCTION* =============================================================================//
-	 *  TO RETURN LIST OF OBJECTS FROM DATABASE TO POPULATE SPINNER
-	 */
-	private List<String> populate_spinner(String URL, List<String> list, String key) {
-		
-		//creating new parser class
-        xml_functions parser = new xml_functions();
-        String xml = parser.getXML(URL); // getting XML
-        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
- 
-        //Returns a NodeList of all the Elements with a given tag name in the order in which 
-        //they are encountered in a preorder traversal of the Document tree.
-        NodeList nl = doc.getElementsByTagName(FOOD_LIST);
-        
-        // looping through all <food_stall>'s
-        for (int i = 0; i < nl.getLength(); i++) {
-        	Element e = (Element) nl.item(i);
-        	list.add(parser.getValue(e, key));
-        }
-        
-		return list;
-	}
-	
-	/*FUNCTION* =============================================================================//
-	 *  ONCLICK FUNCTION
-	 */
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()) {
-			case R.id.ib_search_basic:
-
-		//------send intent to results page with query---------------------------------//
-				String message = et_search.getText().toString();
-				Bundle sending = new Bundle();
-				sending.putString("search_intent", message);
-				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
-				send_intent.putExtras(sending);
-				startActivity(send_intent);
-				
-				break;
-			case R.id.ib_search_adv:
-				break;
-				
-			case R.id.b_menu:
-				sd.animateToggle();
-				break;
-		}
-	}
-
-	/*FUNCTION* =============================================================================//
-	 *  FOR SPINNER CLASS
-	 */
-	@Override
-	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> arg0) {
-		
-	}
-
-	/*FUNCTION* =============================================================================//
-	 *  FOR SLIDING DRAWER
-	 */
-	@Override
-	public void onDrawerOpened() {
-		
+		//ADVANCED
+			fac = (Spinner)findViewById(R.id.sp_search_adv_fac);
+			store = (Spinner)findViewById(R.id.sp_search_adv_store);
+			cuisine = (Spinner)findViewById(R.id.sp_search_adv_cuisine);
 	}
 	
 	/*FUNCTION* =============================================================================//
 	 *  FOR MENU FUNCTION
 	 *  FUNCTION PARAMETER : onItemClick (AdapterView<?> parent, View view, int position, long id)
+	 *  CRITERIA : OnItemClickListener
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -259,5 +186,195 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				break;
 		}
 	}
+
+	/*FUNCTION* =============================================================================//
+	 *  ONCLICK FUNCTION
+	 *  CRITERIA : OnClickListener
+	 */
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()) {
+		
+			//SEARCH BASIC
+			case R.id.ib_search_basic:
+
+		//------send intent to results page with query---------------------------------//
+				String message = et_search.getText().toString();
+				Bundle sending = new Bundle();
+				sending.putString("search_type", "basic");
+				sending.putString("search_intent", message);
+				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+				send_intent.putExtras(sending);
+				startActivity(send_intent);
+				
+				break;
+				
+			//SEARCH ADVANCED
+			case R.id.ib_search_adv:
+				
+				String faculty = fac_list.get(fac_pos);
+				String store = store_list.get(store_pos);
+				String cuisine = cuisine_list.get(cuisine_pos);
+				
+		//------send intent to results page with query---------------------------------//
+				String adv_message = et_search_adv.getText().toString();
+				Bundle adv_sending = new Bundle();
+				adv_sending.putString("search_type", "advanced");
+				adv_sending.putString("search_intent", adv_message);
+				adv_sending.putString("search_fac", faculty);
+				adv_sending.putString("search_store", store);
+				adv_sending.putString("search_cuisine", cuisine);
+				Intent adv_send_intent = new Intent(SearchAct.this, XmlAct.class);
+				adv_send_intent.putExtras(adv_sending);
+				startActivity(adv_send_intent);
+				
+				break;
+				
+			case R.id.b_menu:
+				sd.animateToggle();
+				break;
+		}
+	}
+	
+	/*FUNCTION* =============================================================================//
+	 *   ++ ADVANCED SEARCH ++
+	 *  TO RETURN LIST OF OBJECTS FROM DATABASE TO POPULATE SPINNER
+	 */
+	private List<String> populate_spinner(String URL, List<String> list, String key) {
+		
+		//creating new parser class
+        xml_functions parser = new xml_functions();
+        String xml = parser.getXML(URL); // getting XML
+        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
+ 
+        //Returns a NodeList of all the Elements with a given tag name in the order in which 
+        //they are encountered in a preorder traversal of the Document tree.
+        NodeList nl = doc.getElementsByTagName(FOOD_LIST);
+        
+        // looping through all <food_stall>'s
+        for (int i = 0; i < nl.getLength(); i++) {
+        	Element e = (Element) nl.item(i);
+        	list.add(parser.getValue(e, key));
+        }
+        
+		return list;
+	}
+	
+
+	/*FUNCTION* =============================================================================//
+	 *  FOR SPINNER CLASS
+	 */
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		
+		fac_pos = fac.getSelectedItemPosition();
+		store_pos = store.getSelectedItemPosition();
+		cuisine_pos = cuisine.getSelectedItemPosition();
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		
+	}
+	
+	/*FUNCTION* =============================================================================//
+	 *  ++ ADVANCED SEARCH ++
+	 *  FOR PROGRESS BAR AND RUNNING RESOURCE INTENSIVE TASK
+	 *  extended AsyncTask class
+		<String, Integer, String>
+			1st - what is passed in, since we pass in nothing
+			2nd - for Progress / Update bar
+			3rd - what we are returning, which is also a void...
+	 */
+	private class loadSpinner extends AsyncTask <Void, Integer, Void>{
+		
+		ProgressDialog progress_bar;
+		
+		// will be called first
+		protected void onPreExecute() {
+			//setting up variables, initialising, etc
+
+			progress_bar = new ProgressDialog(SearchAct.this);
+			//set style
+			progress_bar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			progress_bar.setMessage("LOADING...");
+			progress_bar.show();
+			
+			start = System.currentTimeMillis();
+		}
+		
+		/*FUNCTION* =============================================================================//
+		 *  TO RUN TIME INTENSIVE TASK
+		 *  FOLLOWED BY DISMISSING THE PROGRESS DIALOG
+		 */
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			
+			//------INITIALISE AND POPULATE SPINNER FROM DATABASE---------------------------------------//
+			
+			runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location")); 
+					fac.setAdapter(adapter_fac);
+					
+					adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type")); 
+					store.setAdapter(adapter_store);
+					
+					adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine")); 
+					cuisine.setAdapter(adapter_cuisine);
+				}
+			  });
+			
+			stop = System.currentTimeMillis();
+			
+			long period = stop - start;
+			
+			if (period < 500) {
+
+				try {
+					Thread.sleep(700);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+					
+			}
+			progress_bar.dismiss();
+
+			return null;
+		}
+
+	}
+
+	/*FUNCTION* =============================================================================//
+	 *  DETECT TAB CHANGES
+	 *  CRITERIA : OnTabChangeListener
+	 */
+	@Override
+	public void onTabChanged(String tabId) {
+		int entry = 0;
+		
+		if(tabId.equals("advanced_search_tab")) {
+			//load progress bar to populate spinner
+			new loadSpinner().execute();
+			
+			fac.setOnItemSelectedListener(this);
+			store.setOnItemSelectedListener(this);
+			cuisine.setOnItemSelectedListener(this);
+		} 
+		
+		if (tabId.equals("search_tab")) {
+			entry++;
+			if(entry > 1) {
+				//clear spinner
+				adapter_fac.clear();
+				adapter_store.clear();
+				adapter_cuisine.clear();
+			}
+		}
+		entry = 0;
+ 	}
+
 }
 
