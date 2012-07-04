@@ -188,7 +188,8 @@
                         <Spinner
                             android:id="@+id/sp_search_adv_fac"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:prompt="@string/fac_spinner_prompt" />
 
                         <TextView
                             android:id="@+id/tv_search_adv_store"
@@ -200,7 +201,8 @@
                         <Spinner
                             android:id="@+id/sp_search_adv_store"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:prompt="@string/store_spinner_prompt" />
 
                         <TextView
                             android:id="@+id/tv_search_adv_cuisine"
@@ -212,7 +214,9 @@
                         <Spinner
                             android:id="@+id/sp_search_adv_cuisine"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content" 
+                            android:prompt="@string/cuisine_spinner_prompt"/>
+                        
                     </LinearLayout>
                 </LinearLayout>
 

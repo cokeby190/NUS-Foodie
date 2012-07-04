@@ -5,4 +5,8 @@ Version 1.0
 	02/07/2012
 	
 	- Added sliding drawer for menu
-	- 
+	
+	04/07/2012
+	
+	- Added Default option for Advanced Search Sliders
+	- Remove default option upon User click Slider so the default option will not be displayed

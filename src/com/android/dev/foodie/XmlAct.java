@@ -89,24 +89,19 @@ public class XmlAct extends ListActivity implements TextWatcher{
 	        
         } else if (search_string[0].equals("advanced")) {
         	
-        	//String xml = parser.getXML(URL_base); // getting XML
-        	
         	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
-	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4], Toast.LENGTH_LONG);
+	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+	        				"&halal=" + search_string[5] + "&aircon=" + search_string[6] , Toast.LENGTH_LONG);
 	        t.show();
 	        
 	        search_string[1] = search_string[1].replace(" ", "%20");
 	        search_string[2] = search_string[2].replace(" ", "%20");
 	        search_string[3] = search_string[3].replace(" ", "%20");
 	        search_string[4] = search_string[4].replace(" ", "%20");
-        	
-//	        String xml = parser.getXML(URL_base + "search=advanced&search_string=" + search_string[1] + 
-//	        		"&location=" + search_string[2]); // getting XML
-	        
-	        
 	        
 	        String xml = parser.getXML(URL_base + "search=advanced&search_string=" + search_string[1] + 
-	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4]); // getting XML
+	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    				"&halal=" + search_string[5] + "&aircon=" + search_string[6]); // getting XML
 	        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
 	 
 	        //Returns a NodeList of all the Elements with a given tag name in the order in which 
@@ -140,15 +135,32 @@ public class XmlAct extends ListActivity implements TextWatcher{
 		String store = getMessage.getString("search_store");
 		String cuisine = getMessage.getString("search_cuisine");
 		
+		String halal = getMessage.getString("search_halal");
+		String aircon = getMessage.getString("search_aircon");
+	
+        fac = process_default(fac);
+		store = process_default(store);
+		cuisine = process_default(cuisine);
+		
 		if(search_type.equals("basic")) {
 			String[] return_data = {search_type, getMsg};
 			return return_data;
 		} else if (search_type.equals("advanced")) {
-			String[] return_data = {search_type, getMsg, fac, store, cuisine};
+			String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
 			return return_data;
 		}
+		
 		return null;	
 	}
+    
+    private String process_default(String option) {
+    	
+    	if(option.equals("Select an Option")) {
+    		option = "";
+    	}
+    	
+    	return option;
+    }
     
     public class listener implements OnItemClickListener {
 
@@ -224,8 +236,6 @@ public class XmlAct extends ListActivity implements TextWatcher{
 				stop = System.currentTimeMillis();
 				
 				long period = stop - start;
-				
-				System.out.println(period);
 				
 				if (period < 500) {
 

@@ -1,6 +1,7 @@
 package com.android.dev.foodie;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -8,29 +9,28 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.Spinner;
 import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener, OnTabChangeListener{
+public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener{
 	
 	//stating the BASE URL
 	static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
@@ -60,8 +60,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private EditText et_search, et_search_adv;
 	
 	private int fac_pos, store_pos, cuisine_pos;
-	
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine;
+	
+	private CheckBox halal, aircon;
 	
 	//sliding drawer
 	private SlidingDrawer sd;
@@ -132,7 +133,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	 */
 	private void initialise() {
 		tabs = (TabHost)findViewById(R.id.tabhost);
-		tabs.setOnTabChangedListener(this);
 		
 		search = (ImageButton)findViewById(R.id.ib_search_basic);
 		search_adv = (ImageButton)findViewById(R.id.ib_search_adv);
@@ -156,6 +156,95 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			fac = (Spinner)findViewById(R.id.sp_search_adv_fac);
 			store = (Spinner)findViewById(R.id.sp_search_adv_store);
 			cuisine = (Spinner)findViewById(R.id.sp_search_adv_cuisine);
+
+			halal = (CheckBox) findViewById(R.id.cb_search_adv_halal);
+			aircon = (CheckBox) findViewById(R.id.cb_search_adv_aircon);
+			
+			//make first option invisible after spinner is selected by User
+			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location")) {
+				
+				@Override
+			    public View getDropDownView(int position, View convertView, ViewGroup parent)
+			    {
+			        View v = null;
+
+			        // If this is the initial dummy entry, make it hidden
+			        if (position == 0) {
+			            TextView tv = new TextView(getContext());
+			            tv.setHeight(0);
+			            tv.setVisibility(View.GONE);
+			            v = tv;
+			        }
+			        else {
+			            // Pass convertView as null to prevent reuse of special case views
+			            v = super.getDropDownView(position, null, parent);
+			        }
+
+			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
+			        parent.setVerticalScrollBarEnabled(false);
+			        return v;
+			    }
+			}; 
+			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			fac.setAdapter(adapter_fac);
+			
+			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type")) {
+				
+				@Override
+			    public View getDropDownView(int position, View convertView, ViewGroup parent)
+			    {
+			        View v = null;
+
+			        // If this is the initial dummy entry, make it hidden
+			        if (position == 0) {
+			            TextView tv = new TextView(getContext());
+			            tv.setHeight(0);
+			            tv.setVisibility(View.GONE);
+			            v = tv;
+			        }
+			        else {
+			            // Pass convertView as null to prevent reuse of special case views
+			            v = super.getDropDownView(position, null, parent);
+			        }
+
+			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
+			        parent.setVerticalScrollBarEnabled(false);
+			        return v;
+			    }
+			}; 
+			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			store.setAdapter(adapter_store);
+			
+			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine")) {
+				
+				@Override
+			    public View getDropDownView(int position, View convertView, ViewGroup parent)
+			    {
+			        View v = null;
+
+			        // If this is the initial dummy entry, make it hidden
+			        if (position == 0) {
+			            TextView tv = new TextView(getContext());
+			            tv.setHeight(0);
+			            tv.setVisibility(View.GONE);
+			            v = tv;
+			        }
+			        else {
+			            // Pass convertView as null to prevent reuse of special case views
+			            v = super.getDropDownView(position, null, parent);
+			        }
+
+			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
+			        parent.setVerticalScrollBarEnabled(false);
+			        return v;
+			    }
+			}; 
+			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			cuisine.setAdapter(adapter_cuisine);
+			
+			fac.setOnItemSelectedListener(this);
+			store.setOnItemSelectedListener(this);
+			cuisine.setOnItemSelectedListener(this);
 	}
 	
 	/*FUNCTION* =============================================================================//
@@ -212,9 +301,18 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			//SEARCH ADVANCED
 			case R.id.ib_search_adv:
 				
+				String bool_halal = "", bool_aircon = "";
+				
 				String faculty = fac_list.get(fac_pos);
 				String store = store_list.get(store_pos);
 				String cuisine = cuisine_list.get(cuisine_pos);
+				
+				if(halal.isChecked()) {
+					bool_halal = "Y";
+				}
+				if(aircon.isChecked()) {
+					bool_aircon = "Y";
+				}
 				
 		//------send intent to results page with query---------------------------------//
 				String adv_message = et_search_adv.getText().toString();
@@ -224,6 +322,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				adv_sending.putString("search_fac", faculty);
 				adv_sending.putString("search_store", store);
 				adv_sending.putString("search_cuisine", cuisine);
+				adv_sending.putString("search_halal", bool_halal);
+				adv_sending.putString("search_aircon", bool_aircon);
 				Intent adv_send_intent = new Intent(SearchAct.this, XmlAct.class);
 				adv_send_intent.putExtras(adv_sending);
 				startActivity(adv_send_intent);
@@ -257,6 +357,10 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         	list.add(parser.getValue(e, key));
         }
         
+        Collections.sort(list);
+        
+        list.add(0, "Select an Option");
+        
 		return list;
 	}
 	
@@ -276,105 +380,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	public void onNothingSelected(AdapterView<?> parent) {
 		
 	}
-	
-	/*FUNCTION* =============================================================================//
-	 *  ++ ADVANCED SEARCH ++
-	 *  FOR PROGRESS BAR AND RUNNING RESOURCE INTENSIVE TASK
-	 *  extended AsyncTask class
-		<String, Integer, String>
-			1st - what is passed in, since we pass in nothing
-			2nd - for Progress / Update bar
-			3rd - what we are returning, which is also a void...
-	 */
-	private class loadSpinner extends AsyncTask <Void, Integer, Void>{
-		
-		ProgressDialog progress_bar;
-		
-		// will be called first
-		protected void onPreExecute() {
-			//setting up variables, initialising, etc
-
-			progress_bar = new ProgressDialog(SearchAct.this);
-			//set style
-			progress_bar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progress_bar.setMessage("LOADING...");
-			progress_bar.show();
-			
-			start = System.currentTimeMillis();
-		}
-		
-		/*FUNCTION* =============================================================================//
-		 *  TO RUN TIME INTENSIVE TASK
-		 *  FOLLOWED BY DISMISSING THE PROGRESS DIALOG
-		 */
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			
-			//------INITIALISE AND POPULATE SPINNER FROM DATABASE---------------------------------------//
-			
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location")); 
-					fac.setAdapter(adapter_fac);
-					
-					adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type")); 
-					store.setAdapter(adapter_store);
-					
-					adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_dropdown_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine")); 
-					cuisine.setAdapter(adapter_cuisine);
-				}
-			  });
-			
-			stop = System.currentTimeMillis();
-			
-			long period = stop - start;
-			
-			if (period < 500) {
-
-				try {
-					Thread.sleep(700);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-					
-			}
-			progress_bar.dismiss();
-
-			return null;
-		}
-
-	}
-
-	/*FUNCTION* =============================================================================//
-	 *  DETECT TAB CHANGES
-	 *  CRITERIA : OnTabChangeListener
-	 */
-	@Override
-	public void onTabChanged(String tabId) {
-		int entry = 0;
-		
-		if(tabId.equals("advanced_search_tab")) {
-			//load progress bar to populate spinner
-			new loadSpinner().execute();
-			
-			fac.setOnItemSelectedListener(this);
-			store.setOnItemSelectedListener(this);
-			cuisine.setOnItemSelectedListener(this);
-		} 
-		
-		if (tabId.equals("search_tab")) {
-			entry++;
-			if(entry > 1) {
-				//clear spinner
-				adapter_fac.clear();
-				adapter_store.clear();
-				adapter_cuisine.clear();
-			}
-		}
-		entry = 0;
- 	}
 
 }
 
