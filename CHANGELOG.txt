@@ -10,3 +10,9 @@ Version 1.0
 	
 	- Added Default option for Advanced Search Sliders
 	- Remove default option upon User click Slider so the default option will not be displayed
+	
+	05/07/2012
+	
+	- Resolved bug where App will crash with blank query issued for Basic Search
+	- Resolved bug where halal and aircon options will show empty results
+	- Added number of results count for Search

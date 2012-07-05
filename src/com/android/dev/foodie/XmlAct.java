@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class XmlAct extends ListActivity implements TextWatcher{
@@ -45,6 +46,7 @@ public class XmlAct extends ListActivity implements TextWatcher{
     ListView lv;
     ListAdapter filter_adapter;
     EditText filterText = null;
+    TextView result_count;
     
     //search information extracted from SearchAct
     String getMsg, search_type;
@@ -65,6 +67,7 @@ public class XmlAct extends ListActivity implements TextWatcher{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xml_display);
         lv = (ListView) findViewById(android.R.id.list);
+        result_count = (TextView) findViewById(R.id.tv_search_result_count);
  
         //for text filter
         filterText = (EditText) findViewById(R.id.search_box);
@@ -159,22 +162,23 @@ public class XmlAct extends ListActivity implements TextWatcher{
 		search_type = getMessage.getString("search_type");
 		getMsg = getMessage.getString("search_intent");
 		
-		String fac = getMessage.getString("search_fac");
-		String store = getMessage.getString("search_store");
-		String cuisine = getMessage.getString("search_cuisine");
-		
-		String halal = getMessage.getString("search_halal");
-		String aircon = getMessage.getString("search_aircon");
-	
-        fac = process_default(fac);
-		store = process_default(store);
-		cuisine = process_default(cuisine);
-		
 		//RETURN the string array according to what search is required
 		if(search_type.equals("basic")) {
 			String[] return_data = {search_type, getMsg};
 			return return_data;
 		} else if (search_type.equals("advanced")) {
+			
+			String fac = getMessage.getString("search_fac");
+			String store = getMessage.getString("search_store");
+			String cuisine = getMessage.getString("search_cuisine");
+			
+			String halal = getMessage.getString("search_halal");
+			String aircon = getMessage.getString("search_aircon");
+		
+	        fac = process_default(fac);
+			store = process_default(store);
+			cuisine = process_default(cuisine);
+			
 			String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
 			return return_data;
 		}
@@ -189,6 +193,12 @@ public class XmlAct extends ListActivity implements TextWatcher{
 	 *  	option: individual spinner selected string 
 	 *  So if spinner option selected is default it should ignore the selection
 	 */
+    
+    /**
+     * est function name
+     * @param option
+     * @return String
+     */
     private String process_default(String option) {
     	
     	if(option.equals("Select an Option")) {
@@ -275,7 +285,19 @@ public class XmlAct extends ListActivity implements TextWatcher{
 		            // adding HashList to ArrayList
 		            menuItems.add(map);
 		        }
+		        
+		        //within DoInBackground cannot change UI ELEMENTS 
+		        	//so need to runOnUiThread function
+		        runOnUiThread(new Runnable() {
 
+					@Override
+					public void run() {
+						//int value to string
+				        result_count.setText("Search returned " + String.valueOf(nl.getLength()) + " results. (;");
+					}
+		        	
+		        });
+		        
 				//------END OF time consuming task---------------------------------------//
 				
 				stop = System.currentTimeMillis();

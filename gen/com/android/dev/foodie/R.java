@@ -80,6 +80,7 @@ public final class R {
         public static final int tv_search_adv_label=0x7f060026;
         public static final int tv_search_adv_store=0x7f06002e;
         public static final int tv_search_label=0x7f060020;
+        public static final int tv_search_result_count=0x7f06003a;
         public static final int tv_title=0x7f060037;
     }
     public static final class layout {
