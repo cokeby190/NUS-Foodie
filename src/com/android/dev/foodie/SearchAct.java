@@ -32,6 +32,18 @@ import android.widget.TextView;
 
 public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener{
 	
+//-------------------------------START CUSTOM MENU SLIDER-------------------------------------------------//
+	//sliding drawer
+	private SlidingDrawer sd;
+	private ListView sd_content;
+	//titlebar
+	boolean customTitleSupport = true;
+	TextView title_bar;
+	Button menu;
+	//menu list
+	private String[] menu_list = {"Home", "Search" , "Directory" , "Crowd" , "Nearby"};
+//-------------------------------END CUSTOM MENU SLIDER-------------------------------------------------//	
+
 	//stating the BASE URL
 	static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
     
@@ -49,6 +61,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
     static final String AIRCON = "aircon";
     static final String AVAILABILITY_WEEKDAY = "availability_weekday";
 	
+//-------------------------------START SPINNER---------------------------------------------------------//
     //list for spinner
     private List <String> fac_list = new ArrayList<String>();
     private List <String> store_list = new ArrayList<String>();
@@ -60,26 +73,16 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private EditText et_search, et_search_adv;
 	private CheckBox halal, aircon;
 	
-		//SPINNER SELECTION POSITION 
+	//SPINNER SELECTION POSITION 
 	private int fac_pos, store_pos, cuisine_pos;
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine;
-	
-	//sliding drawer
-	private SlidingDrawer sd;
-	private ListView sd_content;
-	
-	//titlebar
-	boolean customTitleSupport = true;
-	TextView title_bar;
-	Button menu;
-	
-	//menu list
-	private String[] menu_list = {"Search" , "Directory" , "Crowd" , "Nearby"};
+//-------------------------------END SPINNER-----------------------------------------------------------//
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+      //-------------------------------START CUSTOM MENU SLIDER---------------------------------------------------------//
         //titlebar
         customTitleSupport = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -88,7 +91,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         
         if(customTitleSupport) {
         	customTitleBar(getText(R.string.app_name).toString());
-        }
+        } 
+      //-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
         
         //initialise UI elements 
         initialise();  
@@ -121,7 +125,50 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		
 		title_bar.setText(title);
 		menu.setOnClickListener(this);
+		
+		//sliding drawer initialisation
+		sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
+		sd_content = (ListView) findViewById(R.id.sd_list);
+		//list for menu
+			//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
+		ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_list_item_1, menu_list);
+		sd_content.setAdapter(adapter_sd);
+		sd_content.setOnItemClickListener(this);
 	}
+	
+	/*FUNCTION* =============================================================================//
+	 *  FOR MENU FUNCTION
+	 *  FUNCTION PARAMETER : onItemClick (AdapterView<?> parent, View view, int position, long id)
+	 *  CRITERIA : OnItemClickListener
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		switch(position) {
+			case 0:
+				Intent send_search = new Intent(SearchAct.this, NUSFoodieActivity.class);
+				startActivity(send_search);
+				break;
+			case 1:
+				Intent send_dir = new Intent(SearchAct.this, SearchAct.class);
+				startActivity(send_dir);
+				//Intent send_dir = new Intent(SearchAct.this, SearchAct.class);
+				//startActivity(send_dir);
+				break;
+			case 2:
+				//Intent send_crowd = new Intent(SearchAct.this, SearchAct.class);
+				//startActivity(send_crowd);
+				break;
+			case 3:
+				//Intent send_nearby = new Intent(SearchAct.this, SearchAct.class);
+				//startActivity(send_nearby);
+				break;
+			case 4:
+				Intent send_nearby = new Intent(SearchAct.this, NearbyAct.class);
+				startActivity(send_nearby);
+				break;
+		}
+	}
+	
 
 //------SEARCH TAB--------------------------------------------------------------------------//
 	
@@ -139,15 +186,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		
 		et_search = (EditText) findViewById(R.id.et_search_bar);
 		et_search_adv = (EditText) findViewById(R.id.et_search_adv_bar);
-		
-		//sliding drawer initialisation
-			sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
-			sd_content = (ListView) findViewById(R.id.sd_list);
-			//list for menu
-				//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
-			ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_list_item_1, menu_list);
-			sd_content.setAdapter(adapter_sd);
-			sd_content.setOnItemClickListener(this);
 
 		//ADVANCED
 			fac = (Spinner)findViewById(R.id.sp_search_adv_fac);
@@ -244,35 +282,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			cuisine.setOnItemSelectedListener(this);
 	}
 	
-	/*FUNCTION* =============================================================================//
-	 *  FOR MENU FUNCTION
-	 *  FUNCTION PARAMETER : onItemClick (AdapterView<?> parent, View view, int position, long id)
-	 *  CRITERIA : OnItemClickListener
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		switch(position) {
-			case 0:
-				Intent send_search = new Intent(SearchAct.this, SearchAct.class);
-				startActivity(send_search);
-				break;
-			case 1:
-				Intent send_dir = new Intent(SearchAct.this, NUSFoodieActivity.class);
-				startActivity(send_dir);
-				//Intent send_dir = new Intent(SearchAct.this, SearchAct.class);
-				//startActivity(send_dir);
-				break;
-			case 2:
-				//Intent send_crowd = new Intent(SearchAct.this, SearchAct.class);
-				//startActivity(send_crowd);
-				break;
-			case 3:
-				//Intent send_nearby = new Intent(SearchAct.this, SearchAct.class);
-				//startActivity(send_nearby);
-				break;
-		}
-	}
-
+	
 	/*FUNCTION* =============================================================================//
 	 *  ONCLICK FUNCTION
 	 *  CRITERIA : OnClickListener
@@ -351,7 +361,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private List<String> populate_spinner(String URL, List<String> list, String key) {
 		
 		//creating new parser class
-        xml_functions parser = new xml_functions();
+        XmlFunction parser = new XmlFunction();
         String xml = parser.getXML(URL); // getting XML
         Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
  

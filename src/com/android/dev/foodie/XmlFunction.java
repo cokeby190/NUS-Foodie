@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class xml_functions {
+public class XmlFunction {
 
 	//httprequest to the server
 	public String getXML(String str_url) {

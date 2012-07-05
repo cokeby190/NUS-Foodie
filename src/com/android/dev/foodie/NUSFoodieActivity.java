@@ -67,6 +67,11 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
 				Intent open_dir = new Intent(NUSFoodieActivity.this, TitleBar.class);
 				startActivity(open_dir);
 				break;
+				
+			case R.id.b_main_nearby:
+				Intent open_nearby = new Intent(NUSFoodieActivity.this, NearbyAct.class);
+				startActivity(open_nearby);
+				break;
 		}
 	}
 }

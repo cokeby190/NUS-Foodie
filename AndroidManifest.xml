@@ -6,6 +6,8 @@
 
     <uses-sdk android:minSdkVersion="7" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -27,13 +29,17 @@
         
         <activity
             android:name=".TitleBar"
-            android:label="@string/cd" >
+            android:label="@string/app_name" >
         </activity>
-        
         
         <activity
             android:name=".XmlAct"
             android:label="@string/search" >
+        </activity>
+
+        <activity
+            android:name=".NearbyAct"
+            android:label="@string/nearby" >
         </activity>
         
         <activity
