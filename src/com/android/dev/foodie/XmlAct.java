@@ -25,8 +25,9 @@ import android.widget.Toast;
 
 public class XmlAct extends ListActivity implements TextWatcher{
 
-    //stating the URL
+	//stating the BASE URL
     static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
+    
     // XML node keys
     static final String FOOD_STALL = "food_stall"; // parent node
     static final String CANTEEN_NAME = "canteen_name";
@@ -40,13 +41,18 @@ public class XmlAct extends ListActivity implements TextWatcher{
     static final String AIRCON = "aircon";
     static final String AVAILABILITY_WEEKDAY = "availability_weekday";
     
+    //UI Elements
     ListView lv;
     ListAdapter filter_adapter;
     EditText filterText = null;
+    
+    //search information extracted from SearchAct
     String getMsg, search_type;
     
+    //OnItemClickListener class
     listener onclick_obj;
     
+    //XML parser objects
     ArrayList<HashMap<String, String>> menuItems;
     xml_functions parser;
     NodeList nl;
@@ -60,16 +66,20 @@ public class XmlAct extends ListActivity implements TextWatcher{
         setContentView(R.layout.xml_display);
         lv = (ListView) findViewById(android.R.id.list);
  
+        //for text filter
         filterText = (EditText) findViewById(R.id.search_box);
         filterText.addTextChangedListener(this);
         
+        //getting back returned data, passed from SearchAct
         String[] search_string = getData();
         
+        //to store the list of stores to show as results
         menuItems = new ArrayList<HashMap<String, String>>();
 
         //creating new parser class
         parser = new xml_functions();
         
+//------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
         if(search_string[0].equals("basic")) {
 		
 	        //String xml = parser.getXML(URL_base); // getting XML
@@ -84,16 +94,31 @@ public class XmlAct extends ListActivity implements TextWatcher{
 	        
 	        //CONSTRUCTOR FOR SimpleAdapter
 	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
 	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
 	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
-	        
+	
+//------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
         } else if (search_string[0].equals("advanced")) {
         	
+        	//checking if halal and aircon options are checked
+        	String query_halal = "", query_aircon = "";
+        	
+        	if(!search_string[5].equals("")) {
+        		query_halal = "&halal=" + search_string[5];
+        	}
+        	
+        	if(!search_string[6].equals("")) {
+        		query_aircon = "&aircon=" + search_string[6];
+        	}
+        	
+        	//TOAST!
         	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
 	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-	        				"&halal=" + search_string[5] + "&aircon=" + search_string[6] , Toast.LENGTH_LONG);
+	        		query_halal + query_aircon, Toast.LENGTH_LONG);
 	        t.show();
 	        
+	        //URL encoding white spaces to its ASCII equivalent
 	        search_string[1] = search_string[1].replace(" ", "%20");
 	        search_string[2] = search_string[2].replace(" ", "%20");
 	        search_string[3] = search_string[3].replace(" ", "%20");
@@ -101,7 +126,8 @@ public class XmlAct extends ListActivity implements TextWatcher{
 	        
 	        String xml = parser.getXML(URL_base + "search=advanced&search_string=" + search_string[1] + 
 	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-    				"&halal=" + search_string[5] + "&aircon=" + search_string[6]); // getting XML
+	        		query_halal + query_aircon);
+    				//"&halal=" + search_string[5] + "&aircon=" + search_string[6]); // getting XML
 	        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
 	 
 	        //Returns a NodeList of all the Elements with a given tag name in the order in which 
@@ -125,7 +151,9 @@ public class XmlAct extends ListActivity implements TextWatcher{
         
     }
     
-    //function to receive data from intent from search page
+    /*FUNCTION* =============================================================================//
+	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
+	 */
     private String[] getData() {
 		Bundle getMessage = getIntent().getExtras();
 		search_type = getMessage.getString("search_type");
@@ -142,6 +170,7 @@ public class XmlAct extends ListActivity implements TextWatcher{
 		store = process_default(store);
 		cuisine = process_default(cuisine);
 		
+		//RETURN the string array according to what search is required
 		if(search_type.equals("basic")) {
 			String[] return_data = {search_type, getMsg};
 			return return_data;
@@ -153,6 +182,13 @@ public class XmlAct extends ListActivity implements TextWatcher{
 		return null;	
 	}
     
+    /*FUNCTION* =============================================================================//
+	 *  FOR DEFAULT OPTION PROCESSING
+	 *  If default option is chosen, database should return results that DONT CARE that option
+	 *  FUNCTION PARAMETER: process_default(String option)
+	 *  	option: individual spinner selected string 
+	 *  So if spinner option selected is default it should ignore the selection
+	 */
     private String process_default(String option) {
     	
     	if(option.equals("Select an Option")) {
@@ -162,6 +198,7 @@ public class XmlAct extends ListActivity implements TextWatcher{
     	return option;
     }
     
+    //OnItemClickListener for list item clicked by User
     public class listener implements OnItemClickListener {
 
     	@Override
@@ -173,6 +210,8 @@ public class XmlAct extends ListActivity implements TextWatcher{
     	
     }
     
+    
+    //for filter text
 	public void afterTextChanged(Editable s) {
 	}
 
@@ -180,10 +219,16 @@ public class XmlAct extends ListActivity implements TextWatcher{
 			int after) {
 	}
 
+	
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		((SimpleAdapter) filter_adapter).getFilter().filter(s.toString());
 	}
 	
+	/*FUNCTION* =============================================================================//
+	 *  FOR loading progress bar while results are loading
+	 *  PreExecute : display progress bar
+	 *  DoInBackground : perform the task that is time consuming and hence requires AsyncTask
+	 */
 	//extended AsyncTask class
 			//<String, Integer, String>
 			//1st - what is passed in, since we pass in nothing
@@ -235,6 +280,8 @@ public class XmlAct extends ListActivity implements TextWatcher{
 				
 				stop = System.currentTimeMillis();
 				
+				
+				// if duration of loading is too fast, sleep for a while
 				long period = stop - start;
 				
 				if (period < 500) {
@@ -246,6 +293,7 @@ public class XmlAct extends ListActivity implements TextWatcher{
 					}
 						
 				}
+				//then dismiss the loading dialog once it has completed
 				progress_bar.dismiss();
 
 				return null;

@@ -58,11 +58,11 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private Spinner fac, store, cuisine;
 	private ImageButton search, search_adv;
 	private EditText et_search, et_search_adv;
+	private CheckBox halal, aircon;
 	
+		//SPINNER SELECTION POSITION 
 	private int fac_pos, store_pos, cuisine_pos;
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine;
-	
-	private CheckBox halal, aircon;
 	
 	//sliding drawer
 	private SlidingDrawer sd;
@@ -75,9 +75,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	
 	//menu list
 	private String[] menu_list = {"Search" , "Directory" , "Crowd" , "Nearby"};
-	
-	//loading bar
-    long start = 0, stop = 0;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -288,6 +285,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			case R.id.ib_search_basic:
 
 		//------send intent to results page with query---------------------------------//
+		//------bundle search query with intent----------------------------------------//
 				String message = et_search.getText().toString();
 				Bundle sending = new Bundle();
 				sending.putString("search_type", "basic");
@@ -301,8 +299,10 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			//SEARCH ADVANCED
 			case R.id.ib_search_adv:
 				
+				//checkbox halal and aircon option
 				String bool_halal = "", bool_aircon = "";
 				
+				//get selected spinner option from User into string
 				String faculty = fac_list.get(fac_pos);
 				String store = store_list.get(store_pos);
 				String cuisine = cuisine_list.get(cuisine_pos);
@@ -315,6 +315,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				}
 				
 		//------send intent to results page with query---------------------------------//
+		//------bundle various search conditions with query----------------------------//
+				
 				String adv_message = et_search_adv.getText().toString();
 				Bundle adv_sending = new Bundle();
 				adv_sending.putString("search_type", "advanced");
@@ -330,6 +332,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				
 				break;
 				
+		//------button to toggle menu slide open/close---------------------------------//
 			case R.id.b_menu:
 				sd.animateToggle();
 				break;
@@ -339,6 +342,11 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	/*FUNCTION* =============================================================================//
 	 *   ++ ADVANCED SEARCH ++
 	 *  TO RETURN LIST OF OBJECTS FROM DATABASE TO POPULATE SPINNER
+	 *  FUNCTION PARAMETER : (URL, list, key)
+	 *  URL: URL to pass in to parse XML from httpresponse
+	 *  list: list extracted from XML to populate spinner with
+	 *  key: which attribute we want to extract from the XML
+	 *  	(i.e. to return a list of faculties in NUS we call for a "location" key)
 	 */
 	private List<String> populate_spinner(String URL, List<String> list, String key) {
 		
@@ -357,6 +365,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         	list.add(parser.getValue(e, key));
         }
         
+        //sort list then add the default option at the very top
         Collections.sort(list);
         
         list.add(0, "Select an Option");
