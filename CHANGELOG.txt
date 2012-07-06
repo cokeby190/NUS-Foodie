@@ -16,3 +16,10 @@ Version 1.0
 	- Resolved bug where App will crash with blank query issued for Basic Search
 	- Resolved bug where halal and aircon options will show empty results
 	- Added number of results count for Search
+	
+	06/07/2012
+	
+	- Resolved bug where App crashes when load Results from XmlAct
+		> Bug caused by not updating change of list adapter in runOnUiThread function.
+			Changes to UI should not be in only background thread in AsyncTask is required to be 
+			wrapped by runOnUiThread

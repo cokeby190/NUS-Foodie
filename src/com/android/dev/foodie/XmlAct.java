@@ -109,22 +109,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         
 //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
         if(search_string[0].equals("basic")) {
-		
-	        //String xml = parser.getXML(URL_base); // getting XML
-	        String xml = parser.getXML(URL_base + "search=basic&search_string=" + search_string[1]); // getting XML
-	        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
-	 
-	        //Returns a NodeList of all the Elements with a given tag name in the order in which 
-	        //they are encountered in a preorder traversal of the Document tree.
-	        nl = doc.getElementsByTagName(FOOD_STALL);
-	        
-	        new loadData().execute();
-	        
-	        //CONSTRUCTOR FOR SimpleAdapter
-	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
+        	
+        	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
 	
 //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
         } else if (search_string[0].equals("advanced")) {
@@ -152,22 +138,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 	        search_string[3] = search_string[3].replace(" ", "%20");
 	        search_string[4] = search_string[4].replace(" ", "%20");
 	        
-	        String xml = parser.getXML(URL_base + "search=advanced&search_string=" + search_string[1] + 
+	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
 	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
 	        		query_halal + query_aircon);
-    				//"&halal=" + search_string[5] + "&aircon=" + search_string[6]); // getting XML
-	        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
-	 
-	        //Returns a NodeList of all the Elements with a given tag name in the order in which 
-	        //they are encountered in a preorder traversal of the Document tree.
-	        nl = doc.getElementsByTagName(FOOD_STALL);
-	        
-	        new loadData().execute();
-	        
-	        //CONSTRUCTOR FOR SimpleAdapter
-	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
         }
 	        
 	    setListAdapter(filter_adapter);
@@ -368,27 +341,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 		
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			
-			//------Do the time consuming task---------------------------------------//
-
-	        // looping through all <food_stall>'s
-	        for (int i = 0; i < nl.getLength(); i++) {
-	            // creating new HashMap
-	            HashMap<String, String> map = new HashMap<String, String>();
-	            Element e = (Element) nl.item(i);
-	            // adding each child node to HashMap key => value
-	            //hashmap.put(KEY, VALUE)
-	            map.put(CANTEEN_NAME, parser.getValue(e, CANTEEN_NAME));
-	            map.put(STORE_NAME, parser.getValue(e, STORE_NAME));
-	            map.put(LOCATION, parser.getValue(e, LOCATION));
-	            map.put(ROOM_CODE, parser.getValue(e, ROOM_CODE));
-	            map.put(STORE_TYPE, parser.getValue(e, STORE_TYPE));
-	            map.put(CUISINE, parser.getValue(e, CUISINE));
-	            map.put(HALAL, parser.getValue(e, HALAL));
-	            map.put(AIRCON, parser.getValue(e, AIRCON));
-	            // adding HashList to ArrayList
-	            menuItems.add(map);
-	        }
 	        
 	        //within DoInBackground cannot change UI ELEMENTS 
 	        	//so need to runOnUiThread function
@@ -396,6 +348,26 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 
 				@Override
 				public void run() {
+					
+					// looping through all <food_stall>'s
+			        for (int i = 0; i < nl.getLength(); i++) {
+			            // creating new HashMap
+			            HashMap<String, String> map = new HashMap<String, String>();
+			            Element e = (Element) nl.item(i);
+			            // adding each child node to HashMap key => value
+			            //hashmap.put(KEY, VALUE)
+			            map.put(CANTEEN_NAME, parser.getValue(e, CANTEEN_NAME));
+			            map.put(STORE_NAME, parser.getValue(e, STORE_NAME));
+			            map.put(LOCATION, parser.getValue(e, LOCATION));
+			            map.put(ROOM_CODE, parser.getValue(e, ROOM_CODE));
+			            map.put(STORE_TYPE, parser.getValue(e, STORE_TYPE));
+			            map.put(CUISINE, parser.getValue(e, CUISINE));
+			            map.put(HALAL, parser.getValue(e, HALAL));
+			            map.put(AIRCON, parser.getValue(e, AIRCON));
+			            // adding HashList to ArrayList
+			            menuItems.add(map);
+			        }
+					
 					//int value to string
 			        result_count.setText("Search returned " + String.valueOf(nl.getLength()) + " results. (;");
 				}
@@ -413,7 +385,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			if (period < 500) {
 
 				try {
-					Thread.sleep(600);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -425,5 +397,24 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			return null;
 		}
 
+	}
+	
+	//function to parse XML results into ListView for User to view
+	private void parse_results(String URL) {
+		//String xml = parser.getXML(URL_base); // getting XML
+        String xml = parser.getXML(URL); // getting XML
+        Document doc = parser.XMLfromString(xml); // parsing XML to document so we can read it
+ 
+        //Returns a NodeList of all the Elements with a given tag name in the order in which 
+        //they are encountered in a preorder traversal of the Document tree.
+        nl = doc.getElementsByTagName(FOOD_STALL);
+        
+        new loadData().execute();
+        
+        //CONSTRUCTOR FOR SimpleAdapter
+        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
+        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
+        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
 	}
 }    
