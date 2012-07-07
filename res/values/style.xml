@@ -13,4 +13,10 @@
         <item name="android:textColor">#00FF00</item>
         <item name="android:typeface">monospace</item>
     </style>
+    
+    <style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/rice_rating_draw</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
+    </style>
 </resources>

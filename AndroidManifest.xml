@@ -38,9 +38,16 @@
         </activity>
 
         <activity
+            android:name=".StoreInfo"
+            android:label="@string/search" >
+        </activity>
+        
+        <activity
             android:name=".NearbyAct"
             android:label="@string/nearby" >
         </activity>
+        
+        
         
         <activity
             android:name=".CopyOfsearch_act"

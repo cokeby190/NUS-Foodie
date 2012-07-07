@@ -16,11 +16,14 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TabHost.TabSpec;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.SlidingDrawer;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 public class StoreInfo extends Activity implements OnClickListener, OnItemClickListener{
@@ -54,10 +57,12 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String AVAILABILITY_WEEKDAY = "availability_weekday";
     
     //UI Elements
+    TextView store_name, store_location, store_canteen;
+    TabHost tabs;
     
-    
-    //search information extracted from SearchAct
-    String getMsg, search_type;
+    //search information extracted from XmlAct
+    String store_name_data, location, canteen_name;
+    String[] store_info;
     
     //XML parser objects
     ArrayList<HashMap<String, String>> menuItems;
@@ -87,10 +92,29 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         initialise(); 
      
         //getting back returned data, passed from SearchAct
-        //String[] search_string = getData();
+        store_info = getData();
         
+        store_name.setText(store_info[0]);
+    	store_location.setText(store_info[1]);
+    	store_canteen.setText(store_info[2]);
         
+//------Setup tabs--------------------------------------------------------------------------//
+        tabs.setup();  
+
+        TabSpec tab_one = tabs.newTabSpec("info_tab"); 
+        tab_one.setContent(R.id.info_tab); 
+        tab_one.setIndicator("Information"); 
+        tabs.addTab(tab_one);  
+
+        TabSpec tab_two = tabs.newTabSpec("operating_tab");
+        tab_two.setContent(R.id.operating_tab);
+        tab_two.setIndicator("Operating Hours"); 
+        tabs.addTab(tab_two);
         
+        TabSpec tab_three = tabs.newTabSpec("reviews_tab");
+        tab_three.setContent(R.id.review_tab);
+        tab_three.setIndicator("Reviews"); 
+        tabs.addTab(tab_three);
         
     }
     
@@ -167,21 +191,28 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	private void initialise() {
 		
 		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
-		TextView store_name = (TextView) findViewById(R.id.tv_store_name);
-		TextView store_location = (TextView) findViewById(R.id.tv_store_location);
-		TextView store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		store_name = (TextView) findViewById(R.id.tv_store_name);
+		store_location = (TextView) findViewById(R.id.tv_store_location);
+		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		
+		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
+		tabs = (TabHost)findViewById(R.id.tabhost);
 	}
     
     /*FUNCTION* =============================================================================//
 	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
 	 */
     private String[] getData() {
-		//Bundle getMessage = getIntent().getExtras();
 		
+    	Bundle getMessage = getIntent().getExtras();
+		store_name_data = getMessage.getString("store_name");
+		location = getMessage.getString("location");
+		canteen_name = getMessage.getString("canteen_name");
 		
-		return null;	
+		String[] return_data = {store_name_data, location, canteen_name};
+		
+		return return_data;
 	}
-    
     
 	
 //	/*FUNCTION* =============================================================================//

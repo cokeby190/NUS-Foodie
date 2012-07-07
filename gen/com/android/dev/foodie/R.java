@@ -20,19 +20,25 @@ public final class R {
         public static final int local=0x7f020006;
         public static final int menu=0x7f020007;
         public static final int review=0x7f020008;
-        public static final int search=0x7f020009;
+        public static final int rice_rating=0x7f020009;
+        public static final int rice_rating_d=0x7f02000a;
+        public static final int rice_rating_draw=0x7f02000b;
+        public static final int rice_rating_empty=0x7f02000c;
+        public static final int rice_rating_empty_d=0x7f02000d;
+        public static final int search=0x7f02000e;
     }
     public static final class id {
+        public static final int CheckBox01=0x7f06003c;
         public static final int adv_search_tab=0x7f06002d;
         public static final int aircon_checkbox=0x7f060005;
         public static final int b_main_crowd=0x7f06001a;
         public static final int b_main_dir=0x7f060019;
         public static final int b_main_nearby=0x7f06001b;
         public static final int b_main_search=0x7f060018;
-        public static final int b_menu=0x7f060042;
+        public static final int b_menu=0x7f060048;
         public static final int breakfast_tab=0x7f06000d;
-        public static final int button1=0x7f060041;
-        public static final int button2=0x7f060040;
+        public static final int button1=0x7f060042;
+        public static final int button2=0x7f060041;
         public static final int cb_search_adv_aircon=0x7f060033;
         public static final int cb_search_adv_halal=0x7f060032;
         public static final int cb_search_basic=0x7f06002b;
@@ -52,12 +58,15 @@ public final class R {
         public static final int ib_search_basic=0x7f06002a;
         public static final int imageButton1=0x7f060002;
         public static final int imageView1=0x7f060023;
+        public static final int info_tab=0x7f060045;
         public static final int iv_linus_logo=0x7f060017;
-        public static final int iv_store=0x7f06003a;
-        public static final int linearLayout1=0x7f06003b;
+        public static final int iv_store=0x7f06003e;
+        public static final int linearLayout1=0x7f06003a;
         public static final int list_text=0x7f06001e;
         public static final int nearby=0x7f060016;
+        public static final int operating_tab=0x7f060046;
         public static final int ratingBar1=0x7f06003f;
+        public static final int review_tab=0x7f060047;
         public static final int scrollView1=0x7f06002c;
         public static final int sd_list=0x7f060022;
         public static final int search=0x7f060013;
@@ -70,6 +79,7 @@ public final class R {
         public static final int sp_search_adv_cuisine=0x7f060039;
         public static final int sp_search_adv_fac=0x7f060035;
         public static final int sp_search_adv_store=0x7f060037;
+        public static final int sp_search_range=0x7f06003b;
         public static final int spinner1=0x7f060007;
         public static final int spinner2=0x7f060009;
         public static final int spinner3=0x7f06000b;
@@ -87,10 +97,11 @@ public final class R {
         public static final int tv_search_adv_store=0x7f060036;
         public static final int tv_search_label=0x7f060028;
         public static final int tv_search_result_count=0x7f06001d;
-        public static final int tv_store_cname=0x7f06003e;
-        public static final int tv_store_location=0x7f06003d;
-        public static final int tv_store_name=0x7f06003c;
-        public static final int tv_title=0x7f060043;
+        public static final int tv_store_cname=0x7f060043;
+        public static final int tv_store_location=0x7f060040;
+        public static final int tv_store_name=0x7f06003d;
+        public static final int tv_store_nearby=0x7f060044;
+        public static final int tv_title=0x7f060049;
     }
     public static final class layout {
         public static final int adv_search_page=0x7f030000;
@@ -131,5 +142,6 @@ public final class R {
         public static final int CodeFont=0x7f050002;
         public static final int CustomTheme=0x7f050001;
         public static final int CustomWindowTitleBackground=0x7f050000;
+        public static final int foodRatingBar=0x7f050003;
     }
 }

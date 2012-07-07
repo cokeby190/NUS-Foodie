@@ -68,14 +68,14 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
     private List <String> cuisine_list = new ArrayList<String>();
     
 	private TabHost tabs;
-	private Spinner fac, store, cuisine;
+	private Spinner fac, store, cuisine, range;
 	private ImageButton search, search_adv;
 	private EditText et_search, et_search_adv;
-	private CheckBox halal, aircon;
+	private CheckBox halal, aircon, cb_range;
 	
 	//SPINNER SELECTION POSITION 
 	private int fac_pos, store_pos, cuisine_pos;
-	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine;
+	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine, adapter_range;
 //-------------------------------END SPINNER-----------------------------------------------------------//
 	
 	@Override
@@ -186,6 +186,39 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		
 		et_search = (EditText) findViewById(R.id.et_search_bar);
 		et_search_adv = (EditText) findViewById(R.id.et_search_adv_bar);
+		
+		range = (Spinner)findViewById(R.id.sp_search_range);
+		
+		cb_range = (CheckBox) findViewById(R.id.CheckBox01);
+		
+		String[] range_list = {"Range", "10m", "20m", "30m"};
+		
+		//make first option invisible after spinner is selected by User
+		adapter_range = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, range_list) {
+			@Override
+		    public View getDropDownView(int position, View convertView, ViewGroup parent)
+		    {
+		        View v = null;
+
+		        // If this is the initial dummy entry, make it hidden
+		        if (position == 0) {
+		            TextView tv = new TextView(getContext());
+		            tv.setHeight(0);
+		            tv.setVisibility(View.GONE);
+		            v = tv;
+		        }
+		        else {
+		            // Pass convertView as null to prevent reuse of special case views
+		            v = super.getDropDownView(position, null, parent);
+		        }
+
+		        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
+		        parent.setVerticalScrollBarEnabled(false);
+		        return v;
+		    }
+		};
+		adapter_range.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		range.setAdapter(adapter_range);
 
 		//ADVANCED
 			fac = (Spinner)findViewById(R.id.sp_search_adv_fac);

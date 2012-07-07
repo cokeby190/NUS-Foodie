@@ -292,9 +292,18 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// Starting new intent
-            Intent in = new Intent(getApplicationContext(), NUSFoodieActivity.class);
+    		String store_name = menuItems.get(position).get(STORE_NAME);
+    		String location = menuItems.get(position).get(LOCATION);
+    		String canteen_name = menuItems.get(position).get(CANTEEN_NAME);
+    		Bundle sending = new Bundle();
+    		sending.putString("store_name", store_name);
+    		sending.putString("location", location);
+    		sending.putString("canteen_name", canteen_name);
+            Intent in = new Intent(getApplicationContext(), StoreInfo.class);
+            in.putExtras(sending);
             startActivity(in);
 		}	
+    	
     }
     
     
