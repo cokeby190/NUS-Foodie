@@ -3,27 +3,77 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-    
-    <!-- Pretty hint text, and maxLines -->
-    <EditText android:id="@+id/search_box" 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="TYPE TO FILTER!(:"
-        android:inputType="text"
-        android:maxLines="1"/>
-    
-    <ListView 
-        android:id="@android:id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
 
-   <TextView
-        android:id="@+id/list_text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft="20dp"
-        android:text="info_list" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:focusable="true"
+    	android:focusableInTouchMode="true">
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/search_box"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="TYPE TO FILTER!(:"
+                android:inputType="text"
+                android:maxLines="1" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/tv_search_result_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search returned 0 Results. ): \n Please try again!"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+            </ListView>
+
+            <TextView
+                android:id="@+id/list_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:paddingLeft="20dp"
+                android:text="info_list"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <SlidingDrawer
+            android:id="@+id/slidingDrawer1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:content="@+id/content"
+            android:handle="@+id/handle"
+            android:orientation="horizontal" >
+
+            <View
+                android:id="@id/handle"
+                android:layout_width="0dip"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#323323" >
+
+                <ListView
+                    android:id="@+id/sd_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+                </ListView>
+            </LinearLayout>
+        </SlidingDrawer>
+
+    </FrameLayout>
 </LinearLayout>

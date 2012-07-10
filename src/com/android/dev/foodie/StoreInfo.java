@@ -62,7 +62,8 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //search information extracted from XmlAct
     String store_name_data, location, canteen_name;
-    String[] store_info;
+    int store_info;
+    int position;
     
     //XML parser objects
     ArrayList<HashMap<String, String>> menuItems;
@@ -71,6 +72,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //loading bar
     long start = 0, stop = 0;
+    
+    //TabHost
+    TextView tv_cuisine, tv_halal, tv_menu, tv_aircon; 
+    TextView sch_wd, sch_we, vac_wd, vac_we;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,9 +99,9 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         //getting back returned data, passed from SearchAct
         store_info = getData();
         
-        store_name.setText(store_info[0]);
-    	store_location.setText(store_info[1]);
-    	store_canteen.setText(store_info[2]);
+        store_name.setText(menuItems.get(store_info).get(STORE_NAME));
+    	store_location.setText(menuItems.get(store_info).get(LOCATION));
+    	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
         
 //------Setup tabs--------------------------------------------------------------------------//
         tabs.setup();  
@@ -116,6 +121,29 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         tab_three.setIndicator("Reviews"); 
         tabs.addTab(tab_three);
         
+        //TAB1 - INFORMATION TAB
+	        String halal = "No don't have ):", menu = "No don't have ):", aircon = "No don't have ):";
+	        
+	        if(menuItems.get(store_info).get(HALAL).equals("Y")) {
+	        	halal = "Yah lah!";
+	        }
+	        
+	        if(menuItems.get(store_info).get(MENU).equals("Y")) {
+	        	menu = "Yah lah!";
+	        }
+	        
+	        if(menuItems.get(store_info).get(AIRCON).equals("Y")) {
+	        	aircon = "Yah lah!";
+	        }
+	        
+	        tv_cuisine.setText(menuItems.get(store_info).get(CUISINE));
+	        tv_halal.setText(halal);
+	        tv_menu.setText(menu);
+	        tv_aircon.setText(aircon);
+	        
+	   //TAB2 - OPERATING HOURS TAB
+	        
+        sch_wd.setText(menuItems.get(store_info).get(AVAILABILITY_WEEKDAY));
     }
     
     /*FUNCTION* =============================================================================//
@@ -196,110 +224,33 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
 		
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
-		tabs = (TabHost)findViewById(R.id.tabhost);
+		
+		tabs = (TabHost)findViewById(R.id.th_store);
+		
+		//tab 1
+		tv_cuisine = (TextView) findViewById(R.id.tv_store_cuisine);
+		tv_halal = (TextView) findViewById(R.id.tv_store_halal);
+		tv_menu = (TextView) findViewById(R.id.tv_store_menu);
+		tv_aircon = (TextView) findViewById(R.id.tv_store_aircon);
+		
+		//tab 2
+		sch_wd = (TextView) findViewById(R.id.tv_store_sch_wd);
+		sch_we = (TextView) findViewById(R.id.tv_store_sch_we);
+		vac_wd = (TextView) findViewById(R.id.tv_store_vac_wd);
+		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
+		
 	}
     
     /*FUNCTION* =============================================================================//
 	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
 	 */
-    private String[] getData() {
+    private int getData() {
 		
     	Bundle getMessage = getIntent().getExtras();
-		store_name_data = getMessage.getString("store_name");
-		location = getMessage.getString("location");
-		canteen_name = getMessage.getString("canteen_name");
+		position = getMessage.getInt("position");
 		
-		String[] return_data = {store_name_data, location, canteen_name};
+		menuItems =(ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("menuItems");
 		
-		return return_data;
-	}
-    
-	
-//	/*FUNCTION* =============================================================================//
-//	 *  FOR loading progress bar while results are loading
-//	 *  PreExecute : display progress bar
-//	 *  DoInBackground : perform the task that is time consuming and hence requires AsyncTask
-//	 */
-//	//extended AsyncTask class
-//			//<String, Integer, String>
-//			//1st - what is passed in, since we pass in nothing
-//			//2nd - for Progress / Update bar
-//			//3rd - what we are returning, which is also a void...
-//	private class loadData extends AsyncTask <Void, Integer, Void>{
-//	//private class loadSpinner extends AsyncTask <Void, Integer, Void>{
-//		
-//		ProgressDialog progress_bar;
-//		
-//		// will be called first
-//		protected void onPreExecute() {
-//			//setting up variables, initialising, etc
-//
-//			progress_bar = new ProgressDialog(Store_Info.this);
-//			//set style
-//			progress_bar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//			progress_bar.setMessage("LOADING...");
-//			progress_bar.show();
-//			
-//			start = System.currentTimeMillis();
-//		}
-//		
-//		@Override
-//		protected Void doInBackground(Void... arg0) {
-//			
-//			//------Do the time consuming task---------------------------------------//
-//
-//	        // looping through all <food_stall>'s
-//	        for (int i = 0; i < nl.getLength(); i++) {
-//	            // creating new HashMap
-//	            HashMap<String, String> map = new HashMap<String, String>();
-//	            Element e = (Element) nl.item(i);
-//	            // adding each child node to HashMap key => value
-//	            //hashmap.put(KEY, VALUE)
-//	            map.put(CANTEEN_NAME, parser.getValue(e, CANTEEN_NAME));
-//	            map.put(STORE_NAME, parser.getValue(e, STORE_NAME));
-//	            map.put(LOCATION, parser.getValue(e, LOCATION));
-//	            map.put(ROOM_CODE, parser.getValue(e, ROOM_CODE));
-//	            map.put(STORE_TYPE, parser.getValue(e, STORE_TYPE));
-//	            map.put(CUISINE, parser.getValue(e, CUISINE));
-//	            map.put(HALAL, parser.getValue(e, HALAL));
-//	            map.put(AIRCON, parser.getValue(e, AIRCON));
-//	            // adding HashList to ArrayList
-//	            menuItems.add(map);
-//	        }
-//	        
-//	        //within DoInBackground cannot change UI ELEMENTS 
-//	        	//so need to runOnUiThread function
-//	        runOnUiThread(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					
-//				}
-//	        	
-//	        });
-//	        
-//			//------END OF time consuming task---------------------------------------//
-//			
-//			stop = System.currentTimeMillis();
-//			
-//			
-//			// if duration of loading is too fast, sleep for a while
-//			long period = stop - start;
-//			
-//			if (period < 500) {
-//
-//				try {
-//					Thread.sleep(600);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//					
-//			}
-//			//then dismiss the loading dialog once it has completed
-//			progress_bar.dismiss();
-//
-//			return null;
-//		}
-//
-//	}
-}    
+		return position;
+	}  
+}

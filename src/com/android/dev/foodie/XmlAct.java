@@ -292,15 +292,14 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// Starting new intent
-    		String store_name = menuItems.get(position).get(STORE_NAME);
-    		String location = menuItems.get(position).get(LOCATION);
-    		String canteen_name = menuItems.get(position).get(CANTEEN_NAME);
+    		
+    		int send_position = position;
+
     		Bundle sending = new Bundle();
-    		sending.putString("store_name", store_name);
-    		sending.putString("location", location);
-    		sending.putString("canteen_name", canteen_name);
+    		sending.putInt("position", send_position);
             Intent in = new Intent(getApplicationContext(), StoreInfo.class);
             in.putExtras(sending);
+            in.putExtra("menuItems", menuItems);
             startActivity(in);
 		}	
     	
@@ -372,7 +371,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			            map.put(STORE_TYPE, parser.getValue(e, STORE_TYPE));
 			            map.put(CUISINE, parser.getValue(e, CUISINE));
 			            map.put(HALAL, parser.getValue(e, HALAL));
+			            map.put(MENU, parser.getValue(e, MENU));
 			            map.put(AIRCON, parser.getValue(e, AIRCON));
+			            map.put(AVAILABILITY_WEEKDAY, parser.getValue(e, AVAILABILITY_WEEKDAY));
 			            // adding HashList to ArrayList
 			            menuItems.add(map);
 			        }

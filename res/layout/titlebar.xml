@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="35dip"
-    android:orientation="horizontal"
     android:background="#002357"
     android:paddingLeft="5dip" >
-
-    <Button
-        android:id="@+id/b_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Menu"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="3dp" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -22,8 +13,17 @@
         android:text="NUS Foodie"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="5dp" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/b_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:text="Menu" />
+
+</RelativeLayout>

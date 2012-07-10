@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -39,7 +39,7 @@
                     android:paddingTop="10dp"
                     android:text="TextView"
                     android:textColor="#A5DEF7"
-                    android:textSize="20sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -59,13 +59,15 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true" />
             </RelativeLayout>
-
+
             <RelativeLayout
+                style="@style/store_textSize"
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="0.00" >
+"
 
                 <TextView
                     android:id="@+id/tv_store_location"
@@ -73,23 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:text="TextView" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="73dp"
-                    android:text="Button" />
-
-                <Button
-                    android:id="@+id/button1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="70dp"
-                    android:text="Crowd Level" />
+                    android:text="TextView"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_store_cname"
@@ -97,7 +84,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/tv_store_location"
                     android:layout_below="@+id/tv_store_location"
-                    android:text="TextView" />
+                    android:layout_centerHorizontal="true"
+                    android:text="TextView"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_store_nearby"
@@ -105,9 +94,29 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/tv_store_cname"
                     android:layout_below="@+id/tv_store_cname"
-                    android:text="TextView" />
+                    android:layout_centerHorizontal="true"
+                    android:text="TextView"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/b_store_crowd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="26dp"
+                    android:text="Crowd Level" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="25dp"
+                    android:text="Button" />
             </RelativeLayout>
-
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +124,7 @@
                 android:orientation="vertical" >
 
                 <TabHost
-                    android:id="@android:id/tabhost"
+                    android:id="@+id/th_store"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" >
 
@@ -135,16 +144,284 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
 
+                            <RelativeLayout
+                                android:id="@+id/operating_tab"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:weightSum="100" >
+
+                                <TextView
+                                    android:id="@+id/textView_operating"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginLeft="80dp"
+                                    android:layout_marginTop="34dp"
+                                    android:text="School Term : "
+                                    android:textColor="#FF8A8A"
+                                    android:textStyle="bold" />
+
+                                <TableLayout
+                                    android:id="@+id/tableLayout2"
+                                    style="@style/store_tablepad"
+                                    android:layout_width="262dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignTop="@+id/textView_operating"
+                                    android:layout_marginLeft="32dp"
+                                    android:layout_toRightOf="@+id/textView_operating"
+                                    android:layout_weight="40"
+                                    android:weightSum="100" >
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Weekdays : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_sch_wd"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Weekends : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_sch_we"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+                                </TableLayout>
+
+                                <TextView
+                                    android:id="@+id/textView_operating_v"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignLeft="@+id/textView_operating"
+                                    android:layout_below="@+id/tableLayout2"
+                                    android:text="Vacations : "
+                                    android:textColor="#FF8A8A"
+                                    android:textStyle="bold" />
+
+                                <TableLayout
+                                    android:id="@+id/tableLayout1"
+                                    style="@style/store_tablepad"
+                                    android:layout_width="262dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignLeft="@+id/tableLayout2"
+                                    android:layout_below="@+id/tableLayout2"
+                                    android:layout_weight="40"
+                                    android:weightSum="100" >
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Weekdays : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_vac_wd"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Weekends : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_vac_we"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+                                </TableLayout>
+
+                                <TextView
+                                    android:id="@+id/textView_operating_ph"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignLeft="@+id/textView_operating_v"
+                                    android:layout_below="@+id/tableLayout1"
+                                    android:text="Public Holidays : "
+                                    android:textColor="#FF8A8A"
+                                    android:textStyle="bold" />
+
+                                <TableLayout
+                                    android:id="@+id/tableLayout3"
+                                    style="@style/store_tablepad"
+                                    android:layout_width="262dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignLeft="@+id/tableLayout1"
+                                    android:layout_alignTop="@+id/textView_operating_ph"
+                                    android:layout_weight="40"
+                                    android:weightSum="100" >
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Weekdays : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_vac_wd"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+                                </TableLayout>
+                            </RelativeLayout>
+
                             <LinearLayout
                                 android:id="@+id/info_tab"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" >
-                            </LinearLayout>
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:weightSum="100" >
 
-                            <LinearLayout
-                                android:id="@+id/operating_tab"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" >
+                                <TableLayout
+                                    style="@style/store_tablepad"
+                                    android:layout_width="262dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="40dp"
+                                    android:layout_weight="60"
+                                    android:stretchColumns="*"
+                                    android:weightSum="100" >
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Cuisine : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_cuisine"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Halal : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_halal"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Menu : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_menu"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView4"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Air-conditioned : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_aircon"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+                                </TableLayout>
                             </LinearLayout>
 
                             <LinearLayout
@@ -155,9 +432,7 @@
                         </FrameLayout>
                     </LinearLayout>
                 </TabHost>
-
             </LinearLayout>
-
         </LinearLayout>
 
         <SlidingDrawer

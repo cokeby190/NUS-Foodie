@@ -14,7 +14,7 @@
         android:text="NUS Foodie"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="5dp" />
 

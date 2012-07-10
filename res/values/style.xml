@@ -19,4 +19,14 @@
         <item name="android:minHeight">40dip</item>
         <item name="android:maxHeight">40dip</item>
     </style>
+    
+    <style name="store_textSize" parent="@android:style/TextAppearance">
+        <item name="android:textSize">18sp</item>
+    </style>
+    
+    <style name="store_tablepad" parent="@android:style/TextAppearance">
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    
 </resources>

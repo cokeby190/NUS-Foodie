@@ -1,8 +1,17 @@
 package com.android.dev.foodie;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.LocationManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -16,6 +25,9 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
 	//titlebar
 	boolean customTitleSupport = true;
 	TextView title_bar;
+	
+	//wifi_check
+	WifiManager wifimgr;
 	
     /** Called when the activity is first created. */
     @Override
@@ -33,6 +45,15 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
         }
         
         initialise_elmts();
+        
+        //setup wifi to ensure user connected to nus network
+        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        
+        if(wifimgr.isWifiEnabled() == false){
+        	CreateAlertDialog dialog = new CreateAlertDialog();
+        	AlertDialog alert = dialog.newdialog(this);
+        	alert.show();
+        }
     }
     
     /*FUNCTION* =============================================================================//
@@ -55,6 +76,26 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
     	dirButton.setOnClickListener(this);
     }
 
+    private AlertDialog CreateDialog() {
+    	AlertDialog.Builder alert_dialog = new AlertDialog.Builder(this); 
+    	
+    	alert_dialog.setMessage("This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.")
+        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+    			startActivity(intent);
+            }
+        })
+        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            	dialog.cancel();
+            }
+        });
+    	AlertDialog alert = alert_dialog.create();
+    	
+    	return alert;
+    }
+    
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
