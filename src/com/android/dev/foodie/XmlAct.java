@@ -7,9 +7,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -58,6 +61,10 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     static final String MENU = "menu";
     static final String AIRCON = "aircon";
     static final String AVAILABILITY_WEEKDAY = "availability_weekday";
+    static final String AVAILABILITY_WEEKEND = "availability_weekend";
+    static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
+    static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
+    static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     
     //UI Elements
     ListView lv;
@@ -79,6 +86,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     //loading bar
     long start = 0, stop = 0;
     
+    //wifi_check
+    WifiManager wifimgr;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,57 +107,67 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         
         //initialise UI elements 
         initialise(); 
+        
+        //setup wifi to ensure user connected to nus network
+        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        
+        if(wifimgr.isWifiEnabled() == false){
+        	CreateAlertDialog dialog = new CreateAlertDialog();
+        	AlertDialog alert = dialog.newdialog(this);
+        	alert.show();
+        } else {
      
-        //getting back returned data, passed from SearchAct
-        String[] search_string = getData();
-        
-        //to store the list of stores to show as results
-        menuItems = new ArrayList<HashMap<String, String>>();
+        	//getting back returned data, passed from SearchAct
+            String[] search_string = getData();
+            
+            //to store the list of stores to show as results
+            menuItems = new ArrayList<HashMap<String, String>>();
 
-        //creating new parser class
-        parser = new XmlFunction();
-        
-//------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
-        if(search_string[0].equals("basic")) {
-        	
-        	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
-	
-//------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
-        } else if (search_string[0].equals("advanced")) {
-        	
-        	//checking if halal and aircon options are checked
-        	String query_halal = "", query_aircon = "";
-        	
-        	if(!search_string[5].equals("")) {
-        		query_halal = "&halal=" + search_string[5];
-        	}
-        	
-        	if(!search_string[6].equals("")) {
-        		query_aircon = "&aircon=" + search_string[6];
-        	}
-        	
-        	//TOAST!
-        	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
-	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-	        		query_halal + query_aircon, Toast.LENGTH_LONG);
-	        t.show();
-	        
-	        //URL encoding white spaces to its ASCII equivalent
-	        search_string[1] = search_string[1].replace(" ", "%20");
-	        search_string[2] = search_string[2].replace(" ", "%20");
-	        search_string[3] = search_string[3].replace(" ", "%20");
-	        search_string[4] = search_string[4].replace(" ", "%20");
-	        
-	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
-	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-	        		query_halal + query_aircon);
+            //creating new parser class
+            parser = new XmlFunction();
+            
+    //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
+            if(search_string[0].equals("basic")) {
+            	
+            	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
+    	
+    //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
+            } else if (search_string[0].equals("advanced")) {
+            	
+            	//checking if halal and aircon options are checked
+            	String query_halal = "", query_aircon = "";
+            	
+            	if(!search_string[5].equals("")) {
+            		query_halal = "&halal=" + search_string[5];
+            	}
+            	
+            	if(!search_string[6].equals("")) {
+            		query_aircon = "&aircon=" + search_string[6];
+            	}
+            	
+            	//TOAST!
+            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
+    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    	        		query_halal + query_aircon, Toast.LENGTH_LONG);
+    	        t.show();
+    	        
+    	        //URL encoding white spaces to its ASCII equivalent
+    	        search_string[1] = search_string[1].replace(" ", "%20");
+    	        search_string[2] = search_string[2].replace(" ", "%20");
+    	        search_string[3] = search_string[3].replace(" ", "%20");
+    	        search_string[4] = search_string[4].replace(" ", "%20");
+    	        
+    	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
+    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    	        		query_halal + query_aircon);
+            }
+    	        
+    	    setListAdapter(filter_adapter);
         }
-	        
-	    setListAdapter(filter_adapter);
         
     }
-    
-    /*FUNCTION* =============================================================================//
+
+	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
 	public void customTitleBar(String title) {
@@ -374,6 +394,10 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			            map.put(MENU, parser.getValue(e, MENU));
 			            map.put(AIRCON, parser.getValue(e, AIRCON));
 			            map.put(AVAILABILITY_WEEKDAY, parser.getValue(e, AVAILABILITY_WEEKDAY));
+			            map.put(AVAILABILITY_WEEKEND, parser.getValue(e, AVAILABILITY_WEEKEND));
+			            map.put(AVAILABILITY_VAC_WEEKDAY, parser.getValue(e, AVAILABILITY_VAC_WEEKDAY));
+			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
+			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
 			            // adding HashList to ArrayList
 			            menuItems.add(map);
 			        }

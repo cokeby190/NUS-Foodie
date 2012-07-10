@@ -56,7 +56,7 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
         }
     }
     
-    /*FUNCTION* =============================================================================//
+   	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
 	public void customTitleBar_simple(String title) {
@@ -76,26 +76,6 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
     	dirButton.setOnClickListener(this);
     }
 
-    private AlertDialog CreateDialog() {
-    	AlertDialog.Builder alert_dialog = new AlertDialog.Builder(this); 
-    	
-    	alert_dialog.setMessage("This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.")
-        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            	Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-    			startActivity(intent);
-            }
-        })
-        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            	dialog.cancel();
-            }
-        });
-    	AlertDialog alert = alert_dialog.create();
-    	
-    	return alert;
-    }
-    
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {

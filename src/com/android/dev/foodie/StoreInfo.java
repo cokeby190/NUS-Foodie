@@ -55,6 +55,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String MENU = "menu";
     static final String AIRCON = "aircon";
     static final String AVAILABILITY_WEEKDAY = "availability_weekday";
+    static final String AVAILABILITY_WEEKEND = "availability_weekend";
+    static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
+    static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
+    static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     
     //UI Elements
     TextView store_name, store_location, store_canteen;
@@ -75,7 +79,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //TabHost
     TextView tv_cuisine, tv_halal, tv_menu, tv_aircon; 
-    TextView sch_wd, sch_we, vac_wd, vac_we;
+    TextView sch_wd, sch_we, vac_wd, vac_we, pubhol;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -141,9 +145,38 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	        tv_menu.setText(menu);
 	        tv_aircon.setText(aircon);
 	        
-	   //TAB2 - OPERATING HOURS TAB
+	    //TAB2 - OPERATING HOURS TAB
+	        String sch_wd_str = menuItems.get(store_info).get(AVAILABILITY_WEEKDAY),
+	        		sch_we_str = menuItems.get(store_info).get(AVAILABILITY_WEEKEND), 
+	        		vac_wd_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKDAY), 
+	        		vac_we_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKEND), 
+	        		pubhol_str = menuItems.get(store_info).get(AVAILABILITY_PUBHOL);
 	        
-        sch_wd.setText(menuItems.get(store_info).get(AVAILABILITY_WEEKDAY));
+	        if(!parse_operating(sch_wd_str)) {
+	        	sch_wd_str = "Not Operating";
+	        }
+	        
+	        if(!parse_operating(sch_we_str)) {
+	        	sch_we_str = "Not Operating";
+	        }
+	        
+	        if(!parse_operating(vac_wd_str)) {
+	        	vac_wd_str = "Not Operating";
+	        }
+	        
+	        if(!parse_operating(vac_we_str)) {
+	        	vac_we_str = "Not Operating";
+	        }
+	        
+	        if(!parse_operating(pubhol_str)) {
+	        	pubhol_str = "Not Operating";
+	        }
+	        
+	        sch_wd.setText(sch_wd_str);
+	        sch_we.setText(sch_we_str);
+	        vac_wd.setText(vac_wd_str);
+	        vac_we.setText(vac_we_str);
+	        pubhol.setText(pubhol_str);
     }
     
     /*FUNCTION* =============================================================================//
@@ -238,6 +271,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		sch_we = (TextView) findViewById(R.id.tv_store_sch_we);
 		vac_wd = (TextView) findViewById(R.id.tv_store_vac_wd);
 		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
+		pubhol = (TextView) findViewById(R.id.tv_store_ph);
 		
 	}
     
@@ -253,4 +287,18 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		
 		return position;
 	}  
+    
+    private boolean parse_operating(String hours) {
+    	
+    	String[] avail = hours.split("-");
+    	String[] first = avail[0].split(":");
+    	String[] second = avail[1].split(":");
+    	
+    	if(first[0].equals("00") && second[0].equals("00") 
+    			&& first[1].equals("00") && second[1].equals("00")) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
 }

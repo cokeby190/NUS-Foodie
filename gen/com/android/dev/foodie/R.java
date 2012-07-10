@@ -37,7 +37,7 @@ public final class R {
         public static final int b_main_dir=0x7f060019;
         public static final int b_main_nearby=0x7f06001b;
         public static final int b_main_search=0x7f060018;
-        public static final int b_menu=0x7f06005f;
+        public static final int b_menu=0x7f060060;
         public static final int b_store_crowd=0x7f060045;
         public static final int breakfast_tab=0x7f06000d;
         public static final int button2=0x7f060046;
@@ -60,7 +60,7 @@ public final class R {
         public static final int ib_search_basic=0x7f06002a;
         public static final int imageButton1=0x7f060002;
         public static final int imageView1=0x7f060023;
-        public static final int info_tab=0x7f060055;
+        public static final int info_tab=0x7f060056;
         public static final int iv_linus_logo=0x7f060017;
         public static final int iv_store=0x7f060040;
         public static final int linearLayout1=0x7f06003d;
@@ -68,7 +68,7 @@ public final class R {
         public static final int nearby=0x7f060016;
         public static final int operating_tab=0x7f060048;
         public static final int ratingBar1=0x7f060041;
-        public static final int review_tab=0x7f06005d;
+        public static final int review_tab=0x7f06005e;
         public static final int scrollView1=0x7f06002f;
         public static final int sd_list=0x7f060022;
         public static final int search=0x7f060013;
@@ -93,12 +93,12 @@ public final class R {
         public static final int tableLayout3=0x7f060054;
         public static final int tableRow1=0x7f06004b;
         public static final int tableRow2=0x7f06004d;
-        public static final int tableRow3=0x7f060058;
-        public static final int tableRow4=0x7f06005a;
+        public static final int tableRow3=0x7f060059;
+        public static final int tableRow4=0x7f06005b;
         public static final int textView1=0x7f06000e;
         public static final int textView2=0x7f060024;
         public static final int textView3=0x7f060025;
-        public static final int textView4=0x7f06005b;
+        public static final int textView4=0x7f06005c;
         public static final int textView_operating=0x7f060049;
         public static final int textView_operating_ph=0x7f060053;
         public static final int textView_operating_v=0x7f06004f;
@@ -111,19 +111,20 @@ public final class R {
         public static final int tv_search_adv_store=0x7f060039;
         public static final int tv_search_label=0x7f060028;
         public static final int tv_search_result_count=0x7f06001d;
-        public static final int tv_store_aircon=0x7f06005c;
+        public static final int tv_store_aircon=0x7f06005d;
         public static final int tv_store_cname=0x7f060043;
-        public static final int tv_store_cuisine=0x7f060056;
-        public static final int tv_store_halal=0x7f060057;
+        public static final int tv_store_cuisine=0x7f060057;
+        public static final int tv_store_halal=0x7f060058;
         public static final int tv_store_location=0x7f060042;
-        public static final int tv_store_menu=0x7f060059;
+        public static final int tv_store_menu=0x7f06005a;
         public static final int tv_store_name=0x7f06003f;
         public static final int tv_store_nearby=0x7f060044;
+        public static final int tv_store_ph=0x7f060055;
         public static final int tv_store_sch_wd=0x7f06004c;
         public static final int tv_store_sch_we=0x7f06004e;
         public static final int tv_store_vac_wd=0x7f060051;
         public static final int tv_store_vac_we=0x7f060052;
-        public static final int tv_title=0x7f06005e;
+        public static final int tv_title=0x7f06005f;
     }
     public static final class layout {
         public static final int adv_search_page=0x7f030000;
