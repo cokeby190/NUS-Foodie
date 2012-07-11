@@ -11,44 +11,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <RelativeLayout
+            android:orientation="vertical" >
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="268dp"
-                android:orientation="horizontal" >
+                android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/linearLayout1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="26dp"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
+                
                 <TextView
                     android:id="@+id/tv_store_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
+                    android:layout_gravity="center_horizontal"
                     android:paddingTop="10dp"
                     android:text="TextView"
                     android:textColor="#A5DEF7"
                     android:textSize="25sp"
                     android:textStyle="bold" />
-
+                
                 <ImageView
                     android:id="@+id/iv_store"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_below="@+id/tv_store_name"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="20dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp"
                     android:src="@android:drawable/star_big_on" />
 
                 <RatingBar
@@ -56,9 +42,9 @@
                     style="@style/foodRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true" />
-            </RelativeLayout>
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 style="@style/store_textSize"
@@ -67,7 +53,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_weight="0.00" >
-"
+
 
                 <TextView
                     android:id="@+id/tv_store_location"
@@ -143,6 +129,107 @@
                             android:id="@android:id/tabcontent"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
+
+                            <LinearLayout
+                                android:id="@+id/info_tab"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:weightSum="100" >
+
+                                <TableLayout
+                                    style="@style/store_tablepad"
+                                    android:layout_width="262dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="40dp"
+                                    android:layout_weight="60"
+                                    android:stretchColumns="*"
+                                    android:weightSum="100" >
+
+                                    <TableRow
+                                        android:id="@+id/tableRow1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="40dp"
+                                            android:text="Cuisine : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_cuisine"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Halal : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_halal"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView3"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Menu : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_menu"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+
+                                    <TableRow
+                                        android:id="@+id/tableRow4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="25" >
+
+                                        <TextView
+                                            android:id="@+id/textView4"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Air-conditioned : "
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_store_aircon"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="TextView" />
+                                    </TableRow>
+                                </TableLayout>
+                            </LinearLayout>
 
                             <RelativeLayout
                                 android:id="@+id/operating_tab"
@@ -322,107 +409,6 @@
                                     </TableRow>
                                 </TableLayout>
                             </RelativeLayout>
-
-                            <LinearLayout
-                                android:id="@+id/info_tab"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:weightSum="100" >
-
-                                <TableLayout
-                                    style="@style/store_tablepad"
-                                    android:layout_width="262dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginTop="40dp"
-                                    android:layout_weight="60"
-                                    android:stretchColumns="*"
-                                    android:weightSum="100" >
-
-                                    <TableRow
-                                        android:id="@+id/tableRow1"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="25" >
-
-                                        <TextView
-                                            android:id="@+id/textView1"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_marginRight="40dp"
-                                            android:text="Cuisine : "
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/tv_store_cuisine"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="TextView" />
-                                    </TableRow>
-
-                                    <TableRow
-                                        android:id="@+id/tableRow2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="25" >
-
-                                        <TextView
-                                            android:id="@+id/textView2"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Halal : "
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/tv_store_halal"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="TextView" />
-                                    </TableRow>
-
-                                    <TableRow
-                                        android:id="@+id/tableRow3"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="25" >
-
-                                        <TextView
-                                            android:id="@+id/textView3"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Menu : "
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/tv_store_menu"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="TextView" />
-                                    </TableRow>
-
-                                    <TableRow
-                                        android:id="@+id/tableRow4"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="25" >
-
-                                        <TextView
-                                            android:id="@+id/textView4"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Air-conditioned : "
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/tv_store_aircon"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="TextView" />
-                                    </TableRow>
-                                </TableLayout>
-                            </LinearLayout>
 
                             <LinearLayout
                                 android:id="@+id/review_tab"
