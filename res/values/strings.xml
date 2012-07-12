@@ -17,6 +17,8 @@
     <string name="store_spinner_prompt">Choose a Store Type</string>
     <string name="cuisine_spinner_prompt">Choose a Cuisine</string>
     
+    <string name="store_info">Store Information</string>
+    
     
     <string name="cd">College Dining App</string>
     <string name="cd_sitting">Sitting Area</string>

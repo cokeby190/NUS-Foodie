@@ -28,3 +28,7 @@ Version 1.0
 	
 	- Added AlertDialog to prompt for wifi
 	- Additional changes to UI of Store Information page
+	
+	11/07/2012
+	
+	- Modified Store.xml some elements from relative layout to linearlayout.

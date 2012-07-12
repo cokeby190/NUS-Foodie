@@ -43,6 +43,12 @@
         </activity>
         
         <activity
+            android:name=".DialogAct"
+            android:label="@string/store_info" 
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+        
+        <activity
             android:name=".NearbyAct"
             android:label="@string/nearby" >
         </activity>

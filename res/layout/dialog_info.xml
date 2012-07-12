@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TableLayout
+        style="@style/store_tablepad"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:stretchColumns="*"
+        android:weightSum="100" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Cuisine : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_cuisine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Halal : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_halal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Menu : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Air-conditioned : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_aircon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView_operating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="School Term : "
+        android:textColor="#FF8A8A"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:id="@+id/tableLayout2"
+        style="@style/store_tablepad"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:stretchColumns="*"
+        android:weightSum="100" >
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Weekdays : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_sch_wd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Weekends : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_sch_we"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView_operating_v"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Vacations : "
+        android:textColor="#FF8A8A"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        style="@style/store_tablepad"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:stretchColumns="*"
+        android:weightSum="100" >
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Weekdays : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_vac_wd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/TableRow01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Weekends : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_vac_we"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView_operating_ph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Public Holidays : "
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#FF8A8A"
+        android:textStyle="bold" />
+
+    <TableLayout
+        android:id="@+id/tableLayout3"
+        style="@style/store_tablepad"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:stretchColumns="*"
+        android:weightSum="100" >
+
+        <TableRow
+            android:id="@+id/TableRow02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="25" >
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:text="Weekdays : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_store_ph"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

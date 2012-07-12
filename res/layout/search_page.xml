@@ -275,34 +275,34 @@
             </FrameLayout>
         </LinearLayout>
     </TabHost>
-    
+
     <SlidingDrawer
-            android:id="@+id/slidingDrawer1"
+        android:id="@+id/slidingDrawer1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:content="@+id/content"
+        android:handle="@id/handle"
+        android:orientation="horizontal" >
+
+        <View
+            android:id="@id/handle"
+            android:layout_width="0dip"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:content="@+id/content"
-            android:handle="@id/handle"
-            android:orientation="horizontal" >
+            android:background="#323323" >
 
-            <View
-                android:id="@id/handle"
-                android:layout_width="0dip"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/content"
+            <ListView
+                android:id="@+id/sd_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#323323" >
-
-                <ListView
-                    android:id="@+id/sd_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" >
-                </ListView>
-            </LinearLayout>
-        </SlidingDrawer>
+                android:layout_weight="1" >
+            </ListView>
+        </LinearLayout>
+    </SlidingDrawer>
         
 	</FrameLayout>
     

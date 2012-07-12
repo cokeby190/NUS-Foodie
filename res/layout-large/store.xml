@@ -46,62 +46,65 @@
 
             </LinearLayout>
 
-            <RelativeLayout
-                style="@style/store_textSize"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="0.00" >
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:weightSum="100" >
 
-
-                <TextView
-                    android:id="@+id/tv_store_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="TextView"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_store_cname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/tv_store_location"
-                    android:layout_below="@+id/tv_store_location"
-                    android:layout_centerHorizontal="true"
-                    android:text="TextView"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_store_nearby"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/tv_store_cname"
-                    android:layout_below="@+id/tv_store_cname"
-                    android:layout_centerHorizontal="true"
-                    android:text="TextView"
-                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/b_store_crowd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginLeft="26dp"
-                    android:text="Crowd Level" />
+                    android:layout_marginLeft="10dp"
+                    android:text="Crowd Level" 
+                    android:layout_weight="20" />
+                
+                <LinearLayout
+                    style="@style/store_textSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" 
+                    android:layout_weight="60" >
+"
+                
+	                <TextView
+	                    android:id="@+id/tv_store_location"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center_horizontal"
+	                    android:text="TextView"
+	                    android:textStyle="bold" />
+	
+	                <TextView
+	                    android:id="@+id/tv_store_cname"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center_horizontal"
+	                    android:text="TextView"
+	                    android:textStyle="bold" />
+	
+	                <TextView
+	                    android:id="@+id/tv_store_nearby"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_gravity="center_horizontal"
+	                    android:text="TextView"
+	                    android:textStyle="bold" />
+	                
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="25dp"
-                    android:text="Button" />
-            </RelativeLayout>
+                    android:layout_marginRight="10dp"
+                    android:text="Button" 
+                    android:layout_weight="20" />
+                
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

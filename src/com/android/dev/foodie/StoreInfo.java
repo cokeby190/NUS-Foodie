@@ -8,6 +8,7 @@ import org.w3c.dom.NodeList;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.sax.Element;
@@ -25,6 +26,7 @@ import android.widget.RatingBar;
 import android.widget.SlidingDrawer;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StoreInfo extends Activity implements OnClickListener, OnItemClickListener{
 
@@ -62,7 +64,11 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //UI Elements
     TextView store_name, store_location, store_canteen;
-    TabHost tabs;
+    Button b_crowd;
+    	//UI TABLET
+    	TabHost tabs;
+    	//UI NORMAL
+    	Button b_info, b_review;
     
     //search information extracted from XmlAct
     String store_name_data, location, canteen_name;
@@ -95,19 +101,186 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         if(customTitleSupport) {
         	customTitleBar(getText(R.string.app_name).toString());
         } 
-//-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
         
-        //initialise UI elements 
-        initialise(); 
-     
         //getting back returned data, passed from SearchAct
         store_info = getData();
+        
+//-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
+
+        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_LARGE) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+        	
+        	layout_large();
+        	
+        } else if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_NORMAL) == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+        	
+        	layout_normal();
+        }
+    }
+    
+    /*FUNCTION* =============================================================================//
+	 *  CUSTOM TITLE BAR
+	 */
+	public void customTitleBar(String title) {
+			
+		//setFeatureInt(int featureId, int value)
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
+		
+		title_bar = (TextView) findViewById(R.id.tv_title);
+		menu = (Button) findViewById(R.id.b_menu);
+		
+		title_bar.setText(title);
+		menu.setOnClickListener(this);
+		
+		//sliding drawer initialisation
+		sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
+		sd_content = (ListView) findViewById(R.id.sd_list);
+		//list for menu
+			//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
+		ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (StoreInfo.this, android.R.layout.simple_list_item_1, menu_list);
+		sd_content.setAdapter(adapter_sd);
+		sd_content.setOnItemClickListener(this);
+	}
+	
+	/*FUNCTION* =============================================================================//
+	 *  FOR MENU FUNCTION
+	 *  FUNCTION PARAMETER : onItemClick (AdapterView<?> parent, View view, int position, long id)
+	 *  CRITERIA : OnItemClickListener
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		switch(position) {
+			case 0:
+				Intent send_search = new Intent(StoreInfo.this, NUSFoodieActivity.class);
+				startActivity(send_search);
+				break;
+			case 1:
+				Intent send_dir = new Intent(StoreInfo.this, SearchAct.class);
+				startActivity(send_dir);
+				break;
+			case 2:
+				//Intent send_crowd = new Intent(Store_Info.this, Store_Info.class);
+				//startActivity(send_crowd);
+				break;
+			case 3:
+				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
+				//startActivity(send_nearby);
+				break;
+			case 4:
+				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
+				//startActivity(send_nearby);
+				break;
+		}
+	}
+	
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()) {
+		//------button to toggle menu slide open/close---------------------------------//
+			case R.id.b_menu:
+				sd.animateToggle();
+				break;
+				
+			case R.id.b_store_info:
+				Intent dialog = new Intent(StoreInfo.this, DialogAct.class);
+				startActivity(dialog);
+				break;
+			
+			case R.id.b_store_review:
+				break;
+			
+			case R.id.b_store_crowd:
+				break;
+		}
+	}
+	
+	/*FUNCTION* =============================================================================//
+	 *  INITIALISE UI ELEMENTS
+	 */
+	private void initialise_large() {
+		
+		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_name = (TextView) findViewById(R.id.tv_store_name);
+		store_location = (TextView) findViewById(R.id.tv_store_location);
+		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		
+		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
+		
+		tabs = (TabHost)findViewById(R.id.th_store);
+		
+		//tab 1
+		tv_cuisine = (TextView) findViewById(R.id.tv_store_cuisine);
+		tv_halal = (TextView) findViewById(R.id.tv_store_halal);
+		tv_menu = (TextView) findViewById(R.id.tv_store_menu);
+		tv_aircon = (TextView) findViewById(R.id.tv_store_aircon);
+		
+		//tab 2
+		sch_wd = (TextView) findViewById(R.id.tv_store_sch_wd);
+		sch_we = (TextView) findViewById(R.id.tv_store_sch_we);
+		vac_wd = (TextView) findViewById(R.id.tv_store_vac_wd);
+		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
+		pubhol = (TextView) findViewById(R.id.tv_store_ph);
+		
+	}
+    
+	/*FUNCTION* =============================================================================//
+	 *  INITIALISE UI ELEMENTS
+	 */
+	private void initialise() {
+		
+		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_name = (TextView) findViewById(R.id.tv_store_name);
+		store_location = (TextView) findViewById(R.id.tv_store_location);
+		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		
+		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
+		
+		b_info = (Button) findViewById(R.id.b_store_info);
+		b_review = (Button) findViewById(R.id.b_store_review);
+		b_crowd = (Button) findViewById(R.id.b_store_crowd);
+		
+		b_info.setOnClickListener(this);
+		b_review.setOnClickListener(this);
+		b_crowd.setOnClickListener(this);
+		
+	}
+	
+    /*FUNCTION* =============================================================================//
+	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
+	 */
+    private int getData() {
+		
+    	Bundle getMessage = getIntent().getExtras();
+		position = getMessage.getInt("position");
+		
+		menuItems =(ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("menuItems");
+		
+		return position;
+	}  
+    
+    private boolean parse_operating(String hours) {
+    	
+    	String[] avail = hours.split("-");
+    	String[] first = avail[0].split(":");
+    	String[] second = avail[1].split(":");
+    	
+    	if(first[0].equals("00") && second[0].equals("00") 
+    			&& first[1].equals("00") && second[1].equals("00")) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
+    private void layout_large() {
+    	
+    	//initialise UI elements 
+        initialise_large(); 
         
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
-        
-//------Setup tabs--------------------------------------------------------------------------//
+    	
+    	//------Setup tabs--------------------------------------------------------------------------//
         tabs.setup();  
 
         TabSpec tab_one = tabs.newTabSpec("info_tab"); 
@@ -179,126 +352,14 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	        pubhol.setText(pubhol_str);
     }
     
-    /*FUNCTION* =============================================================================//
-	 *  CUSTOM TITLE BAR
-	 */
-	public void customTitleBar(String title) {
-			
-		//setFeatureInt(int featureId, int value)
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
-		
-		title_bar = (TextView) findViewById(R.id.tv_title);
-		menu = (Button) findViewById(R.id.b_menu);
-		
-		title_bar.setText(title);
-		menu.setOnClickListener(this);
-		
-		//sliding drawer initialisation
-		sd = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
-		sd_content = (ListView) findViewById(R.id.sd_list);
-		//list for menu
-			//ArrayAdapter constructor : ArrayAdapter <String> (Context, int layout, String list)
-		ArrayAdapter <String> adapter_sd = new ArrayAdapter <String> (StoreInfo.this, android.R.layout.simple_list_item_1, menu_list);
-		sd_content.setAdapter(adapter_sd);
-		sd_content.setOnItemClickListener(this);
-	}
-	
-	/*FUNCTION* =============================================================================//
-	 *  FOR MENU FUNCTION
-	 *  FUNCTION PARAMETER : onItemClick (AdapterView<?> parent, View view, int position, long id)
-	 *  CRITERIA : OnItemClickListener
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		switch(position) {
-			case 0:
-				Intent send_search = new Intent(StoreInfo.this, NUSFoodieActivity.class);
-				startActivity(send_search);
-				break;
-			case 1:
-				Intent send_dir = new Intent(StoreInfo.this, SearchAct.class);
-				startActivity(send_dir);
-				//Intent send_dir = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_dir);
-				break;
-			case 2:
-				//Intent send_crowd = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_crowd);
-				break;
-			case 3:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
-				break;
-			case 4:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
-				break;
-		}
-	}
-	
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()) {
-		//------button to toggle menu slide open/close---------------------------------//
-		case R.id.b_menu:
-			sd.animateToggle();
-			break;
-		}
-	}
-	
-	/*FUNCTION* =============================================================================//
-	 *  INITIALISE UI ELEMENTS
-	 */
-	private void initialise() {
-		
-		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
-		store_name = (TextView) findViewById(R.id.tv_store_name);
-		store_location = (TextView) findViewById(R.id.tv_store_location);
-		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
-		
-		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
-		
-		tabs = (TabHost)findViewById(R.id.th_store);
-		
-		//tab 1
-		tv_cuisine = (TextView) findViewById(R.id.tv_store_cuisine);
-		tv_halal = (TextView) findViewById(R.id.tv_store_halal);
-		tv_menu = (TextView) findViewById(R.id.tv_store_menu);
-		tv_aircon = (TextView) findViewById(R.id.tv_store_aircon);
-		
-		//tab 2
-		sch_wd = (TextView) findViewById(R.id.tv_store_sch_wd);
-		sch_we = (TextView) findViewById(R.id.tv_store_sch_we);
-		vac_wd = (TextView) findViewById(R.id.tv_store_vac_wd);
-		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
-		pubhol = (TextView) findViewById(R.id.tv_store_ph);
-		
-	}
-    
-    /*FUNCTION* =============================================================================//
-	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
-	 */
-    private int getData() {
-		
-    	Bundle getMessage = getIntent().getExtras();
-		position = getMessage.getInt("position");
-		
-		menuItems =(ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("menuItems");
-		
-		return position;
-	}  
-    
-    private boolean parse_operating(String hours) {
+    private void layout_normal() {
     	
-    	String[] avail = hours.split("-");
-    	String[] first = avail[0].split(":");
-    	String[] second = avail[1].split(":");
+    	//initialise UI elements 
+        initialise(); 
+
+        store_name.setText(menuItems.get(store_info).get(STORE_NAME));
+    	store_location.setText(menuItems.get(store_info).get(LOCATION));
+    	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
     	
-    	if(first[0].equals("00") && second[0].equals("00") 
-    			&& first[1].equals("00") && second[1].equals("00")) {
-    		return false;
-    	}
-    	
-    	return true;
     }
 }
