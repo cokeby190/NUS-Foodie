@@ -87,6 +87,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     TextView tv_cuisine, tv_halal, tv_menu, tv_aircon; 
     TextView sch_wd, sch_we, vac_wd, vac_we, pubhol;
     
+    //String for xml data
+    String halal_str = "No don't have ):", menu_str = "No don't have ):", aircon_str = "No don't have ):";
+    String sch_wd_str, sch_we_str, vac_wd_str, vac_we_str, pubhol_str;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +110,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_info = getData();
         
 //-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
-
+        
         if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_LARGE) == Configuration.SCREENLAYOUT_SIZE_LARGE) {
         	
         	layout_large();
@@ -181,8 +185,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				break;
 				
 			case R.id.b_store_info:
-				Intent dialog = new Intent(StoreInfo.this, DialogAct.class);
-				startActivity(dialog);
+				//send intent to dialog to show data
+				Bundle sending = new Bundle();
+				sending.putInt("position", store_info);
+		        Intent in = new Intent(getApplicationContext(), DialogAct.class);
+		        in.putExtras(sending);
+		        in.putExtra("menuItems", menuItems);
+		        startActivity(in);
 				break;
 			
 			case R.id.b_store_review:
@@ -298,52 +307,54 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         tab_three.setIndicator("Reviews"); 
         tabs.addTab(tab_three);
         
+      //BOOLEAN STORE INFO
+        if(menuItems.get(store_info).get(HALAL).equals("Y")) {
+        	halal_str = "Yah lah!";
+        }
+        
+        if(menuItems.get(store_info).get(MENU).equals("Y")) {
+        	menu_str = "Yah lah!";
+        }
+        
+        if(menuItems.get(store_info).get(AIRCON).equals("Y")) {
+        	aircon_str = "Yah lah!";
+        }
+        
+        sch_wd_str = menuItems.get(store_info).get(AVAILABILITY_WEEKDAY);
+		sch_we_str = menuItems.get(store_info).get(AVAILABILITY_WEEKEND); 
+		vac_wd_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKDAY); 
+		vac_we_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKEND); 
+		pubhol_str = menuItems.get(store_info).get(AVAILABILITY_PUBHOL);
+        
+        //OPERATING HOURS
+        if(!parse_operating(sch_wd_str)) {
+        	sch_wd_str = "Not Operating";
+        }
+        
+        if(!parse_operating(sch_we_str)) {
+        	sch_we_str = "Not Operating";
+        }
+        
+        if(!parse_operating(vac_wd_str)) {
+        	vac_wd_str = "Not Operating";
+        }
+        
+        if(!parse_operating(vac_we_str)) {
+        	vac_we_str = "Not Operating";
+        }
+        
+        if(!parse_operating(pubhol_str)) {
+        	pubhol_str = "Not Operating";
+        }
+        
         //TAB1 - INFORMATION TAB
-	        String halal = "No don't have ):", menu = "No don't have ):", aircon = "No don't have ):";
-	        
-	        if(menuItems.get(store_info).get(HALAL).equals("Y")) {
-	        	halal = "Yah lah!";
-	        }
-	        
-	        if(menuItems.get(store_info).get(MENU).equals("Y")) {
-	        	menu = "Yah lah!";
-	        }
-	        
-	        if(menuItems.get(store_info).get(AIRCON).equals("Y")) {
-	        	aircon = "Yah lah!";
-	        }
-	        
+	        	        
 	        tv_cuisine.setText(menuItems.get(store_info).get(CUISINE));
-	        tv_halal.setText(halal);
-	        tv_menu.setText(menu);
-	        tv_aircon.setText(aircon);
+	        tv_halal.setText(halal_str);
+	        tv_menu.setText(menu_str);
+	        tv_aircon.setText(aircon_str);
 	        
 	    //TAB2 - OPERATING HOURS TAB
-	        String sch_wd_str = menuItems.get(store_info).get(AVAILABILITY_WEEKDAY),
-	        		sch_we_str = menuItems.get(store_info).get(AVAILABILITY_WEEKEND), 
-	        		vac_wd_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKDAY), 
-	        		vac_we_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKEND), 
-	        		pubhol_str = menuItems.get(store_info).get(AVAILABILITY_PUBHOL);
-	        
-	        if(!parse_operating(sch_wd_str)) {
-	        	sch_wd_str = "Not Operating";
-	        }
-	        
-	        if(!parse_operating(sch_we_str)) {
-	        	sch_we_str = "Not Operating";
-	        }
-	        
-	        if(!parse_operating(vac_wd_str)) {
-	        	vac_wd_str = "Not Operating";
-	        }
-	        
-	        if(!parse_operating(vac_we_str)) {
-	        	vac_we_str = "Not Operating";
-	        }
-	        
-	        if(!parse_operating(pubhol_str)) {
-	        	pubhol_str = "Not Operating";
-	        }
 	        
 	        sch_wd.setText(sch_wd_str);
 	        sch_we.setText(sch_we_str);

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class NUSFoodieActivity extends Activity implements OnClickListener{
 	
-	private Button searchButton, dirButton;
+	private Button searchButton, dirButton, nearbyButton;
 	
 	//titlebar
 	boolean customTitleSupport = true;
@@ -69,6 +69,9 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
     	
     	dirButton = (Button)findViewById(R.id.b_main_dir);
     	dirButton.setOnClickListener(this);
+    	
+    	nearbyButton = (Button)findViewById(R.id.b_main_nearby);
+    	nearbyButton.setOnClickListener(this);
     }
 
 	@Override
