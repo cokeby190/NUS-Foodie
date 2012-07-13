@@ -105,12 +105,12 @@ public class NearbyAct extends ListActivity implements OnClickListener, OnItemCl
         } 
 //-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
         
-        TextView temp = (TextView) findViewById (R.id.textView1);
-        WifiLocation obj = new WifiLocation(this);
-        
-        String loc = obj.find_location();
-        
-        temp.setText(loc);
+//        TextView temp = (TextView) findViewById (R.id.textView1);
+//        WifiLocation obj = new WifiLocation(this);
+//        
+//        String loc = obj.find_location();
+//        
+//        temp.setText(loc);
     }
 
 	/*FUNCTION* =============================================================================//

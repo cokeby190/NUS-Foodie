@@ -9,7 +9,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener{
 	
@@ -110,6 +114,19 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
 
+        WifiManager wifimgr;
+        
+        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        
+        wifimgr.startScan();
+        
+        List<ScanResult> wifilist = wifimgr.getScanResults();
+        
+        //WifiLocation obj = new WifiLocation(this, wifilist);
+        
+        //String loc = obj.find_location();
+        
+        //Toast.makeText(getApplicationContext(), "Here is : " + loc, Toast.LENGTH_LONG).show();
     }
 	
 	/*FUNCTION* =============================================================================//

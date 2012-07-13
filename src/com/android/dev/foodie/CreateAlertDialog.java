@@ -8,10 +8,10 @@ import android.provider.Settings;
 
 public class CreateAlertDialog {
 
-	public AlertDialog newdialog(final Context context) {
+	public AlertDialog newdialog(final Context context, String message) {
 		AlertDialog.Builder alert_dialog = new AlertDialog.Builder(context); 
 		
-		alert_dialog.setMessage("This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.")
+		alert_dialog.setMessage(message)
 	    .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int id) {
 	        	Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);

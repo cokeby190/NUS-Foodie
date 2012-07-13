@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
@@ -43,11 +44,25 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
         
         //setup wifi to ensure user connected to nus network
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifi_info;
+        
+        String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
+        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
         
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();
-        	AlertDialog alert = dialog.newdialog(this);
+        	AlertDialog alert = dialog.newdialog(this, wifi_disabled);
         	alert.show();
+        } else {
+     
+        	wifi_info = wifimgr.getConnectionInfo();
+        	String wifi_ssid = wifi_info.getSSID();
+        	
+        	if(!wifi_ssid.equals("NUS")) {
+        		CreateAlertDialog dialog = new CreateAlertDialog();
+            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
+            	alert.show();
+        	}
         }
     }
     

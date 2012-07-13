@@ -12,6 +12,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -88,6 +89,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     
     //wifi_check
     WifiManager wifimgr;
+    WifiInfo wifi_info;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,60 +113,72 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         //setup wifi to ensure user connected to nus network
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
+        String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
+        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
+        
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();
-        	AlertDialog alert = dialog.newdialog(this);
+        	AlertDialog alert = dialog.newdialog(this, wifi_disabled);
         	alert.show();
         } else {
      
-        	//getting back returned data, passed from SearchAct
-            String[] search_string = getData();
-            
-            //to store the list of stores to show as results
-            menuItems = new ArrayList<HashMap<String, String>>();
+        	wifi_info = wifimgr.getConnectionInfo();
+        	String wifi_ssid = wifi_info.getSSID();
+        	
+        	if(!wifi_ssid.equals("NUS")) {
+        		CreateAlertDialog dialog = new CreateAlertDialog();
+            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
+            	alert.show();
+        	} else {
+        		
+        		//getting back returned data, passed from SearchAct
+                String[] search_string = getData();
+                
+                //to store the list of stores to show as results
+                menuItems = new ArrayList<HashMap<String, String>>();
 
-            //creating new parser class
-            parser = new XmlFunction();
-            
-    //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
-            if(search_string[0].equals("basic")) {
-            	
-            	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
-    	
-    //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
-            } else if (search_string[0].equals("advanced")) {
-            	
-            	//checking if halal and aircon options are checked
-            	String query_halal = "", query_aircon = "";
-            	
-            	if(!search_string[5].equals("")) {
-            		query_halal = "&halal=" + search_string[5];
-            	}
-            	
-            	if(!search_string[6].equals("")) {
-            		query_aircon = "&aircon=" + search_string[6];
-            	}
-            	
-            	//TOAST!
-            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
-    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-    	        		query_halal + query_aircon, Toast.LENGTH_LONG);
-    	        t.show();
-    	        
-    	        //URL encoding white spaces to its ASCII equivalent
-    	        search_string[1] = search_string[1].replace(" ", "%20");
-    	        search_string[2] = search_string[2].replace(" ", "%20");
-    	        search_string[3] = search_string[3].replace(" ", "%20");
-    	        search_string[4] = search_string[4].replace(" ", "%20");
-    	        
-    	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
-    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-    	        		query_halal + query_aircon);
-            }
-    	        
-    	    setListAdapter(filter_adapter);
+                //creating new parser class
+                parser = new XmlFunction();
+                
+        //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
+                if(search_string[0].equals("basic")) {
+                	
+                	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
+        	
+        //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
+                } else if (search_string[0].equals("advanced")) {
+                	
+                	//checking if halal and aircon options are checked
+                	String query_halal = "", query_aircon = "";
+                	
+                	if(!search_string[5].equals("")) {
+                		query_halal = "&halal=" + search_string[5];
+                	}
+                	
+                	if(!search_string[6].equals("")) {
+                		query_aircon = "&aircon=" + search_string[6];
+                	}
+                	
+                	//TOAST!
+                	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
+        	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+        	        		query_halal + query_aircon, Toast.LENGTH_LONG);
+        	        t.show();
+        	        
+        	        //URL encoding white spaces to its ASCII equivalent
+        	        search_string[1] = search_string[1].replace(" ", "%20");
+        	        search_string[2] = search_string[2].replace(" ", "%20");
+        	        search_string[3] = search_string[3].replace(" ", "%20");
+        	        search_string[4] = search_string[4].replace(" ", "%20");
+        	        
+        	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
+        	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+        	        		query_halal + query_aircon);
+                }
+        	        
+        	    setListAdapter(filter_adapter);
+        	}
         }
-        
     }
 
 	/*FUNCTION* =============================================================================//
