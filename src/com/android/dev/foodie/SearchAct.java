@@ -113,6 +113,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setContent(R.id.adv_search_tab);
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
+        
+        Intent intent = new Intent(this, ServiceLocation.class);
+        startService(intent);
 
         WifiManager wifimgr;
         
