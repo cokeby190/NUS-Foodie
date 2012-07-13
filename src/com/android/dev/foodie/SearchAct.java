@@ -9,11 +9,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -114,7 +117,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
         
+        int counter = 1;
         Intent intent = new Intent(this, ServiceLocation.class);
+        intent.putExtra("counter", counter++);
         startService(intent);
 
         WifiManager wifimgr;
@@ -125,11 +130,19 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         
         List<ScanResult> wifilist = wifimgr.getScanResults();
         
+        
+        
         //WifiLocation obj = new WifiLocation(this, wifilist);
         
         //String loc = obj.find_location();
         
         //Toast.makeText(getApplicationContext(), "Here is : " + loc, Toast.LENGTH_LONG).show();
+        
+        receive_service msg_receive = new receive_service();
+        
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+        registerReceiver(msg_receive, filter);
     }
 	
 	/*FUNCTION* =============================================================================//
@@ -336,6 +349,14 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	}
 	
 	
+	//CLOSE SERVICE
+	public void stopService() {
+		if(stopService(new Intent(SearchAct.this, ServiceLocation.class)))
+			Toast.makeText(this, "stopService success", Toast.LENGTH_LONG);
+		else
+			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
+	}
+	
 	/*FUNCTION* =============================================================================//
 	 *  ONCLICK FUNCTION
 	 *  CRITERIA : OnClickListener
@@ -347,6 +368,11 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			//SEARCH BASIC
 			case R.id.ib_search_basic:
 
+				//TESTING ONLY!
+					//CLOSE THREAD
+					stopService();
+				
+				
 		//------send intent to results page with query---------------------------------//
 		//------bundle search query with intent----------------------------------------//
 				String message = et_search.getText().toString();
@@ -450,6 +476,22 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 
 	@Override
 	public void onNothingSelected(AdapterView<?> parent) {
+		
+	}
+	
+	public class receive_service extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			String action = intent.getAction();
+			//if(action.equals("LOCATION")) {
+				Bundle extra = intent.getExtras();
+				String location = extra.getString("LOCATION");
+				Log.v("RETURN_MSG", location);
+				//Toast.makeText(getApplicationContext(), "I am at : " + location, Toast.LENGTH_LONG).show();
+			//}
+		}
 		
 	}
 

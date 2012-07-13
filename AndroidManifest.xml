@@ -28,6 +28,9 @@
         <activity
             android:name=".SearchAct"
             android:label="@string/search" >
+            <intent-filter>
+            <action android:name="com.android.dev.foodie.SHOW_LOCATION"></action>
+        </intent-filter>
         </activity>
         
         <activity
