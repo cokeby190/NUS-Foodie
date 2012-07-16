@@ -5,13 +5,21 @@ import java.util.HashMap;
 
 import org.w3c.dom.NodeList;
 
+import sg.edu.nus.ami.wifilocation.APLocation;
+
+import com.android.dev.foodie.SearchAct.receive_service;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.sax.Element;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -119,6 +127,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         	
         	layout_normal();
         }
+        
+        //TEST
+        receive_service msg_receive = new receive_service();
+        
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+        registerReceiver(msg_receive, filter);
     }
     
     /*FUNCTION* =============================================================================//
@@ -198,6 +213,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				break;
 			
 			case R.id.b_store_crowd:
+				//TESTING ONLY!
+				//CLOSE THREAD
+				stopService();
+				Toast.makeText(getApplicationContext(), "Crowd button clicked!", Toast.LENGTH_LONG).show();
 				break;
 		}
 	}
@@ -228,6 +247,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		vac_wd = (TextView) findViewById(R.id.tv_store_vac_wd);
 		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
 		pubhol = (TextView) findViewById(R.id.tv_store_ph);
+		
+		b_crowd = (Button) findViewById(R.id.b_store_crowd);
+		
+		b_crowd.setOnClickListener(this);
 		
 	}
     
@@ -373,4 +396,66 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
     	
     }
+    
+    //TEST
+    public class receive_service extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			String action = intent.getAction();
+			
+			APLocation return_location = new APLocation();
+			
+			//if(action.equals("LOCATION")) {
+				Bundle extra = intent.getExtras();
+				String location = extra.getString("ap_location");
+				location = location.replace("APLocation [", "");
+				location = location.replace("]", "");
+				
+				//PARSE string from APLocation object retrieved
+				String[] location_split = location.split(", ");
+				for(int i=0; i< location_split.length; i++) {
+					int end  = location_split[i].length();
+					int index = location_split[i].indexOf("=");
+										if(location_split[i].substring(0, index).equals("building")) {
+						return_location.setBuilding(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_name")) {
+						return_location.setAp_name(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_location")) {
+						return_location.setAp_location(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("accuracy")) {
+						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_lat")) {
+						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_long")) {
+						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+				}
+				
+				Log.v("RETURN_MSG", return_location.getAp_location());
+				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+				
+				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+			//}
+		}
+		
+	}
+    
+  //CLOSE SERVICE
+  	public void stopService() {
+  		if(stopService(new Intent(StoreInfo.this, ServiceLocation.class)))
+  			Toast.makeText(this, "stopService success", Toast.LENGTH_LONG);
+  		else
+  			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
+  	}
+
 }

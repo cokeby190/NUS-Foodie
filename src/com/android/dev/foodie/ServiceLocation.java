@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Vector;
 
 import sg.edu.nus.ami.wifilocation.APLocation;
-import sg.edu.nus.ami.wifilocation.BasicWifiLocation;
 import sg.edu.nus.ami.wifilocation.CmpScan;
 import sg.edu.nus.ami.wifilocation.Geoloc;
 import sg.edu.nus.ami.wifilocation.NUSGeoloc;
@@ -18,9 +17,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -96,12 +95,12 @@ public class ServiceLocation extends Service{
 		@Override
 		public void run() {
 			final String TAG2 = "ServiceWorker:" + Thread.currentThread().getId();
-			int ct = 0;
-			for(int t=0; t<1000; t++) {
-				ct++;
-				System.out.println(ct);
-				Log.v(TAG, "Testing ct = " + ct);
-			}	
+//			int ct = 0;
+//			for(int t=0; t<1000; t++) {
+//				ct++;
+//				System.out.println(ct);
+//				Log.v(TAG, "Testing ct = " + ct);
+//			}	
 				//setup wifi
 			    wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			    
@@ -208,6 +207,7 @@ public class ServiceLocation extends Service{
 										temp.append(apoint.getAp_location() + "\n");
 										//dist.append(String.valueOf(df.format(CI.SignalD(wifinus.get(g).level))+"m \n"+wifinus.get(g).level+"\n"));
 										g++;
+
 									}
 									
 //									double []P1xy=new double[2] ;
@@ -236,8 +236,15 @@ public class ServiceLocation extends Service{
 									
 									Intent return_intent = new Intent();
 									return_intent.setAction(BROADCAST_ACTION);
-									return_intent.putExtra("LOCATION", temp.toString());
+									return_intent.putExtra("ap_location", apLocation.toString());
+									//return_intent.putExtra("LOCATION", temp.toString());
+									//Bundle send_obj = new Bundle();
+									//send_obj.putSerializable("ap_location", apLocation);
+									//return_intent.putExtras(send_obj);
+									//return_intent.putExtra("ap_location", apLocation);
 									sendBroadcast(return_intent);
+									
+									Log.v(TAG,"Sending Object over.");
 									
 								}
 								

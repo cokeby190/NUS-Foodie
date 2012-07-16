@@ -8,6 +8,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import sg.edu.nus.ami.wifilocation.APLocation;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -117,6 +119,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
         
+        //Call service to start
         int counter = 1;
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.putExtra("counter", counter++);
@@ -368,9 +371,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			//SEARCH BASIC
 			case R.id.ib_search_basic:
 
-				//TESTING ONLY!
-					//CLOSE THREAD
-					stopService();
+//				//TESTING ONLY!
+//					//CLOSE THREAD
+//					stopService();
 				
 				
 		//------send intent to results page with query---------------------------------//
@@ -485,11 +488,47 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		public void onReceive(Context context, Intent intent) {
 
 			String action = intent.getAction();
+			
+			APLocation return_location = new APLocation();
+			
 			//if(action.equals("LOCATION")) {
 				Bundle extra = intent.getExtras();
-				String location = extra.getString("LOCATION");
-				Log.v("RETURN_MSG", location);
-				//Toast.makeText(getApplicationContext(), "I am at : " + location, Toast.LENGTH_LONG).show();
+				String location = extra.getString("ap_location");
+				location = location.replace("APLocation [", "");
+				location = location.replace("]", "");
+				
+				//PARSE string from APLocation object retrieved
+				String[] location_split = location.split(", ");
+				for(int i=0; i< location_split.length; i++) {
+					int end  = location_split[i].length();
+					int index = location_split[i].indexOf("=");
+										if(location_split[i].substring(0, index).equals("building")) {
+						return_location.setBuilding(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_name")) {
+						return_location.setAp_name(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_location")) {
+						return_location.setAp_location(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("accuracy")) {
+						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_lat")) {
+						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_long")) {
+						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+				}
+				
+				Log.v("RETURN_MSG", return_location.getAp_location());
+				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+				
+				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
 			//}
 		}
 		
