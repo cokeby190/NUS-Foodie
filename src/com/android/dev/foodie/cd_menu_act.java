@@ -1,5 +1,7 @@
 package com.android.dev.foodie;
 
+//add comments for testing git in eclipse
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TabHost;
