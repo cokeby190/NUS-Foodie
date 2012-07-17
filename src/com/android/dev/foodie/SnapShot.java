@@ -1,6 +1,7 @@
 package com.android.dev.foodie;
 
 import java.io.BufferedInputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -28,10 +29,9 @@ public class SnapShot extends Activity implements OnTouchListener {
 	/** Called when the activity is first created. */
 	private static final String TAG = "Touch";
 	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/TechnoEdge_Cam04.jpg";
-	private String path = "http://172.18.101.125:8080/geoserver/nus/wms?service=WMS&version=1.1.0&"
-			+ "request=GetMap&layers=nus:floors&styles=&"
-			+ "bbox=103.771520782468,1.29205751696442,103.776169751949,1.29931030264545&"
-			+ "width=540&height=960" + "&srs=EPSG:4326&format=image%2Fpng";
+	private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/test.png";
+	//private String path = "http://www.opera.com/bitmaps/products/mobile/next/android/10.1b/android-robog-alone.png";
+	//private String path = "http://www.desktopwallpaperhd.com/wallpapers/29/33905.jpg";
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();
 	Matrix savedMatrix = new Matrix();
@@ -69,11 +69,24 @@ public class SnapShot extends Activity implements OnTouchListener {
 //			}
 //			
 			
-			BitmapDrawable image = (BitmapDrawable) ImageOperations(this, path, "image");
-			Bitmap bitmap = image.getBitmap();
+//			BitmapDrawable image = (BitmapDrawable) ImageOperations(this, path, "image");
+//			Bitmap bitmap = image.getBitmap();
+//			
+//			view.setImageBitmap(bitmap);
+//			view.setOnTouchListener(this);
+
+			try {
+				InputStream in;
+				in = new java.net.URL(path).openStream();
+				Bitmap bmp = BitmapFactory.decodeStream(new FlushedInputStream(in));
+				view.setImageBitmap(bmp);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
-			view.setImageBitmap(bitmap);
-			view.setOnTouchListener(this);
+			
 		}
 
 	}
@@ -202,5 +215,29 @@ public class SnapShot extends Activity implements OnTouchListener {
 		float x = event.getX(0) + event.getX(1);
 		float y = event.getY(0) + event.getY(1);
 		point.set(x / 2, y / 2);
+	}
+	
+	static class FlushedInputStream extends FilterInputStream {
+	    public FlushedInputStream(InputStream inputStream) {
+	        super(inputStream);
+	    }
+
+	    @Override
+	    public long skip(long n) throws IOException {
+	        long totalBytesSkipped = 0L;
+	        while (totalBytesSkipped < n) {
+	            long bytesSkipped = in.skip(n - totalBytesSkipped);
+	            if (bytesSkipped == 0L) {
+	                  int byte_image = read();
+	                  if (byte_image < 0) {
+	                      break;  // we reached EOF
+	                  } else {
+	                      bytesSkipped = 1; // we read one byte
+	                  }
+	           }
+	            totalBytesSkipped += bytesSkipped;
+	        }
+	        return totalBytesSkipped;
+	    }
 	}
 }
