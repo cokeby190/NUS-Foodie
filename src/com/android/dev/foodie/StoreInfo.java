@@ -210,13 +210,23 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				break;
 			
 			case R.id.b_store_review:
+				
 				break;
 			
 			case R.id.b_store_crowd:
+				//send intent to dialog to show data
+		        Intent snap_shot = new Intent(getApplicationContext(), SnapShot.class);
+		        snap_shot.putExtra("store_name", menuItems.get(store_info).get(STORE_NAME));
+		        snap_shot.putExtra("location", menuItems.get(store_info).get(LOCATION));
+		        snap_shot.putExtra("canteen", menuItems.get(store_info).get(CANTEEN_NAME));
+		        startActivity(snap_shot);
+				break;
+				
+			case R.id.button2: 
 				//TESTING ONLY!
 				//CLOSE THREAD
 				stopService();
-				Toast.makeText(getApplicationContext(), "Crowd button clicked!", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "Stop Service button clicked!", Toast.LENGTH_LONG).show();
 				break;
 		}
 	}

@@ -39,7 +39,7 @@ public final class R {
         public static final int b_main_dir=0x7f060033;
         public static final int b_main_nearby=0x7f060035;
         public static final int b_main_search=0x7f060032;
-        public static final int b_menu=0x7f060066;
+        public static final int b_menu=0x7f060067;
         public static final int b_store_crowd=0x7f06005a;
         public static final int b_store_info=0x7f060058;
         public static final int b_store_review=0x7f060059;
@@ -67,6 +67,7 @@ public final class R {
         public static final int info_tab=0x7f060062;
         public static final int iv_linus_logo=0x7f060031;
         public static final int iv_store=0x7f060057;
+        public static final int iv_store_snap=0x7f060065;
         public static final int linearLayout1=0x7f060054;
         public static final int linearLayout2=0x7f06005c;
         public static final int list_text=0x7f060038;
@@ -129,7 +130,7 @@ public final class R {
         public static final int tv_store_sch_we=0x7f060029;
         public static final int tv_store_vac_wd=0x7f06002c;
         public static final int tv_store_vac_we=0x7f06002d;
-        public static final int tv_title=0x7f060065;
+        public static final int tv_title=0x7f060066;
     }
     public static final class layout {
         public static final int adv_search_page=0x7f030000;
@@ -142,10 +143,11 @@ public final class R {
         public static final int row_view=0x7f030007;
         public static final int search_page=0x7f030008;
         public static final int store=0x7f030009;
-        public static final int test=0x7f03000a;
-        public static final int titlebar=0x7f03000b;
-        public static final int titlebar_simple=0x7f03000c;
-        public static final int xml_display=0x7f03000d;
+        public static final int store_snapshot=0x7f03000a;
+        public static final int test=0x7f03000b;
+        public static final int titlebar=0x7f03000c;
+        public static final int titlebar_simple=0x7f03000d;
+        public static final int xml_display=0x7f03000e;
     }
     public static final class string {
         public static final int app_name=0x7f040001;

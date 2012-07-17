@@ -29,8 +29,8 @@
             android:name=".SearchAct"
             android:label="@string/search" >
             <intent-filter>
-            <action android:name="com.android.dev.foodie.SHOW_LOCATION"></action>
-        </intent-filter>
+            	<action android:name="com.android.dev.foodie.SHOW_LOCATION"></action>
+        	</intent-filter>
         </activity>
         
         <activity
@@ -59,6 +59,11 @@
             android:label="@string/nearby" >
         </activity>
         
+        
+        <activity
+            android:name=".SnapShot"
+            android:label="@string/nearby" >
+        </activity>
         
         
         <activity
