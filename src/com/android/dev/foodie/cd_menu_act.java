@@ -1,4 +1,5 @@
 package com.android.dev.foodie;
+//add comments by qinfeng
 
 import android.app.Activity;
 import android.os.Bundle;
