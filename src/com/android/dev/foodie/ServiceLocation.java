@@ -58,7 +58,7 @@ public class ServiceLocation extends Service{
 
 		Toast.makeText(this, "ServiceLocation CREATED", Toast.LENGTH_LONG).show();
 		notifmgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		displayNotificationMessage("Background Service 'ServiceLocation' is running.");
+		displayNotificationMessage("Background Service 'NUS Foodie' is running.");
 	}
 	
 	/**
@@ -276,6 +276,7 @@ public class ServiceLocation extends Service{
 		Toast.makeText(this, "ServiceLocation Done.", Toast.LENGTH_LONG).show();
 		myThreads.interrupt();
 		notifmgr.cancelAll();
+		unregisterReceiver(receiver);
 		
 	}
 

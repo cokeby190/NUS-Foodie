@@ -1,9 +1,11 @@
 package com.android.dev.foodie;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,10 +30,24 @@ import android.widget.Toast;
 public class SnapShot extends Activity implements OnTouchListener {
 	/** Called when the activity is first created. */
 	private static final String TAG = "Touch";
-	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/TechnoEdge_Cam04.jpg";
-	private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/test.png";
+	private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/TechnoEdge_Cam04.jpg";
+	
+	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/test.jpg";
+	
+	//private String path = "http://d1b.org/other/pub/tests/android/open_aus_search/test.jpg";
+	
+	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/ss.png";
+	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/20120718144648.jpg";
+	
 	//private String path = "http://www.opera.com/bitmaps/products/mobile/next/android/10.1b/android-robog-alone.png";
 	//private String path = "http://www.desktopwallpaperhd.com/wallpapers/29/33905.jpg";
+	
+	//private String path = "http://137.132.145.136/Camera/TechnoEdgeCanteen/TechnoEdge_Cam03.png";
+	
+//	private String path = "http://172.18.101.125:8080/geoserver/nus/wms?service=WMS&version=1.1.0&"
+//			+ "request=GetMap&layers=nus:floors&styles=&"
+//			+ "bbox=103.771520782468,1.29205751696442,103.776169751949,1.29931030264545&"
+//			+ "width=540&height=960" + "&srs=EPSG:4326&format=image%2Fpng";
 	// These matrices will be used to move and zoom image
 	Matrix matrix = new Matrix();
 	Matrix savedMatrix = new Matrix();
@@ -57,8 +73,9 @@ public class SnapShot extends Activity implements OnTouchListener {
 		
 		getData();
 		
-		if (store_name.equals("Indonesia Panggang")) {
-			Toast.makeText(SnapShot.this, "You are in HERE! " + "Indonesia Panggang", Toast.LENGTH_LONG).show();
+		if (store_name.equals("Starbucks Coffee")) {
+			Log.v("STARBUCKS", "you are at starbucks!");
+			Toast.makeText(SnapShot.this, "You are in HERE! " + "Starbucks Coffee", Toast.LENGTH_LONG).show();
 			
 //			try {
 //				Bitmap image = getRemoteImage(new URL(path));
@@ -74,11 +91,20 @@ public class SnapShot extends Activity implements OnTouchListener {
 //			
 //			view.setImageBitmap(bitmap);
 //			view.setOnTouchListener(this);
+			
+			Bitmap test = getBitmapFromURL(path);
+			view.setImageBitmap(test);
 
 			try {
 				InputStream in;
 				in = new java.net.URL(path).openStream();
-				Bitmap bmp = BitmapFactory.decodeStream(new FlushedInputStream(in));
+
+				byte [] content = convertInputStreamToByteArray(in);
+				Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+				
+				//doesnt work for Nextiva server snapshot
+				//Bitmap bmp = BitmapFactory.decodeStream(in);
+				
 				view.setImageBitmap(bmp);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
@@ -87,9 +113,28 @@ public class SnapShot extends Activity implements OnTouchListener {
 			}
 			
 			
+			
+			
 		}
 
 	}
+	
+	 public static byte[] convertInputStreamToByteArray(InputStream is) throws IOException
+	 {
+	 BufferedInputStream bis = new BufferedInputStream(is);
+	 ByteArrayOutputStream buf = new ByteArrayOutputStream();
+	 int result = bis.read();
+	 while(result !=-1)
+	 {
+	 byte b = (byte)result;
+	 buf.write(b);
+	 result = bis.read();
+	 }
+	 return buf.toByteArray();
+	 }
+
+
+	 
 	
 	private void getData() {
 		Bundle getMessage = getIntent().getExtras();
@@ -185,6 +230,23 @@ public class SnapShot extends Activity implements OnTouchListener {
 //	    } catch (IOException e) {}
 //	    return null;
 //	}
+	
+	
+	//TEST
+	public static Bitmap getBitmapFromURL(String src) {
+	    try {
+	        URL url = new URL(src);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setDoInput(true);
+	        connection.connect();
+	        InputStream input = connection.getInputStream();
+	        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+	        return myBitmap;
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
 
 	private Drawable ImageOperations(Context ctx, String url, String saveFilename) {
 		try {

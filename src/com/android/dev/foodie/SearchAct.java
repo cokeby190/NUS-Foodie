@@ -75,6 +75,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
     private List <String> fac_list = new ArrayList<String>();
     private List <String> store_list = new ArrayList<String>();
     private List <String> cuisine_list = new ArrayList<String>();
+    private String[] range_list = {"Range", "200m", "500m", "1000m", "2000m"};
     
 	private TabHost tabs;
 	private Spinner fac, store, cuisine, range;
@@ -86,6 +87,11 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private int fac_pos, store_pos, cuisine_pos;
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine, adapter_range;
 //-------------------------------END SPINNER-----------------------------------------------------------//
+	
+	//for Service
+	receive_service msg_receive;
+	boolean receiver_register = false;
+	double ap_lat = 1.296469, ap_lon = 103.776373;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,13 +131,13 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         intent.putExtra("counter", counter++);
         startService(intent);
 
-        WifiManager wifimgr;
-        
-        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        
-        wifimgr.startScan();
-        
-        List<ScanResult> wifilist = wifimgr.getScanResults();
+//        WifiManager wifimgr;
+//        
+//        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+//        
+//        wifimgr.startScan();
+//        
+//        List<ScanResult> wifilist = wifimgr.getScanResults();
         
         
         
@@ -141,13 +147,15 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         
         //Toast.makeText(getApplicationContext(), "Here is : " + loc, Toast.LENGTH_LONG).show();
         
-        receive_service msg_receive = new receive_service();
+        msg_receive = new receive_service();
         
         IntentFilter filter = new IntentFilter();
         filter.addAction(ServiceLocation.BROADCAST_ACTION);
         registerReceiver(msg_receive, filter);
+        
+        receiver_register = true;
     }
-	
+
 	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
@@ -226,8 +234,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		range = (Spinner)findViewById(R.id.sp_search_range);
 		
 		cb_range = (CheckBox) findViewById(R.id.CheckBox01);
-		
-		String[] range_list = {"Range", "10m", "20m", "30m"};
 		
 		//make first option invisible after spinner is selected by User
 		adapter_range = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, range_list) {
@@ -375,16 +381,30 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 //					//CLOSE THREAD
 //					stopService();
 				
+//				if(!cb_range.isChecked()) {
+			//------send intent to results page with query---------------------------------//
+			//------bundle search query with intent----------------------------------------//
+					String message = et_search.getText().toString();
+					Bundle sending = new Bundle();
+					sending.putString("search_type", "basic");
+					sending.putString("search_intent", message);
+					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+					send_intent.putExtras(sending);
+					startActivity(send_intent);
+//				} else if (cb_range.isChecked()) {
 				
-		//------send intent to results page with query---------------------------------//
-		//------bundle search query with intent----------------------------------------//
-				String message = et_search.getText().toString();
-				Bundle sending = new Bundle();
-				sending.putString("search_type", "basic");
-				sending.putString("search_intent", message);
-				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
-				send_intent.putExtras(sending);
-				startActivity(send_intent);
+					//new class to accomodate nearby search? or existing?
+	//				String range = range_list[cuisine_pos];
+					
+	//				String message = et_search.getText().toString();
+	//				Bundle sending = new Bundle();
+	//				sending.putString("search_type", "basic");
+	//				sending.putString("search_intent", message);
+	//				sending.putString("range", range)
+	//				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+	//				send_intent.putExtras(sending);
+	//				startActivity(send_intent);
+//				}
 				
 				break;
 				
@@ -521,6 +541,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
 					}
 				}
+				
+				ap_lat = return_location.getAp_lat();
+				ap_lon = return_location.getAp_long();
 				
 				Log.v("RETURN_MSG", return_location.getAp_location());
 				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();

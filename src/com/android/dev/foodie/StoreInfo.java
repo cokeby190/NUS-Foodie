@@ -72,7 +72,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //UI Elements
     TextView store_name, store_location, store_canteen;
-    Button b_crowd;
+    Button b_crowd, button2;
     	//UI TABLET
     	TabHost tabs;
     	//UI NORMAL
@@ -98,6 +98,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     //String for xml data
     String halal_str = "No don't have ):", menu_str = "No don't have ):", aircon_str = "No don't have ):";
     String sch_wd_str, sch_we_str, vac_wd_str, vac_we_str, pubhol_str;
+    
+    //for Service
+  	receive_service msg_receive;
+  	boolean receiver_register = false;
+    
+    //Toasts
+    Toast show_location, show_lat, show_long;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,14 +136,16 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         }
         
         //TEST
-        receive_service msg_receive = new receive_service();
+        msg_receive = new receive_service();
         
         IntentFilter filter = new IntentFilter();
         filter.addAction(ServiceLocation.BROADCAST_ACTION);
         registerReceiver(msg_receive, filter);
+       
+        receiver_register = true;
     }
     
-    /*FUNCTION* =============================================================================//
+   	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
 	public void customTitleBar(String title) {
@@ -210,7 +219,12 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				break;
 			
 			case R.id.b_store_review:
-				
+				//TESTING ONLY!
+				//CLOSE THREAD
+				Log.v("STOP SERVICE", "button pressed to stop service");
+				stopService();				 
+				Toast.makeText(getApplicationContext(), "Stop Service button clicked!", Toast.LENGTH_LONG).show();
+				unregisterReceiver(msg_receive);
 				break;
 			
 			case R.id.b_store_crowd:
@@ -225,8 +239,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 			case R.id.button2: 
 				//TESTING ONLY!
 				//CLOSE THREAD
+				Log.v("STOP SERVICE", "button pressed to stop service");
 				stopService();
 				Toast.makeText(getApplicationContext(), "Stop Service button clicked!", Toast.LENGTH_LONG).show();
+				unregisterReceiver(msg_receive);
 				break;
 		}
 	}
@@ -261,6 +277,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		b_crowd = (Button) findViewById(R.id.b_store_crowd);
 		
 		b_crowd.setOnClickListener(this);
+		
+		button2 = (Button) findViewById(R.id.button2);
+
+		button2.setOnClickListener(this);
 		
 	}
     
@@ -449,12 +469,15 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				}
 				
 				Log.v("RETURN_MSG", return_location.getAp_location());
-				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+				show_location = Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_SHORT);
+				show_location.show();
 				
 				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
-				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+				show_lat = Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_SHORT);
+				show_lat.show();
 				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
-				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+				show_long = Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_SHORT);
+				show_long.show();
 			//}
 		}
 		
@@ -466,6 +489,12 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
   			Toast.makeText(this, "stopService success", Toast.LENGTH_LONG);
   		else
   			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
+  	}
+  	
+  	private void kill_toast() {
+  		show_location.cancel();
+  		show_lat.cancel();
+  		show_long.cancel();
   	}
 
 }
