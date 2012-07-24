@@ -281,11 +281,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:content="@+id/content"
-        android:handle="@id/handle"
+        android:handle="@+id/handle"
         android:orientation="horizontal" >
 
         <View
-            android:id="@id/handle"
+            android:id="@+id/handle"
             android:layout_width="0dip"
             android:layout_height="match_parent" />
 

@@ -68,13 +68,14 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical" 
                     android:layout_weight="60" >
-"
+
                 
 	                <TextView
 	                    android:id="@+id/tv_store_location"
 	                    android:layout_width="wrap_content"
 	                    android:layout_height="wrap_content"
 	                    android:layout_gravity="center_horizontal"
+	                    android:textColor="#949494"
 	                    android:text="TextView"
 	                    android:textStyle="bold" />
 	
@@ -92,6 +93,7 @@
 	                    android:layout_height="wrap_content"
 	                    android:layout_gravity="center_horizontal"
 	                    android:text="TextView"
+	                    android:textColor="#F56F5B"
 	                    android:textStyle="bold" />
 	                
                 </LinearLayout>

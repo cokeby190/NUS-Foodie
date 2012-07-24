@@ -15,6 +15,7 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -52,7 +54,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 //-------------------------------END CUSTOM MENU SLIDER-------------------------------------------------//	
 	
 	//stating the BASE URL
-    static final String URL_base = "http://172.18.101.125:8080/api1/Nearby?lat=1.296469&lon=103.776373&radius=2000&category=food";
+    static final String URL_base = "http://172.18.101.125:8080/api1/Nearby?";
     
     // XML node keys
     static final String BUILDING = "building"; // parent node
@@ -74,7 +76,8 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     
     //UI Elements
     ListView lv;
-    ListAdapter filter_adapter;
+    //ListAdapter filter_adapter;
+    SimpleAdapter filter_adapter;
     EditText filterText = null;
     TextView result_count;
     
@@ -86,6 +89,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     
     //XML parser objects
     ArrayList<HashMap<String, String>> menuItems;
+    
     XmlFunction parser;
     NodeList nl;
     
@@ -140,17 +144,24 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
             	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
             	alert.show();
         	} else {
-        		                
-                //to store the list of stores to show as results
+        		
+        		//Call service to start
+                int counter = 1;
+                Intent intent = new Intent(NearbyAct.this, ServiceLocation.class);
+                intent.putExtra("counter", counter++);
+                startService(intent);
+
+                msg_receive = new receive_service();
+                
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(ServiceLocation.BROADCAST_ACTION);
+                registerReceiver(msg_receive, filter);
+                
+                receiver_register = true;
+        		
                 menuItems = new ArrayList<HashMap<String, String>>();
 
-                //creating new parser class
-                parser = new XmlFunction();
-                	
-                parse_results(URL_base);
-        	        
-        	    setListAdapter(filter_adapter);
-        	}
+            }
         }
     }
 
@@ -258,8 +269,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 		}	
     	
     }
-    
-    
+
     //for filter text
 	public void afterTextChanged(Editable s) {
 	}
@@ -318,16 +328,32 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 			            Element e = (Element) nl.item(i);
 			            // adding each child node to HashMap key => value
 			            //hashmap.put(KEY, VALUE)
-			            map.put(ROOM_CODE, parser.getValue(e, ROOM_CODE));
-			            map.put(STORE_NAME, parser.getValue(e, STORE_NAME));
 			            map.put(CANTEEN_NAME, parser.getValue(e, CANTEEN_NAME));
+			            map.put(STORE_NAME, parser.getValue(e, STORE_NAME));
 			            map.put(LOCATION, parser.getValue(e, LOCATION));
+			            map.put(ROOM_CODE, parser.getValue(e, ROOM_CODE));
+			            map.put(STORE_TYPE, parser.getValue(e, STORE_TYPE));
+			            map.put(CUISINE, parser.getValue(e, CUISINE));
+			            map.put(HALAL, parser.getValue(e, HALAL));
+			            map.put(MENU, parser.getValue(e, MENU));
+			            map.put(AIRCON, parser.getValue(e, AIRCON));
+			            map.put(AVAILABILITY_WEEKDAY, parser.getValue(e, AVAILABILITY_WEEKDAY));
+			            map.put(AVAILABILITY_WEEKEND, parser.getValue(e, AVAILABILITY_WEEKEND));
+			            map.put(AVAILABILITY_VAC_WEEKDAY, parser.getValue(e, AVAILABILITY_VAC_WEEKDAY));
+			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
+			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
 			            map.put(DIST, parser.getValue(e, DIST));
 			            menuItems.add(map);
 			        }
 					
 					//int value to string
 			        result_count.setText("Search returned " + String.valueOf(nl.getLength()) + " results. (;");
+			        
+//			      //CONSTRUCTOR FOR SimpleAdapter
+//			        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+//			        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
+//			        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
+//			        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
 				}
 	        	
 	        });
@@ -355,6 +381,19 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 			return null;
 		}
 
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			
+			//CONSTRUCTOR FOR SimpleAdapter
+	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
+	        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
+	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+			
+			setListAdapter(filter_adapter);
+		}
+
 	}
 	
 	//function to parse XML results into ListView for User to view
@@ -368,12 +407,6 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
         nl = doc.getElementsByTagName(BUILDING);
         
         new loadData().execute();
-        
-        //CONSTRUCTOR FOR SimpleAdapter
-        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
-        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST}, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
 	}
 	
 	public class receive_service extends BroadcastReceiver {
@@ -416,20 +449,28 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 					}
 				}
 				
+				//store existing lat lon to check
+				double temp_lat, temp_lon;
+				temp_lat = ap_lat;
+				temp_lon = ap_lon;
+				
 				ap_lat = return_location.getAp_lat();
 				ap_lon = return_location.getAp_long();
 				
-				//parse_results(URL_base + "lat=" + String.valueOf(ap_lat) + "&lon=" + String.valueOf(ap_lon) + "&radius=2000&category=food");
-		        
-		        //setListAdapter(filter_adapter);
-				
-				Log.v("RETURN_MSG", return_location.getAp_location());
-				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
-				
-				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
-				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
-				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
-				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+				if(temp_lat != ap_lat || temp_lon != ap_lon) {
+					Log.v("RETURN_MSG", return_location.getAp_location());
+					Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+					
+					Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+					Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+					Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+					Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+					
+	                //creating new parser class
+	                parser = new XmlFunction();
+	
+	                parse_results(URL_base + "lat=" + String.valueOf(ap_lat) + "&lon=" + String.valueOf(ap_lon) + "&radius=2000&category=food");
+				}
 			//}
 		}
 		

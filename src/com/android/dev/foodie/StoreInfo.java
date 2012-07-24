@@ -54,6 +54,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
     
     // XML node keys
+    static final String DIST = "dist";
     static final String FOOD_STALL = "food_stall"; // parent node
     static final String CANTEEN_NAME = "canteen_name";
     static final String STORE_NAME = "store_name";
@@ -71,7 +72,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     
     //UI Elements
-    TextView store_name, store_location, store_canteen;
+    TextView store_name, store_location, store_canteen, store_dist;
     Button b_crowd, button2;
     	//UI TABLET
     	TabHost tabs;
@@ -194,8 +195,8 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				//startActivity(send_nearby);
 				break;
 			case 4:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
+				Intent send_nearby = new Intent(StoreInfo.this, NearbyAct.class);
+				startActivity(send_nearby);
 				break;
 		}
 	}
@@ -256,6 +257,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		store_dist = (TextView) findViewById(R.id.tv_store_nearby);
 		
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
 		
@@ -293,6 +295,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		store_dist = (TextView) findViewById(R.id.tv_store_nearby);
 		
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
 		
@@ -341,6 +344,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	else 
+    		store_dist.setText("Dist Unknown");
     	
     	//------Setup tabs--------------------------------------------------------------------------//
         tabs.setup();  
@@ -424,7 +431,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
-    	
+    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	else 
+    		store_dist.setText("Dist Unknown");
     }
     
     //TEST
@@ -489,12 +499,6 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
   			Toast.makeText(this, "stopService success", Toast.LENGTH_LONG);
   		else
   			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
-  	}
-  	
-  	private void kill_toast() {
-  		show_location.cancel();
-  		show_lat.cancel();
-  		show_long.cancel();
   	}
 
 }
