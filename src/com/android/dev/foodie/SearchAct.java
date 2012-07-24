@@ -84,7 +84,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private CheckBox halal, aircon, cb_range;
 	
 	//SPINNER SELECTION POSITION 
-	private int fac_pos, store_pos, cuisine_pos;
+	private int fac_pos, store_pos, cuisine_pos, range_pos;
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine, adapter_range;
 //-------------------------------END SPINNER-----------------------------------------------------------//
 	
@@ -381,7 +381,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 //					//CLOSE THREAD
 //					stopService();
 				
-//				if(!cb_range.isChecked()) {
+				if(!cb_range.isChecked()) {
 			//------send intent to results page with query---------------------------------//
 			//------bundle search query with intent----------------------------------------//
 					String message = et_search.getText().toString();
@@ -391,20 +391,22 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
 					send_intent.putExtras(sending);
 					startActivity(send_intent);
-//				} else if (cb_range.isChecked()) {
+				} else if (cb_range.isChecked()) {
 				
 					//new class to accomodate nearby search? or existing?
-	//				String range = range_list[cuisine_pos];
+					String range = range_list[cuisine_pos];
 					
-	//				String message = et_search.getText().toString();
-	//				Bundle sending = new Bundle();
-	//				sending.putString("search_type", "basic");
-	//				sending.putString("search_intent", message);
-	//				sending.putString("range", range)
-	//				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
-	//				send_intent.putExtras(sending);
-	//				startActivity(send_intent);
-//				}
+					String message = et_search.getText().toString();
+					Bundle sending = new Bundle();
+					sending.putString("search_type", "nearby");
+					sending.putString("search_intent", message);
+					sending.putString("range", range);
+					sending.putString("lat", String.valueOf(ap_lat));
+					sending.putString("lon", String.valueOf(ap_lon));
+					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+					send_intent.putExtras(sending);
+					startActivity(send_intent);
+				}
 				
 				break;
 				
@@ -495,6 +497,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		fac_pos = fac.getSelectedItemPosition();
 		store_pos = store.getSelectedItemPosition();
 		cuisine_pos = cuisine.getSelectedItemPosition();
+		
+		range_pos = range.getSelectedItemPosition();
 	}
 
 	@Override

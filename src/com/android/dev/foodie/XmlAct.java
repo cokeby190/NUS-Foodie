@@ -51,6 +51,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
     
     // XML node keys
+    static final String DIST = "dist";
     static final String FOOD_STALL = "food_stall"; // parent node
     static final String CANTEEN_NAME = "canteen_name";
     static final String STORE_NAME = "store_name";
@@ -174,6 +175,21 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
         	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
         	        		query_halal + query_aircon);
+                }  else if (search_string[0].equals("nearby")) {
+                	
+                	 //TOAST!
+                	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
+        	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
+        	        t.show();
+        	        
+        	        //URL encoding white spaces to its ASCII equivalent
+        	        search_string[1] = search_string[1].replace(" ", "%20");
+        	        search_string[2] = search_string[2].replace(" ", "%20");
+        	        search_string[3] = search_string[3].replace(" ", "%20");
+        	        search_string[4] = search_string[4].replace(" ", "%20");
+        	        
+        	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
+        	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
                 }
         	        
         	    setListAdapter(filter_adapter);
@@ -292,6 +308,14 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			cuisine = process_default(cuisine);
 			
 			String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
+			return return_data;
+		} else if (search_type.equals("nearby")) {
+			
+			String range = getMessage.getString("range");
+			String lat = getMessage.getString("lat");
+			String lon = getMessage.getString("lon");
+			
+			String[] return_data = {search_type, getMsg, range, lat, lon};
 			return return_data;
 		}
 		
@@ -459,10 +483,20 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         
         new loadData().execute();
         
-        //CONSTRUCTOR FOR SimpleAdapter
-        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
+        
+        String url_temp = URL;
+        int search_ind = url_temp.indexOf("search");
+        String test_nearby = url_temp.substring(search_ind+7, search_ind+13);
+        
+        if(test_nearby.equals("nearby")){
+        	filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
+	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+        } else {
+	        //CONSTRUCTOR FOR SimpleAdapter
+	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
+	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
+	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
+	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
+        }
 	}
 }    
