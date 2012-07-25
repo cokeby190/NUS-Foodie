@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 public class NUSFoodieActivity extends Activity implements OnClickListener{
 	
-	private Button searchButton, dirButton, nearbyButton;
+	private Button searchButton, dirButton, nearbyButton, crowdButton;
 	
 	//titlebar
 	boolean customTitleSupport = true;
@@ -87,6 +87,9 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
     	
     	nearbyButton = (Button)findViewById(R.id.b_main_nearby);
     	nearbyButton.setOnClickListener(this);
+    	
+    	crowdButton = (Button)findViewById(R.id.b_main_crowd);
+    	crowdButton.setOnClickListener(this);
     }
 
 	@Override
@@ -105,6 +108,11 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
 			case R.id.b_main_nearby:
 				Intent open_nearby = new Intent(NUSFoodieActivity.this, NearbyAct.class);
 				startActivity(open_nearby);
+				break;
+				
+			case R.id.b_main_crowd:
+				Intent open_crowd = new Intent(NUSFoodieActivity.this, CrowdAct.class);
+				startActivity(open_crowd);
 				break;
 		}
 	}

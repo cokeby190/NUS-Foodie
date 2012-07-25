@@ -1,5 +1,10 @@
 package com.android.dev.foodie;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,12 +17,15 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -67,6 +75,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
+    static final String IMG_PATH = "img_path";
     
     //UI Elements
     ListView lv;
@@ -177,6 +186,12 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         	        		query_halal + query_aircon);
                 }  else if (search_string[0].equals("nearby")) {
                 	
+                	search_string[2] = search_string[2].replace("m", "");
+                	
+                	Log.v("RANGE_XML", search_string[2]);
+                	Log.v("RANGE_LAT", search_string[3]);
+                	Log.v("RANGE_LON", search_string[4]);
+                	
                 	 //TOAST!
                 	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
         	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
@@ -187,7 +202,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         	        search_string[2] = search_string[2].replace(" ", "%20");
         	        search_string[3] = search_string[3].replace(" ", "%20");
         	        search_string[4] = search_string[4].replace(" ", "%20");
-        	        
+
         	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
         	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
                 }
@@ -244,8 +259,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 				//startActivity(send_crowd);
 				break;
 			case 3:
-				//Intent send_nearby = new Intent(XmlAct.this, SearchAct.class);
-				//startActivity(send_nearby);
+				Intent send_crowd = new Intent(XmlAct.this, CrowdAct.class);
+				startActivity(send_crowd);
 				break;
 			case 4:
 				Intent send_nearby = new Intent(XmlAct.this, NearbyAct.class);
@@ -436,6 +451,24 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			            map.put(AVAILABILITY_VAC_WEEKDAY, parser.getValue(e, AVAILABILITY_VAC_WEEKDAY));
 			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
 			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
+			            map.put(IMG_PATH, parser.getValue(e, IMG_PATH));
+			            
+//			            try {
+//			    			InputStream in;
+//			    			in = new java.net.URL(parser.getValue(e, IMG_PATH)).openStream();
+//			    			byte [] content = convertInputStreamToByteArray(in);
+//			    			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+//			    			map.put("image", bmp);
+//			    			//store_img.setImageBitmap(bmp);
+//			    		} catch (MalformedURLException e1) {
+//			    			e1.printStackTrace();
+//			    		} catch (IOException e1) {
+//			    			e1.printStackTrace();
+//			    		}
+			            
+			            if(parser.getValue(e, DIST)!=null) {
+			            	map.put(DIST, parser.getValue(e, DIST));
+			            }
 			            // adding HashList to ArrayList
 			            menuItems.add(map);
 			        }
@@ -482,13 +515,12 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         nl = doc.getElementsByTagName(FOOD_STALL);
         
         new loadData().execute();
-        
-        
+
         String url_temp = URL;
         int search_ind = url_temp.indexOf("search");
         String test_nearby = url_temp.substring(search_ind+7, search_ind+13);
-        
-        if(test_nearby.equals("nearby")){
+              
+        if(test_nearby.equals("nearby")){    	
         	filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
 	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
         } else {
@@ -498,5 +530,18 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
 	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
         }
+	}
+	
+	public static byte[] convertInputStreamToByteArray(InputStream is)
+			throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		int result = bis.read();
+		while (result != -1) {
+			byte b = (byte) result;
+			buf.write(b);
+			result = bis.read();
+		}
+		return buf.toByteArray();
 	}
 }    

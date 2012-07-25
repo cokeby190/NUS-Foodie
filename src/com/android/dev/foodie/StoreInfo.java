@@ -1,5 +1,10 @@
 package com.android.dev.foodie;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,6 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.sax.Element;
@@ -70,10 +77,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
+    static final String IMG_PATH = "img_path";
     
     //UI Elements
     TextView store_name, store_location, store_canteen, store_dist;
     Button b_crowd, button2;
+    ImageView store_img;
+    GetImage show_img;
     	//UI TABLET
     	TabHost tabs;
     	//UI NORMAL
@@ -191,8 +201,8 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				//startActivity(send_crowd);
 				break;
 			case 3:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
+				Intent send_crowd = new Intent(StoreInfo.this, CrowdAct.class);
+				startActivity(send_crowd);
 				break;
 			case 4:
 				Intent send_nearby = new Intent(StoreInfo.this, NearbyAct.class);
@@ -253,7 +263,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	 */
 	private void initialise_large() {
 		
-		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_img = (ImageView) findViewById(R.id.iv_store);
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
@@ -291,7 +301,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	 */
 	private void initialise() {
 		
-		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_img = (ImageView) findViewById(R.id.iv_store);
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
@@ -344,6 +354,19 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+    	
+		try {
+			InputStream in;
+			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			byte [] content = convertInputStreamToByteArray(in);
+			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+			store_img.setImageBitmap(bmp);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
     	if(!menuItems.get(store_info).get(DIST).equals(null)) 
     		store_dist.setText(menuItems.get(store_info).get(DIST));
     	else 
@@ -431,6 +454,19 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+    	
+    	try {
+			InputStream in;
+			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			byte [] content = convertInputStreamToByteArray(in);
+			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+			store_img.setImageBitmap(bmp);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
     	if(!menuItems.get(store_info).get(DIST).equals(null)) 
     		store_dist.setText(menuItems.get(store_info).get(DIST));
     	else 
@@ -500,5 +536,18 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
   		else
   			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
   	}
+  	
+  	public static byte[] convertInputStreamToByteArray(InputStream is)
+			throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		int result = bis.read();
+		while (result != -1) {
+			byte b = (byte) result;
+			buf.write(b);
+			result = bis.read();
+		}
+		return buf.toByteArray();
+	}
 
 }

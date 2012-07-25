@@ -119,19 +119,18 @@ public class SnapShot extends Activity implements OnTouchListener {
 
 	}
 	
-	 public static byte[] convertInputStreamToByteArray(InputStream is) throws IOException
-	 {
-	 BufferedInputStream bis = new BufferedInputStream(is);
-	 ByteArrayOutputStream buf = new ByteArrayOutputStream();
-	 int result = bis.read();
-	 while(result !=-1)
-	 {
-	 byte b = (byte)result;
-	 buf.write(b);
-	 result = bis.read();
-	 }
-	 return buf.toByteArray();
-	 }
+	public static byte[] convertInputStreamToByteArray(InputStream is)
+			throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		int result = bis.read();
+		while (result != -1) {
+			byte b = (byte) result;
+			buf.write(b);
+			result = bis.read();
+		}
+		return buf.toByteArray();
+	}
 
 
 	 

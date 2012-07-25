@@ -59,9 +59,18 @@
             android:label="@string/nearby" >
         </activity>
         
-        
         <activity
             android:name=".SnapShot"
+            android:label="@string/nearby" >
+        </activity>
+        
+        <activity
+            android:name=".ShakeAct"
+            android:label="@string/nearby" >
+        </activity>
+        
+        <activity
+            android:name=".CrowdAct"
             android:label="@string/nearby" >
         </activity>
         

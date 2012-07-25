@@ -131,22 +131,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         intent.putExtra("counter", counter++);
         startService(intent);
 
-//        WifiManager wifimgr;
-//        
-//        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-//        
-//        wifimgr.startScan();
-//        
-//        List<ScanResult> wifilist = wifimgr.getScanResults();
-        
-        
-        
-        //WifiLocation obj = new WifiLocation(this, wifilist);
-        
-        //String loc = obj.find_location();
-        
-        //Toast.makeText(getApplicationContext(), "Here is : " + loc, Toast.LENGTH_LONG).show();
-        
         msg_receive = new receive_service();
         
         IntentFilter filter = new IntentFilter();
@@ -355,6 +339,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			fac.setOnItemSelectedListener(this);
 			store.setOnItemSelectedListener(this);
 			cuisine.setOnItemSelectedListener(this);
+			range.setOnItemSelectedListener(this);
 	}
 	
 	
@@ -394,7 +379,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				} else if (cb_range.isChecked()) {
 				
 					//new class to accomodate nearby search? or existing?
-					String range = range_list[cuisine_pos];
+					String range = range_list[range_pos];
+
+					Log.v("RANGE", range);
 					
 					String message = et_search.getText().toString();
 					Bundle sending = new Bundle();
