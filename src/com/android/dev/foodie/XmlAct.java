@@ -79,7 +79,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     
     //UI Elements
     ListView lv;
-    ListAdapter filter_adapter;
+    //ListAdapter filter_adapter;
+    CustomAdapter filter_adapter;
+    CustomAdapterNearby filter_adapter_nearby;
     EditText filterText = null;
     TextView result_count;
     
@@ -154,6 +156,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
                 if(search_string[0].equals("basic")) {
                 	
                 	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
+                	
+                	setListAdapter(filter_adapter);
         	
         //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
                 } else if (search_string[0].equals("advanced")) {
@@ -184,6 +188,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
         	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
         	        		query_halal + query_aircon);
+        	        
+        	        setListAdapter(filter_adapter);
+        	        
                 }  else if (search_string[0].equals("nearby")) {
                 	
                 	search_string[2] = search_string[2].replace("m", "");
@@ -205,9 +212,10 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 
         	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
         	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
-                }
         	        
-        	    setListAdapter(filter_adapter);
+        	        setListAdapter(filter_adapter_nearby);
+                }
+
         	}
         }
     }
@@ -251,8 +259,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			case 1:
 				Intent send_dir = new Intent(XmlAct.this, SearchAct.class);
 				startActivity(send_dir);
-				//Intent send_dir = new Intent(XmlAct.this, XmlAct.class);
-				//startActivity(send_dir);
 				break;
 			case 2:
 				//Intent send_crowd = new Intent(XmlAct.this, SearchAct.class);
@@ -295,6 +301,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         
         lv.setTextFilterEnabled(true);
         lv.setOnItemClickListener(onclick_obj);
+        lv.setScrollingCacheEnabled(false);
 	}
     
     /*FUNCTION* =============================================================================//
@@ -389,7 +396,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 
 	
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		((SimpleAdapter) filter_adapter).getFilter().filter(s.toString());
+		//((SimpleAdapter) filter_adapter).getFilter().filter(s.toString());
 	}
 	
 	/*FUNCTION* =============================================================================//
@@ -452,20 +459,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
 			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
 			            map.put(IMG_PATH, parser.getValue(e, IMG_PATH));
-			            
-//			            try {
-//			    			InputStream in;
-//			    			in = new java.net.URL(parser.getValue(e, IMG_PATH)).openStream();
-//			    			byte [] content = convertInputStreamToByteArray(in);
-//			    			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
-//			    			map.put("image", bmp);
-//			    			//store_img.setImageBitmap(bmp);
-//			    		} catch (MalformedURLException e1) {
-//			    			e1.printStackTrace();
-//			    		} catch (IOException e1) {
-//			    			e1.printStackTrace();
-//			    		}
-			            
 			            if(parser.getValue(e, DIST)!=null) {
 			            	map.put(DIST, parser.getValue(e, DIST));
 			            }
@@ -520,15 +513,19 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         int search_ind = url_temp.indexOf("search");
         String test_nearby = url_temp.substring(search_ind+7, search_ind+13);
               
-        if(test_nearby.equals("nearby")){    	
-        	filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
-	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+        if(test_nearby.equals("nearby")){    
+        	filter_adapter_nearby = new CustomAdapterNearby(this, R.layout.nearby_view, menuItems);
+//        	filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
+//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
         } else {
 	        //CONSTRUCTOR FOR SimpleAdapter
 	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
 	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
+//	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
+//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
+        	
+        	filter_adapter = new CustomAdapter(this, R.layout.row_view, menuItems);
+        	
         }
 	}
 	

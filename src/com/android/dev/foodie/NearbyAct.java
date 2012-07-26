@@ -73,11 +73,12 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
+    static final String IMG_PATH = "img_path";
     
     //UI Elements
     ListView lv;
     //ListAdapter filter_adapter;
-    SimpleAdapter filter_adapter;
+    CustomAdapterNearby filter_adapter;
     EditText filterText = null;
     TextView result_count;
     
@@ -280,7 +281,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 
 	
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		((SimpleAdapter) filter_adapter).getFilter().filter(s.toString());
+		//((CustomAdapterNearby) filter_adapter).getFilter().filter(s.toString());
 	}
 	
 	/*FUNCTION* =============================================================================//
@@ -342,6 +343,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 			            map.put(AVAILABILITY_VAC_WEEKDAY, parser.getValue(e, AVAILABILITY_VAC_WEEKDAY));
 			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
 			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
+			            map.put(IMG_PATH, parser.getValue(e, IMG_PATH));
 			            map.put(DIST, parser.getValue(e, DIST));
 			            menuItems.add(map);
 			        }
@@ -388,8 +390,10 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 			//CONSTRUCTOR FOR SimpleAdapter
 	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
 	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-	        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
-	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+//	        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
+//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+//			
+			filter_adapter = new CustomAdapterNearby(NearbyAct.this, R.layout.nearby_view, menuItems);
 			
 			setListAdapter(filter_adapter);
 		}
