@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener{
 	
+//
 //-------------------------------START CUSTOM MENU SLIDER-------------------------------------------------//
 	//sliding drawer
 	private SlidingDrawer sd;
