@@ -1,5 +1,7 @@
 package sg.edu.nus.ami.wifilocation;
 
+import java.io.Serializable;
+
 /**
  * This is our location class for standard addressing the indoor location
  * @author qinfeng

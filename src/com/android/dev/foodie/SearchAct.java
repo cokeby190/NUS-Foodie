@@ -8,6 +8,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import sg.edu.nus.ami.wifilocation.APLocation;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,6 +41,7 @@ import android.widget.Toast;
 
 public class SearchAct extends Activity implements OnClickListener, OnItemSelectedListener, OnItemClickListener{
 	
+//
 //-------------------------------START CUSTOM MENU SLIDER-------------------------------------------------//
 	//sliding drawer
 	private SlidingDrawer sd;
@@ -73,6 +76,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
     private List <String> fac_list = new ArrayList<String>();
     private List <String> store_list = new ArrayList<String>();
     private List <String> cuisine_list = new ArrayList<String>();
+    private String[] range_list = {"Range", "200m", "500m", "1000m", "2000m"};
     
 	private TabHost tabs;
 	private Spinner fac, store, cuisine, range;
@@ -81,9 +85,14 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private CheckBox halal, aircon, cb_range;
 	
 	//SPINNER SELECTION POSITION 
-	private int fac_pos, store_pos, cuisine_pos;
+	private int fac_pos, store_pos, cuisine_pos, range_pos;
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine, adapter_range;
 //-------------------------------END SPINNER-----------------------------------------------------------//
+	
+	//for Service
+	receive_service msg_receive;
+	boolean receiver_register = false;
+	double ap_lat = 1.296469, ap_lon = 103.776373;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,34 +126,21 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
         
+        //Call service to start
         int counter = 1;
         Intent intent = new Intent(this, ServiceLocation.class);
         intent.putExtra("counter", counter++);
         startService(intent);
 
-        WifiManager wifimgr;
-        
-        wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        
-        wifimgr.startScan();
-        
-        List<ScanResult> wifilist = wifimgr.getScanResults();
-        
-        
-        
-        //WifiLocation obj = new WifiLocation(this, wifilist);
-        
-        //String loc = obj.find_location();
-        
-        //Toast.makeText(getApplicationContext(), "Here is : " + loc, Toast.LENGTH_LONG).show();
-        
-        receive_service msg_receive = new receive_service();
+        msg_receive = new receive_service();
         
         IntentFilter filter = new IntentFilter();
         filter.addAction(ServiceLocation.BROADCAST_ACTION);
         registerReceiver(msg_receive, filter);
+        
+        receiver_register = true;
     }
-	
+
 	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
@@ -223,8 +219,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		range = (Spinner)findViewById(R.id.sp_search_range);
 		
 		cb_range = (CheckBox) findViewById(R.id.CheckBox01);
-		
-		String[] range_list = {"Range", "10m", "20m", "30m"};
 		
 		//make first option invisible after spinner is selected by User
 		adapter_range = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, range_list) {
@@ -346,6 +340,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			fac.setOnItemSelectedListener(this);
 			store.setOnItemSelectedListener(this);
 			cuisine.setOnItemSelectedListener(this);
+			range.setOnItemSelectedListener(this);
 	}
 	
 	
@@ -368,20 +363,38 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			//SEARCH BASIC
 			case R.id.ib_search_basic:
 
-				//TESTING ONLY!
-					//CLOSE THREAD
-					stopService();
+//				//TESTING ONLY!
+//					//CLOSE THREAD
+//					stopService();
 				
+				if(!cb_range.isChecked()) {
+			//------send intent to results page with query---------------------------------//
+			//------bundle search query with intent----------------------------------------//
+					String message = et_search.getText().toString();
+					Bundle sending = new Bundle();
+					sending.putString("search_type", "basic");
+					sending.putString("search_intent", message);
+					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+					send_intent.putExtras(sending);
+					startActivity(send_intent);
+				} else if (cb_range.isChecked()) {
 				
-		//------send intent to results page with query---------------------------------//
-		//------bundle search query with intent----------------------------------------//
-				String message = et_search.getText().toString();
-				Bundle sending = new Bundle();
-				sending.putString("search_type", "basic");
-				sending.putString("search_intent", message);
-				Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
-				send_intent.putExtras(sending);
-				startActivity(send_intent);
+					//new class to accomodate nearby search? or existing?
+					String range = range_list[range_pos];
+
+					Log.v("RANGE", range);
+					
+					String message = et_search.getText().toString();
+					Bundle sending = new Bundle();
+					sending.putString("search_type", "nearby");
+					sending.putString("search_intent", message);
+					sending.putString("range", range);
+					sending.putString("lat", String.valueOf(ap_lat));
+					sending.putString("lon", String.valueOf(ap_lon));
+					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
+					send_intent.putExtras(sending);
+					startActivity(send_intent);
+				}
 				
 				break;
 				
@@ -472,6 +485,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		fac_pos = fac.getSelectedItemPosition();
 		store_pos = store.getSelectedItemPosition();
 		cuisine_pos = cuisine.getSelectedItemPosition();
+		
+		range_pos = range.getSelectedItemPosition();
 	}
 
 	@Override
@@ -485,11 +500,50 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		public void onReceive(Context context, Intent intent) {
 
 			String action = intent.getAction();
+			
+			APLocation return_location = new APLocation();
+			
 			//if(action.equals("LOCATION")) {
 				Bundle extra = intent.getExtras();
-				String location = extra.getString("LOCATION");
-				Log.v("RETURN_MSG", location);
-				//Toast.makeText(getApplicationContext(), "I am at : " + location, Toast.LENGTH_LONG).show();
+				String location = extra.getString("ap_location");
+				location = location.replace("APLocation [", "");
+				location = location.replace("]", "");
+				
+				//PARSE string from APLocation object retrieved
+				String[] location_split = location.split(", ");
+				for(int i=0; i< location_split.length; i++) {
+					int end  = location_split[i].length();
+					int index = location_split[i].indexOf("=");
+										if(location_split[i].substring(0, index).equals("building")) {
+						return_location.setBuilding(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_name")) {
+						return_location.setAp_name(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_location")) {
+						return_location.setAp_location(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("accuracy")) {
+						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_lat")) {
+						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_long")) {
+						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+				}
+				
+				ap_lat = return_location.getAp_lat();
+				ap_lon = return_location.getAp_long();
+				
+				Log.v("RETURN_MSG", return_location.getAp_location());
+				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+				
+				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
 			//}
 		}
 		

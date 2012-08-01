@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -16,7 +17,8 @@ import android.widget.TextView;
 
 public class NUSFoodieActivity extends Activity implements OnClickListener{
 	
-	private Button searchButton, dirButton, nearbyButton;
+	private Button searchButton, dirButton, nearbyButton, crowdButton;
+	private Button randomButton;
 	
 	//titlebar
 	boolean customTitleSupport = true;
@@ -87,6 +89,13 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
     	
     	nearbyButton = (Button)findViewById(R.id.b_main_nearby);
     	nearbyButton.setOnClickListener(this);
+    	
+    	crowdButton = (Button)findViewById(R.id.b_main_crowd);
+    	crowdButton.setOnClickListener(this);
+    	
+    	randomButton = (Button)findViewById(R.id.b_main_rand);
+    	randomButton.setBackgroundColor(Color.TRANSPARENT);
+    	randomButton.setOnClickListener(this);
     }
 
 	@Override
@@ -98,13 +107,23 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
 				break;
 				
 			case R.id.b_main_dir:
-				Intent open_dir = new Intent(NUSFoodieActivity.this, TitleBar.class);
+				Intent open_dir = new Intent(NUSFoodieActivity.this, Directory.class);
 				startActivity(open_dir);
 				break;
 				
 			case R.id.b_main_nearby:
 				Intent open_nearby = new Intent(NUSFoodieActivity.this, NearbyAct.class);
 				startActivity(open_nearby);
+				break;
+				
+			case R.id.b_main_crowd:
+				Intent open_crowd = new Intent(NUSFoodieActivity.this, CrowdAct.class);
+				startActivity(open_crowd);
+				break;
+				
+			case R.id.b_main_rand:
+				Intent open_rand = new Intent(NUSFoodieActivity.this, RandomFood.class);
+				startActivity(open_rand);
 				break;
 		}
 	}

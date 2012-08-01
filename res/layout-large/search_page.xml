@@ -275,7 +275,7 @@
                 android:id="@+id/content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#323323" >
+                android:background="#0EB8D2" >
 
                 <ListView
                     android:id="@+id/sd_list"

@@ -29,8 +29,8 @@
             android:name=".SearchAct"
             android:label="@string/search" >
             <intent-filter>
-            <action android:name="com.android.dev.foodie.SHOW_LOCATION"></action>
-        </intent-filter>
+            	<action android:name="com.android.dev.foodie.SHOW_LOCATION"></action>
+        	</intent-filter>
         </activity>
         
         <activity
@@ -59,23 +59,26 @@
             android:label="@string/nearby" >
         </activity>
         
-        
-        
         <activity
-            android:name=".CopyOfsearch_act"
-            android:label="@string/cd" >
+            android:name=".SnapShot"
+            android:label="@string/nearby" >
         </activity>
         
         <activity
-            android:name=".cd_menu_act"
-            android:label="@string/cd" >
+            android:name=".ShakeAct"
+            android:label="@string/nearby" >
         </activity>
         
         <activity
-            android:name=".cd_view_act"
-            android:label="@string/cd" >
+            android:name=".CrowdAct"
+            android:label="@string/nearby" >
         </activity>
         
+        <activity
+            android:name=".RandomFood"
+            android:label="@string/cd" >
+        </activity>
+
     </application>
 
 </manifest>

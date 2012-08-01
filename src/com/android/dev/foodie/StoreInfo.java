@@ -1,17 +1,32 @@
 package com.android.dev.foodie;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.w3c.dom.NodeList;
 
+import sg.edu.nus.ami.wifilocation.APLocation;
+
+import com.android.dev.foodie.SearchAct.receive_service;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.sax.Element;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -46,6 +61,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
     
     // XML node keys
+    static final String DIST = "dist";
     static final String FOOD_STALL = "food_stall"; // parent node
     static final String CANTEEN_NAME = "canteen_name";
     static final String STORE_NAME = "store_name";
@@ -61,10 +77,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String AVAILABILITY_VAC_WEEKDAY = "availability_vac_weekday";
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
+    static final String IMG_PATH = "img_path";
     
     //UI Elements
-    TextView store_name, store_location, store_canteen;
-    Button b_crowd;
+    TextView store_name, store_location, store_canteen, store_dist;
+    Button b_crowd, button2;
+    ImageView store_img;
+    GetImage show_img;
     	//UI TABLET
     	TabHost tabs;
     	//UI NORMAL
@@ -90,6 +109,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     //String for xml data
     String halal_str = "No don't have ):", menu_str = "No don't have ):", aircon_str = "No don't have ):";
     String sch_wd_str, sch_we_str, vac_wd_str, vac_we_str, pubhol_str;
+    
+    //for Service
+  	receive_service msg_receive;
+  	boolean receiver_register = false;
+    
+    //Toasts
+    Toast show_location, show_lat, show_long;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,9 +145,18 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         	
         	layout_normal();
         }
+        
+        //TEST
+        msg_receive = new receive_service();
+        
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+        registerReceiver(msg_receive, filter);
+       
+        receiver_register = true;
     }
     
-    /*FUNCTION* =============================================================================//
+   	/*FUNCTION* =============================================================================//
 	 *  CUSTOM TITLE BAR
 	 */
 	public void customTitleBar(String title) {
@@ -166,12 +201,12 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				//startActivity(send_crowd);
 				break;
 			case 3:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
+				Intent send_crowd = new Intent(StoreInfo.this, CrowdAct.class);
+				startActivity(send_crowd);
 				break;
 			case 4:
-				//Intent send_nearby = new Intent(Store_Info.this, Store_Info.class);
-				//startActivity(send_nearby);
+				Intent send_nearby = new Intent(StoreInfo.this, NearbyAct.class);
+				startActivity(send_nearby);
 				break;
 		}
 	}
@@ -195,9 +230,30 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				break;
 			
 			case R.id.b_store_review:
+				//TESTING ONLY!
+				//CLOSE THREAD
+				Log.v("STOP SERVICE", "button pressed to stop service");
+				stopService();				 
+				Toast.makeText(getApplicationContext(), "Stop Service button clicked!", Toast.LENGTH_LONG).show();
+				unregisterReceiver(msg_receive);
 				break;
 			
 			case R.id.b_store_crowd:
+				//send intent to dialog to show data
+		        Intent snap_shot = new Intent(getApplicationContext(), SnapShot.class);
+		        snap_shot.putExtra("store_name", menuItems.get(store_info).get(STORE_NAME));
+		        snap_shot.putExtra("location", menuItems.get(store_info).get(LOCATION));
+		        snap_shot.putExtra("canteen", menuItems.get(store_info).get(CANTEEN_NAME));
+		        startActivity(snap_shot);
+				break;
+				
+			case R.id.button2: 
+				//TESTING ONLY!
+				//CLOSE THREAD
+				Log.v("STOP SERVICE", "button pressed to stop service");
+				stopService();
+				Toast.makeText(getApplicationContext(), "Stop Service button clicked!", Toast.LENGTH_LONG).show();
+				unregisterReceiver(msg_receive);
 				break;
 		}
 	}
@@ -207,10 +263,11 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	 */
 	private void initialise_large() {
 		
-		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_img = (ImageView) findViewById(R.id.iv_store);
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		store_dist = (TextView) findViewById(R.id.tv_store_nearby);
 		
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
 		
@@ -229,6 +286,14 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 		vac_we = (TextView) findViewById(R.id.tv_store_vac_we);
 		pubhol = (TextView) findViewById(R.id.tv_store_ph);
 		
+		b_crowd = (Button) findViewById(R.id.b_store_crowd);
+		
+		b_crowd.setOnClickListener(this);
+		
+		button2 = (Button) findViewById(R.id.button2);
+
+		button2.setOnClickListener(this);
+		
 	}
     
 	/*FUNCTION* =============================================================================//
@@ -236,10 +301,11 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 	 */
 	private void initialise() {
 		
-		ImageView store_img = (ImageView) findViewById(R.id.iv_store);
+		store_img = (ImageView) findViewById(R.id.iv_store);
 		store_name = (TextView) findViewById(R.id.tv_store_name);
 		store_location = (TextView) findViewById(R.id.tv_store_location);
 		store_canteen = (TextView) findViewById(R.id.tv_store_cname);
+		store_dist = (TextView) findViewById(R.id.tv_store_nearby);
 		
 		RatingBar rating = (RatingBar) findViewById(R.id.ratingBar1);
 		
@@ -288,6 +354,23 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         store_name.setText(menuItems.get(store_info).get(STORE_NAME));
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+    	
+		try {
+			InputStream in;
+			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			byte [] content = convertInputStreamToByteArray(in);
+			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+			store_img.setImageBitmap(bmp);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	else 
+    		store_dist.setText("Dist Unknown");
     	
     	//------Setup tabs--------------------------------------------------------------------------//
         tabs.setup();  
@@ -372,5 +455,99 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     	store_location.setText(menuItems.get(store_info).get(LOCATION));
     	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
     	
+    	try {
+			InputStream in;
+			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			byte [] content = convertInputStreamToByteArray(in);
+			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+			store_img.setImageBitmap(bmp);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	else 
+    		store_dist.setText("Dist Unknown");
     }
+    
+    //TEST
+    public class receive_service extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			String action = intent.getAction();
+			
+			APLocation return_location = new APLocation();
+			
+			//if(action.equals("LOCATION")) {
+				Bundle extra = intent.getExtras();
+				String location = extra.getString("ap_location");
+				location = location.replace("APLocation [", "");
+				location = location.replace("]", "");
+				
+				//PARSE string from APLocation object retrieved
+				String[] location_split = location.split(", ");
+				for(int i=0; i< location_split.length; i++) {
+					int end  = location_split[i].length();
+					int index = location_split[i].indexOf("=");
+										if(location_split[i].substring(0, index).equals("building")) {
+						return_location.setBuilding(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_name")) {
+						return_location.setAp_name(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_location")) {
+						return_location.setAp_location(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("accuracy")) {
+						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_lat")) {
+						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_long")) {
+						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+				}
+				
+				Log.v("RETURN_MSG", return_location.getAp_location());
+				show_location = Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_SHORT);
+				show_location.show();
+				
+				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+				show_lat = Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_SHORT);
+				show_lat.show();
+				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+				show_long = Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_SHORT);
+				show_long.show();
+			//}
+		}
+		
+	}
+    
+  //CLOSE SERVICE
+  	public void stopService() {
+  		if(stopService(new Intent(StoreInfo.this, ServiceLocation.class)))
+  			Toast.makeText(this, "stopService success", Toast.LENGTH_LONG);
+  		else
+  			Toast.makeText(this, "stopService unsuccess", Toast.LENGTH_LONG);
+  	}
+  	
+  	public static byte[] convertInputStreamToByteArray(InputStream is)
+			throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		int result = bis.read();
+		while (result != -1) {
+			byte b = (byte) result;
+			buf.write(b);
+			result = bis.read();
+		}
+		return buf.toByteArray();
+	}
+
 }

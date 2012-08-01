@@ -68,6 +68,8 @@
 	            android:paddingLeft="10dp"
 	            android:paddingTop="10dp"
 	            android:text="Medium Text"
+	            android:textColor="#F56F5B"
+	            android:textStyle="bold"
 	            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 	    </LinearLayout>
