@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" 
+            android:weightSum="200">
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="278dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:scrollbars="none"
+                android:layout_margin="10dp"
+                android:layout_weight="100" >
+
+            </ListView>
+
+            <Button
+                android:id="@+id/b_rand"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Random!"
+                android:layout_margin="10dp"  />
+
+            <ListView
+                android:id="@+id/lv_rand"
+                android:layout_width="278dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:scrollbars="none"
+                android:layout_weight="100"
+                android:layout_margin="10dp" >
+
+            </ListView>
+
+            <Button
+                android:id="@+id/b_rand_2"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Random!" 
+                android:layout_margin="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <SlidingDrawer
+            android:id="@+id/slidingDrawer1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:content="@+id/content"
+            android:handle="@id/handle"
+            android:orientation="horizontal" >
+
+            <View
+                android:id="@id/handle"
+                android:layout_width="0dip"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#323323" >
+
+                <ListView
+                    android:id="@+id/sd_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+                </ListView>
+            </LinearLayout>
+        </SlidingDrawer>
+
+    </FrameLayout>
+
+</LinearLayout>
