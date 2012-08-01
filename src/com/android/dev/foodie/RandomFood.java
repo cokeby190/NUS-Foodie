@@ -81,7 +81,7 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
     //XML parser objects
     ArrayList<HashMap<String, String>> menuItems;
     
-    XmlFunction parser;
+    XmlFunction parser, parser2;
     NodeList nl, nl2;
     
     //loading bar
@@ -131,6 +131,7 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
             	alert.show();
         	} else {
                 parser = new XmlFunction();
+                parser2 = new XmlFunction();
 
                 parse_results(URL_base + "distinct=distinct&query_key=location", URL_base + "distinct=distinct&query_key=canteen_name");
 
@@ -301,10 +302,10 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 	        }
 	        
 	        // looping through all <food_stall>'s
-	        for (int i = 0; i < nl2.getLength(); i++) {
-	            Element e = (Element) nl2.item(i);
+	        for (int j = 0; j < nl2.getLength(); j++) {
+	            Element e = (Element) nl2.item(j);
 	            
-	            canteen[i] = parser.getValue(e, CANTEEN_NAME);
+	            canteen[j] = parser2.getValue(e, CANTEEN_NAME);
 	        }
 
 	        
@@ -340,7 +341,6 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
     		
     		ArrayAdapter <String> list_adapter_canteen = new ArrayAdapter <String>(RandomFood.this, android.R.layout.simple_list_item_1, canteen);
     		lv2.setAdapter(list_adapter_canteen);
-
 		}
 
 	}
@@ -357,8 +357,8 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 
         nl = doc.getElementsByTagName("food_list");
         
-        String xml2 = parser.getXML(URL); // getting XML
-        Document doc2 = parser.XMLfromString(xml2); // parsing XML to document so we can read it
+        String xml2 = parser2.getXML(URL2); // getting XML
+        Document doc2 = parser2.XMLfromString(xml2); // parsing XML to document so we can read it
         nl2 = doc2.getElementsByTagName("food_list");
         
         new loadData().execute();
