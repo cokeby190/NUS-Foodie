@@ -20,6 +20,15 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:src="@drawable/linus_icon"/>
+            
+        <Button
+	        android:id="@+id/b_main_rand"
+	        style="?android:attr/buttonStyleSmall"
+	        android:layout_width="298dp"
+	        android:layout_height="348dp"
+	        android:layout_gravity="center"
+	        android:layout_marginLeft="10dp"
+	        android:text=""/>
 
     </FrameLayout>
 
