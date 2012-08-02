@@ -242,7 +242,7 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 		randomB2 = (Button) findViewById(R.id.b_rand_2);
 		
 		lv.setVerticalFadingEdgeEnabled(true);
-		lv.setFadingEdgeLength(1000);
+		lv.setFadingEdgeLength(400);
 		lv2.setVerticalFadingEdgeEnabled(true);
 		
         onclick_obj = new listener();
