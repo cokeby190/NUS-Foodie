@@ -12,6 +12,10 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +29,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RandomFood extends ListActivity implements OnClickListener, OnItemClickListener{
 
@@ -38,7 +43,7 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 	Button menu;
 	//menu list
 	private String[] menu_list = {"Home", "Search" , "Directory" , "Crowd" , "Nearby"};
-//-------------------------------END CUSTOM MENU SLIDER-------------------------------------------------//	
+//-------------------------------END CUSTOM MENU SLIDER-------------------------------------------------//
 	
 	//stating the BASE URL
     static final String URL_base = "http://172.18.101.125:8080/wte/wte?";
@@ -62,10 +67,18 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     static final String IMG_PATH = "img_path";
     
+    //shake
+    private SensorManager mSensorManager;
+	  private float mAccel; // acceleration apart from gravity
+	  private float mAccelCurrent; // current acceleration including gravity
+	  private float mAccelLast; // last acceleration including gravity
+
+    
     String[] location, canteen, store;
     
     //UI Elements
     ListView lv, lv2;
+    int old_location, old_canteen, new_location, new_canteen;
     //ListAdapter filter_adapter;
     CustomAdapter filter_adapter;
     Button randomB, randomB2;
@@ -193,13 +206,13 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 		
 		case R.id.b_rand:
 			
-			lv.smoothScrollToPosition((int) Math.ceil(Math.random()*(location.length)));
+			set_random(lv, "location");
 			
 			break;
 			
 		case R.id.b_rand_2:
 			
-			lv2.smoothScrollToPosition((int) Math.ceil(Math.random()*(canteen.length)));
+			set_random(lv2, "canteen");
 			
 			break;
 	
@@ -217,6 +230,8 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 		randomB2 = (Button) findViewById(R.id.b_rand_2);
 		
 		lv.setVerticalFadingEdgeEnabled(true);
+		lv.setFadingEdgeLength(400);
+		lv2.setVerticalFadingEdgeEnabled(true);
 		
         onclick_obj = new listener();
 
@@ -225,6 +240,13 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
         
         randomB.setOnClickListener(this);
         randomB2.setOnClickListener(this);
+        
+        //shake
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+	    mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+	    mAccel = 0.00f;
+	    mAccelCurrent = SensorManager.GRAVITY_EARTH;
+	    mAccelLast = SensorManager.GRAVITY_EARTH;
 	}
     
        
@@ -349,6 +371,71 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
         nl2 = doc2.getElementsByTagName("food_list");
         
         new loadData().execute();
+	}
+	
+	private final SensorEventListener mSensorListener = new SensorEventListener() {
+
+		public void onSensorChanged(SensorEvent se) {
+			float x = se.values[0];
+			float y = se.values[1];
+			float z = se.values[2];
+			mAccelLast = mAccelCurrent;
+			mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+			float delta = mAccelCurrent - mAccelLast;
+			mAccel = mAccel * 0.9f + delta; // perform low-cut filter
+
+			if (mAccel > 3) {
+				Toast.makeText(RandomFood.this, "Device is shaking!",
+						Toast.LENGTH_SHORT).show();
+
+				set_random(lv, "location");
+				set_random(lv2, "canteen");
+			}
+		}
+
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		}
+	};
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSensorManager.registerListener(mSensorListener,
+				mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_NORMAL);
+	}
+
+	@Override
+	protected void onStop() {
+		mSensorManager.unregisterListener(mSensorListener);
+		super.onStop();
+	}
+	
+	private void set_random(ListView lv, String parameter) {
+		
+		if(parameter.equals("location")) {
+			new_location = (int) Math.ceil(Math.random()*(location.length));
+			
+			while(new_location == old_location) {
+				new_location = (int) Math.ceil(Math.random()*(location.length));
+			}
+			
+			lv.smoothScrollToPosition(new_location);
+			
+			old_location = new_location;
+			
+		} else if(parameter.equals("canteen")) {
+			new_canteen = (int) Math.ceil(Math.random()*(canteen.length));
+			
+			while(new_canteen == old_canteen) {
+				new_canteen = (int) Math.ceil(Math.random()*(canteen.length));
+			}
+			
+			lv.smoothScrollToPosition(new_canteen);
+			
+			old_canteen = new_canteen;
+		} 
+
 	}
 
 }    
