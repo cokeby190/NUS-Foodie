@@ -12,11 +12,9 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -67,7 +65,6 @@ public class CrowdAct extends ListActivity implements OnClickListener, OnItemCli
     
     //wifi_check
     WifiManager wifimgr;
-    WifiInfo wifi_info;
     
     //loading bar
     long start = 0, stop = 0;
@@ -95,7 +92,6 @@ public class CrowdAct extends ListActivity implements OnClickListener, OnItemCli
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
         String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
-        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
         
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();
@@ -103,25 +99,15 @@ public class CrowdAct extends ListActivity implements OnClickListener, OnItemCli
         	alert.show();
         } else {
      
-        	wifi_info = wifimgr.getConnectionInfo();
-        	String wifi_ssid = wifi_info.getSSID();
-        	
-        	if(!wifi_ssid.equals("NUS")) {
-        		CreateAlertDialog dialog = new CreateAlertDialog();
-            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
-            	alert.show();
-        	} else {
-        		
-                //to store the list of stores to show as results
-                menuItems = new ArrayList<HashMap<String, String>>();
+        	//to store the list of stores to show as results
+            menuItems = new ArrayList<HashMap<String, String>>();
 
-                //creating new parser class
-                parser = new XmlFunction();
-                	
-                parse_results(URL_base + "mode=Select");
+            //creating new parser class
+            parser = new XmlFunction();
+            	
+            parse_results(URL_base + "mode=Select");
 
-        	    setListAdapter(filter_adapter);
-        	}
+    	    setListAdapter(filter_adapter);
         }
 	}
 	

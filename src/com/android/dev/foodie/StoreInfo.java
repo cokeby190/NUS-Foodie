@@ -12,10 +12,7 @@ import org.w3c.dom.NodeList;
 
 import sg.edu.nus.ami.wifilocation.APLocation;
 
-import com.android.dev.foodie.SearchAct.receive_service;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +20,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.sax.Element;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;

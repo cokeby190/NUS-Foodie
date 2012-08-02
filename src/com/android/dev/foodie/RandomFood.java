@@ -12,11 +12,9 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -89,7 +87,6 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
     
     //wifi_check
     WifiManager wifimgr;
-    WifiInfo wifi_info;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +111,6 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
         String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
-        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
         
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();
@@ -122,20 +118,11 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
         	alert.show();
         } else {
      
-        	wifi_info = wifimgr.getConnectionInfo();
-        	String wifi_ssid = wifi_info.getSSID();
-        	
-        	if(!wifi_ssid.equals("NUS")) {
-        		CreateAlertDialog dialog = new CreateAlertDialog();
-            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
-            	alert.show();
-        	} else {
-                parser = new XmlFunction();
-                parser2 = new XmlFunction();
+        	parser = new XmlFunction();
+            parser2 = new XmlFunction();
 
-                parse_results(URL_base + "distinct=distinct&query_key=location", URL_base + "distinct=distinct&query_key=canteen_name");
+            parse_results(URL_base + "distinct=distinct&query_key=location", URL_base + "distinct=distinct&query_key=canteen_name");
 
-            }
         }
     }
 

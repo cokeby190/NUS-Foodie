@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +15,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.FloatMath;
@@ -111,9 +109,7 @@ public class SnapShot extends Activity implements OnTouchListener {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
-			
-			
+
 			
 		}
 

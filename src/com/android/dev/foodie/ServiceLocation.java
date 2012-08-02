@@ -95,12 +95,7 @@ public class ServiceLocation extends Service{
 		@Override
 		public void run() {
 			final String TAG2 = "ServiceWorker:" + Thread.currentThread().getId();
-//			int ct = 0;
-//			for(int t=0; t<1000; t++) {
-//				ct++;
-//				System.out.println(ct);
-//				Log.v(TAG, "Testing ct = " + ct);
-//			}	
+
 				//setup wifi
 			    wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 			    

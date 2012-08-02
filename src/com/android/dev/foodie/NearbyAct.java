@@ -16,7 +16,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,12 +28,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -99,7 +95,6 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     
     //wifi_check
     WifiManager wifimgr;
-    WifiInfo wifi_info;
     
     //for Service
   	receive_service msg_receive;
@@ -129,7 +124,6 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
         String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
-        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
         
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();
@@ -137,32 +131,22 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
         	alert.show();
         } else {
      
-        	wifi_info = wifimgr.getConnectionInfo();
-        	String wifi_ssid = wifi_info.getSSID();
-        	
-        	if(!wifi_ssid.equals("NUS")) {
-        		CreateAlertDialog dialog = new CreateAlertDialog();
-            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
-            	alert.show();
-        	} else {
-        		
-        		//Call service to start
-                int counter = 1;
-                Intent intent = new Intent(NearbyAct.this, ServiceLocation.class);
-                intent.putExtra("counter", counter++);
-                startService(intent);
+        	//Call service to start
+            int counter = 1;
+            Intent intent = new Intent(NearbyAct.this, ServiceLocation.class);
+            intent.putExtra("counter", counter++);
+            startService(intent);
 
-                msg_receive = new receive_service();
-                
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(ServiceLocation.BROADCAST_ACTION);
-                registerReceiver(msg_receive, filter);
-                
-                receiver_register = true;
-        		
-                menuItems = new ArrayList<HashMap<String, String>>();
+            msg_receive = new receive_service();
+            
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ServiceLocation.BROADCAST_ACTION);
+            registerReceiver(msg_receive, filter);
+            
+            receiver_register = true;
+    		
+            menuItems = new ArrayList<HashMap<String, String>>();
 
-            }
         }
     }
 

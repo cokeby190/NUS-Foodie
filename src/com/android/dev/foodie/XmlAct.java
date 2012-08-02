@@ -133,90 +133,79 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         	AlertDialog alert = dialog.newdialog(this, wifi_disabled);
         	alert.show();
         } else {
-     
-        	wifi_info = wifimgr.getConnectionInfo();
-        	String wifi_ssid = wifi_info.getSSID();
-        	
-        	if(!wifi_ssid.equals("NUS")) {
-        		CreateAlertDialog dialog = new CreateAlertDialog();
-            	AlertDialog alert = dialog.newdialog(this, wifi_not_nus);
-            	alert.show();
-        	} else {
         		
-        		//getting back returned data, passed from SearchAct
-                String[] search_string = getData();
-                
-                //to store the list of stores to show as results
-                menuItems = new ArrayList<HashMap<String, String>>();
+    		//getting back returned data, passed from SearchAct
+            String[] search_string = getData();
+            
+            //to store the list of stores to show as results
+            menuItems = new ArrayList<HashMap<String, String>>();
 
-                //creating new parser class
-                parser = new XmlFunction();
-                
-        //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
-                if(search_string[0].equals("basic")) {
-                	
-                	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
-                	
-                	setListAdapter(filter_adapter);
-        	
-        //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
-                } else if (search_string[0].equals("advanced")) {
-                	
-                	//checking if halal and aircon options are checked
-                	String query_halal = "", query_aircon = "";
-                	
-                	if(!search_string[5].equals("")) {
-                		query_halal = "&halal=" + search_string[5];
-                	}
-                	
-                	if(!search_string[6].equals("")) {
-                		query_aircon = "&aircon=" + search_string[6];
-                	}
-                	
-                	//TOAST!
-                	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
-        	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-        	        		query_halal + query_aircon, Toast.LENGTH_LONG);
-        	        t.show();
-        	        
-        	        //URL encoding white spaces to its ASCII equivalent
-        	        search_string[1] = search_string[1].replace(" ", "%20");
-        	        search_string[2] = search_string[2].replace(" ", "%20");
-        	        search_string[3] = search_string[3].replace(" ", "%20");
-        	        search_string[4] = search_string[4].replace(" ", "%20");
-        	        
-        	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
-        	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
-        	        		query_halal + query_aircon);
-        	        
-        	        setListAdapter(filter_adapter);
-        	        
-                }  else if (search_string[0].equals("nearby")) {
-                	
-                	search_string[2] = search_string[2].replace("m", "");
-                	
-                	Log.v("RANGE_XML", search_string[2]);
-                	Log.v("RANGE_LAT", search_string[3]);
-                	Log.v("RANGE_LON", search_string[4]);
-                	
-                	 //TOAST!
-                	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
-        	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
-        	        t.show();
-        	        
-        	        //URL encoding white spaces to its ASCII equivalent
-        	        search_string[1] = search_string[1].replace(" ", "%20");
-        	        search_string[2] = search_string[2].replace(" ", "%20");
-        	        search_string[3] = search_string[3].replace(" ", "%20");
-        	        search_string[4] = search_string[4].replace(" ", "%20");
+            //creating new parser class
+            parser = new XmlFunction();
+            
+    //------BASIC SEARCH FUNCTION--------------------------------------------------------------------------//
+            if(search_string[0].equals("basic")) {
+            	
+            	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
+            	
+            	setListAdapter(filter_adapter);
+    	
+    //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
+            } else if (search_string[0].equals("advanced")) {
+            	
+            	//checking if halal and aircon options are checked
+            	String query_halal = "", query_aircon = "";
+            	
+            	if(!search_string[5].equals("")) {
+            		query_halal = "&halal=" + search_string[5];
+            	}
+            	
+            	if(!search_string[6].equals("")) {
+            		query_aircon = "&aircon=" + search_string[6];
+            	}
+            	
+            	//TOAST!
+            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
+    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    	        		query_halal + query_aircon, Toast.LENGTH_LONG);
+    	        t.show();
+    	        
+    	        //URL encoding white spaces to its ASCII equivalent
+    	        search_string[1] = search_string[1].replace(" ", "%20");
+    	        search_string[2] = search_string[2].replace(" ", "%20");
+    	        search_string[3] = search_string[3].replace(" ", "%20");
+    	        search_string[4] = search_string[4].replace(" ", "%20");
+    	        
+    	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
+    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    	        		query_halal + query_aircon);
+    	        
+    	        setListAdapter(filter_adapter);
+    	        
+            }  else if (search_string[0].equals("nearby")) {
+            	
+            	search_string[2] = search_string[2].replace("m", "");
+            	
+            	Log.v("RANGE_XML", search_string[2]);
+            	Log.v("RANGE_LAT", search_string[3]);
+            	Log.v("RANGE_LON", search_string[4]);
+            	
+            	 //TOAST!
+            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
+    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
+    	        t.show();
+    	        
+    	        //URL encoding white spaces to its ASCII equivalent
+    	        search_string[1] = search_string[1].replace(" ", "%20");
+    	        search_string[2] = search_string[2].replace(" ", "%20");
+    	        search_string[3] = search_string[3].replace(" ", "%20");
+    	        search_string[4] = search_string[4].replace(" ", "%20");
 
-        	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
-        	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
-        	        
-        	        setListAdapter(filter_adapter_nearby);
-                }
-
-        	}
+    	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
+    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
+    	        
+    	        setListAdapter(filter_adapter_nearby);
+            }
         }
     }
 
