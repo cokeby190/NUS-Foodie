@@ -8,9 +8,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:orientation="vertical" >
-
+
 	    <TextView
-	        android:id="@+id/textView1"
+	        android:id="@+id/tv_crowd_canteen"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="Canteen"
@@ -20,17 +20,17 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:orientation="horizontal" >
-
+
 	        <ProgressBar
-	            android:id="@+id/progressBar1"
+	            android:id="@+id/pb_crowd"
 	            style="?android:attr/progressBarStyleHorizontal"
 	            android:layout_width="232dp"
 	            android:layout_height="wrap_content"
-	            android:layout_marginTop="10dp" 
-		        android:layout_marginRight="10dp" />
-
+	            android:layout_marginRight="10dp"
+	            android:layout_marginTop="10dp" />
+
 		    <Button
-		        android:id="@+id/b_main_nearby"
+		        android:id="@+id/b_crowd_snap"
 		        android:layout_width="40dp"
 		        android:layout_height="40dp"
 		        android:drawableTop="@drawable/camera"

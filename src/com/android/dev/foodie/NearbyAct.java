@@ -30,6 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
@@ -73,8 +74,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     
     //UI Elements
     ListView lv;
-    //ListAdapter filter_adapter;
-    CustomAdapterNearby filter_adapter;
+    ListAdapter filter_adapter;
     EditText filterText = null;
     TextView result_count;
     

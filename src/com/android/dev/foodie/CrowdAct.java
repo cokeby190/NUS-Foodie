@@ -291,8 +291,10 @@ public class CrowdAct extends ListActivity implements OnClickListener, OnItemCli
 	        //CONSTRUCTOR FOR SimpleAdapter
 	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
 	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-	        filter_adapter = new SimpleAdapter(CrowdAct.this, menuItems, R.layout.crowd_view, 
-	        		new String[] { LOCATION }, new int[] {R.id.tv_crowd_canteen});
+//	        filter_adapter = new SimpleAdapter(CrowdAct.this, menuItems, R.layout.crowd_view, 
+//	        		new String[] { LOCATION }, new int[] {R.id.tv_crowd_canteen});
+	        
+	        filter_adapter = new CustomAdapterCrowd(CrowdAct.this, R.layout.crowd_view, menuItems);
 			
 			setListAdapter(filter_adapter);
 		}

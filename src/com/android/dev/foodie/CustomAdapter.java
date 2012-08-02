@@ -94,41 +94,6 @@ public class CustomAdapter extends BaseAdapter {
 		holder.canteen_name.setText(menuItems.get(position).get(CANTEEN_NAME));
 
 		imageLoader.DisplayImage(menuItems.get(position).get(IMG_PATH), holder.imgIcon);
-		// Toast.makeText(context, menuItems.get(position).get(STORE_NAME),
-		// Toast.LENGTH_SHORT).show();
-
-//		try {
-//			InputStream in;
-//			in = new java.net.URL(menuItems.get(position).get(IMG_PATH))
-//					.openStream();
-//			byte[] content = convertInputStreamToByteArray(in);
-//
-//			BitmapFactory.Options o = new BitmapFactory.Options();
-//			//o.inJustDecodeBounds = true;
-//
-//			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0,
-//					content.length, o);
-////			int heightRatio = (int) Math.ceil(o.outHeight / (float) 300);
-////			int widthRatio = (int) Math.ceil(o.outWidth / (float) 300);
-////
-////			if (heightRatio > 1 || widthRatio > 1) {
-////				if (heightRatio > widthRatio) {
-////					o.inSampleSize = heightRatio;
-////				} else {
-////					o.inSampleSize = widthRatio;
-////				}
-////			}
-////
-////			o.inJustDecodeBounds = false;
-////			bmp = BitmapFactory.decodeByteArray(content, 0, content.length, o);
-//
-//			holder.imgIcon.setImageBitmap(bmp);
-//
-//		} catch (MalformedURLException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
 
 		return row;
 	}
@@ -139,18 +104,4 @@ public class CustomAdapter extends BaseAdapter {
 		TextView location;
 		TextView canteen_name;
 	}
-
-	public static byte[] convertInputStreamToByteArray(InputStream is)
-			throws IOException {
-		BufferedInputStream bis = new BufferedInputStream(is);
-		ByteArrayOutputStream buf = new ByteArrayOutputStream();
-		int result = bis.read();
-		while (result != -1) {
-			byte b = (byte) result;
-			buf.write(b);
-			result = bis.read();
-		}
-		return buf.toByteArray();
-	}
-
 }
