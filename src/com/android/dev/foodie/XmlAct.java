@@ -101,7 +101,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     
     //wifi_check
     WifiManager wifimgr;
-    WifiInfo wifi_info;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +125,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         wifimgr = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         
         String wifi_disabled = "This application requires a Wifi Connection to the NUS network. Please enable it in the Settings button.";
-        String wifi_not_nus = "You are currently connected to Wifi but not to the NUS network. Please try again.";
         
         if(wifimgr.isWifiEnabled() == false){
         	CreateAlertDialog dialog = new CreateAlertDialog();

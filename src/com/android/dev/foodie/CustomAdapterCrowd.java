@@ -3,8 +3,8 @@ package com.android.dev.foodie;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +24,10 @@ public class CustomAdapterCrowd extends BaseAdapter {
 	int layoutResourceId;
 	ViewHolder holder;
 	int position_temp;
+	
+	TextView canteen_name;
+	ProgressBar metric;
+	Button snapshot;
 
 	public CustomAdapterCrowd(Context context, int layoutResourceId,
 			ArrayList<HashMap<String, String>> data) {
@@ -52,9 +56,13 @@ public class CustomAdapterCrowd extends BaseAdapter {
 		position_temp = position;
 
 		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			row = inflater.inflate(layoutResourceId, parent, false);
 
+			canteen_name = (TextView) row.findViewById(R.id.tv_crowd_canteen);
+			metric = (ProgressBar) row.findViewById(R.id.pb_crowd);
+			snapshot = (Button) row.findViewById(R.id.b_crowd_snap);
+			
 			holder = new ViewHolder();
 			holder.canteen_name = (TextView) row.findViewById(R.id.tv_crowd_canteen);
 			holder.metric = (ProgressBar) row.findViewById(R.id.pb_crowd);
@@ -64,10 +72,13 @@ public class CustomAdapterCrowd extends BaseAdapter {
 		} else
 			holder = (ViewHolder) row.getTag();
 
-		holder.canteen_name.setText(menuItems.get(position).get(LOCATION));
-		//holder.metric.setProgress(Integer.valueOf(menuItems.get(position).get(CROWD_METRIC)));
-		holder.metric.setProgress(50);
+		float metric_db = Float.valueOf(menuItems.get(position).get(CROWD_METRIC));
+		int metric_int = (int) (metric_db*100);
+		Log.v("METRIC", String.valueOf(metric_int));
 		
+		holder.canteen_name.setText(menuItems.get(position).get(LOCATION));
+		holder.metric.setProgress(metric_int);
+				
 		return row;
 	}
 
