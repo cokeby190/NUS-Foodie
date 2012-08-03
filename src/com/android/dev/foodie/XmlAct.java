@@ -372,7 +372,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	
     }
     
-    
     //for filter text
 	public void afterTextChanged(Editable s) {
 	}
