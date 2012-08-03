@@ -1,6 +1,5 @@
 package com.android.dev.foodie;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
@@ -19,9 +18,7 @@ public class DialogAct extends Activity{
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
 	
-	ArrayList<HashMap<String, String>> menuItems;
-	int position;
-	int store_info;
+	HashMap<String, String> menuItems;
 	
 	//UI Elements
 	TextView tv_cuisine, tv_halal, tv_menu, tv_aircon; 
@@ -37,7 +34,7 @@ public class DialogAct extends Activity{
 		
 		setContentView(R.layout.dialog_info);
 		
-		store_info = getData();
+		getData();
 		
 		//tab 1
 		tv_cuisine = (TextView) findViewById(R.id.tv_store_cuisine);
@@ -55,23 +52,23 @@ public class DialogAct extends Activity{
 		//process string
 		
 			//BOOLEAN STORE INFO
-	        if(menuItems.get(store_info).get(HALAL).equals("Y")) {
+	        if(menuItems.get(HALAL).equals("Y")) {
 	        	halal_str = "Yah lah!";
 	        }
 	        
-	        if(menuItems.get(store_info).get(MENU).equals("Y")) {
+	        if(menuItems.get(MENU).equals("Y")) {
 	        	menu_str = "Yah lah!";
 	        }
 	        
-	        if(menuItems.get(store_info).get(AIRCON).equals("Y")) {
+	        if(menuItems.get(AIRCON).equals("Y")) {
 	        	aircon_str = "Yah lah!";
 	        }
 	        
-	        sch_wd_str = menuItems.get(store_info).get(AVAILABILITY_WEEKDAY);
-			sch_we_str = menuItems.get(store_info).get(AVAILABILITY_WEEKEND); 
-			vac_wd_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKDAY); 
-			vac_we_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKEND); 
-			pubhol_str = menuItems.get(store_info).get(AVAILABILITY_PUBHOL);
+	        sch_wd_str = menuItems.get(AVAILABILITY_WEEKDAY);
+			sch_we_str = menuItems.get(AVAILABILITY_WEEKEND); 
+			vac_wd_str = menuItems.get(AVAILABILITY_VAC_WEEKDAY); 
+			vac_we_str = menuItems.get(AVAILABILITY_VAC_WEEKEND); 
+			pubhol_str = menuItems.get(AVAILABILITY_PUBHOL);
 	        
 	        //OPERATING HOURS
 	        if(!parse_operating(sch_wd_str)) {
@@ -95,7 +92,7 @@ public class DialogAct extends Activity{
 	        }
 	        
         //setting Text
-        tv_cuisine.setText(menuItems.get(store_info).get(CUISINE));
+        tv_cuisine.setText(menuItems.get(CUISINE));
         tv_halal.setText(halal_str);
         tv_menu.setText(menu_str);
         tv_aircon.setText(aircon_str);
@@ -112,14 +109,9 @@ public class DialogAct extends Activity{
 	/*FUNCTION* =============================================================================//
 	 *  FOR RECEIVING DATA FROM STOREINFO THROUGH INTENT
 	 */
-    private int getData() {
-		
-    	Bundle getMessage = getIntent().getExtras();
-		position = getMessage.getInt("position");
-		
-		menuItems =(ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("menuItems");
-		
-		return position;
+    private void getData() {
+
+		menuItems =(HashMap<String, String>) getIntent().getSerializableExtra("menuItems");
 	}  
     
     private boolean parse_operating(String hours) {

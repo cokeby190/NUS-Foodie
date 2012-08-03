@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,9 +16,6 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,9 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,6 +70,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     static final String IMG_PATH = "img_path";
+    static final String CAM_NO = "cam_no";
     
     //UI Elements
     ListView lv;
@@ -359,14 +354,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// Starting new intent
-    		
-    		int send_position = position;
-
-    		Bundle sending = new Bundle();
-    		sending.putInt("position", send_position);
             Intent in = new Intent(getApplicationContext(), StoreInfo.class);
-            in.putExtras(sending);
-            in.putExtra("menuItems", menuItems);
+            in.putExtra("menuItems", menuItems.get(position));
             startActivity(in);
 		}	
     	
@@ -445,6 +434,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			            map.put(AVAILABILITY_VAC_WEEKEND, parser.getValue(e, AVAILABILITY_VAC_WEEKEND));
 			            map.put(AVAILABILITY_PUBHOL, parser.getValue(e, AVAILABILITY_PUBHOL));
 			            map.put(IMG_PATH, parser.getValue(e, IMG_PATH));
+			            map.put(CAM_NO, parser.getValue(e, CAM_NO));
 			            if(parser.getValue(e, DIST)!=null) {
 			            	map.put(DIST, parser.getValue(e, DIST));
 			            }

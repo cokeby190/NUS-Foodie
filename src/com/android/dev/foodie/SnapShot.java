@@ -7,16 +7,18 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class SnapShot extends Activity {
-	/** Called when the activity is first created. */
+
 	private String URL_base = "http://137.132.145.136/Camera/TechnoEdgeCanteen/";
 	
-	String store_name = null, location = null, canteen = null; 
+	String cam_no = null; 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,14 +28,11 @@ public class SnapShot extends Activity {
 		ImageView view = (ImageView) findViewById(R.id.iv_store_snap);
 		
 		getData();
-		
-		//if (store_name.equals("Starbucks Coffee")) {
-		//	Log.v("STARBUCKS", "you are at starbucks!");
-		//	Toast.makeText(SnapShot.this, "You are in HERE! " + "Starbucks Coffee", Toast.LENGTH_LONG).show();
 
+		if(!cam_no.equals("Not Available")) {
 			try {
 				InputStream in;
-				in = new java.net.URL(URL_base + "TechnoEdge_Cam04.jpg").openStream();
+				in = new java.net.URL(URL_base + cam_no + ".jpg").openStream();
 
 				byte [] content = convertInputStreamToByteArray(in);
 				Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
@@ -44,7 +43,13 @@ public class SnapShot extends Activity {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		//}
+		} else {
+			
+			String message = "No SnapShot available at the moment. ): Please try again later."; 
+			DialogNotif dialog = new DialogNotif();
+        	AlertDialog alert = dialog.newdialog(this, message);
+        	alert.show();
+		}
 	}
 	
 	public static byte[] convertInputStreamToByteArray(InputStream is)
@@ -62,10 +67,7 @@ public class SnapShot extends Activity {
 	
 	private void getData() {
 		Bundle getMessage = getIntent().getExtras();
-		store_name = getMessage.getString("store_name");
-		location = getMessage.getString("location");
-		canteen = getMessage.getString("canteen");
-		
+		cam_no = getMessage.getString("cam_no");
 	}
 
 }

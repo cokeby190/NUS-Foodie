@@ -73,6 +73,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     static final String AVAILABILITY_VAC_WEEKEND = "availability_vac_weekend";
     static final String AVAILABILITY_PUBHOL = "availability_pubhol";
     static final String IMG_PATH = "img_path";
+    static final String CAM_NO = "cam_no";
     
     //UI Elements
     TextView store_name, store_location, store_canteen, store_dist;
@@ -86,11 +87,9 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     
     //search information extracted from XmlAct
     String store_name_data, location, canteen_name;
-    int store_info;
-    int position;
     
     //XML parser objects
-    ArrayList<HashMap<String, String>> menuItems;
+    HashMap<String, String> menuItems;
     XmlFunction parser;
     NodeList nl;
     
@@ -128,7 +127,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         } 
         
         //getting back returned data, passed from SearchAct
-        store_info = getData();
+        getData();
         
 //-------------------------------END CUSTOM MENU SLIDER---------------------------------------------------------//
         
@@ -216,10 +215,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 				
 			case R.id.b_store_info:
 				//send intent to dialog to show data
-				Bundle sending = new Bundle();
-				sending.putInt("position", store_info);
 		        Intent in = new Intent(getApplicationContext(), DialogAct.class);
-		        in.putExtras(sending);
 		        in.putExtra("menuItems", menuItems);
 		        startActivity(in);
 				break;
@@ -236,9 +232,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 			case R.id.b_store_crowd:
 				//send intent to dialog to show data
 		        Intent snap_shot = new Intent(getApplicationContext(), SnapShot.class);
-		        snap_shot.putExtra("store_name", menuItems.get(store_info).get(STORE_NAME));
-		        snap_shot.putExtra("location", menuItems.get(store_info).get(LOCATION));
-		        snap_shot.putExtra("canteen", menuItems.get(store_info).get(CANTEEN_NAME));
+		        snap_shot.putExtra("cam_no", menuItems.get(CAM_NO));
 		        startActivity(snap_shot);
 				break;
 				
@@ -317,14 +311,10 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     /*FUNCTION* =============================================================================//
 	 *  FOR RECEIVING DATA FROM SEARCHACT THROUGH INTENT
 	 */
-    private int getData() {
+    private void getData() {
+
+		menuItems = (HashMap<String, String>) getIntent().getSerializableExtra("menuItems");
 		
-    	Bundle getMessage = getIntent().getExtras();
-		position = getMessage.getInt("position");
-		
-		menuItems =(ArrayList<HashMap<String, String>>) getIntent().getSerializableExtra("menuItems");
-		
-		return position;
 	}  
     
     private boolean parse_operating(String hours) {
@@ -346,13 +336,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     	//initialise UI elements 
         initialise_large(); 
         
-        store_name.setText(menuItems.get(store_info).get(STORE_NAME));
-    	store_location.setText(menuItems.get(store_info).get(LOCATION));
-    	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+        store_name.setText(menuItems.get(STORE_NAME));
+    	store_location.setText(menuItems.get(LOCATION));
+    	store_canteen.setText(menuItems.get(CANTEEN_NAME));
     	
 		try {
 			InputStream in;
-			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			in = new java.net.URL(menuItems.get(IMG_PATH)).openStream();
 			byte [] content = convertInputStreamToByteArray(in);
 			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
 			store_img.setImageBitmap(bmp);
@@ -362,8 +352,8 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 			e.printStackTrace();
 		}
     	
-    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
-    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	if(!menuItems.get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(DIST));
     	else 
     		store_dist.setText("Dist Unknown");
     	
@@ -386,23 +376,23 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         tabs.addTab(tab_three);
         
       //BOOLEAN STORE INFO
-        if(menuItems.get(store_info).get(HALAL).equals("Y")) {
+        if(menuItems.get(HALAL).equals("Y")) {
         	halal_str = "Yah lah!";
         }
         
-        if(menuItems.get(store_info).get(MENU).equals("Y")) {
+        if(menuItems.get(MENU).equals("Y")) {
         	menu_str = "Yah lah!";
         }
         
-        if(menuItems.get(store_info).get(AIRCON).equals("Y")) {
+        if(menuItems.get(AIRCON).equals("Y")) {
         	aircon_str = "Yah lah!";
         }
         
-        sch_wd_str = menuItems.get(store_info).get(AVAILABILITY_WEEKDAY);
-		sch_we_str = menuItems.get(store_info).get(AVAILABILITY_WEEKEND); 
-		vac_wd_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKDAY); 
-		vac_we_str = menuItems.get(store_info).get(AVAILABILITY_VAC_WEEKEND); 
-		pubhol_str = menuItems.get(store_info).get(AVAILABILITY_PUBHOL);
+        sch_wd_str = menuItems.get(AVAILABILITY_WEEKDAY);
+		sch_we_str = menuItems.get(AVAILABILITY_WEEKEND); 
+		vac_wd_str = menuItems.get(AVAILABILITY_VAC_WEEKDAY); 
+		vac_we_str = menuItems.get(AVAILABILITY_VAC_WEEKEND); 
+		pubhol_str = menuItems.get(AVAILABILITY_PUBHOL);
         
         //OPERATING HOURS
         if(!parse_operating(sch_wd_str)) {
@@ -427,7 +417,7 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
         
         //TAB1 - INFORMATION TAB
 	        	        
-	        tv_cuisine.setText(menuItems.get(store_info).get(CUISINE));
+	        tv_cuisine.setText(menuItems.get(CUISINE));
 	        tv_halal.setText(halal_str);
 	        tv_menu.setText(menu_str);
 	        tv_aircon.setText(aircon_str);
@@ -446,13 +436,13 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
     	//initialise UI elements 
         initialise(); 
 
-        store_name.setText(menuItems.get(store_info).get(STORE_NAME));
-    	store_location.setText(menuItems.get(store_info).get(LOCATION));
-    	store_canteen.setText(menuItems.get(store_info).get(CANTEEN_NAME));
+        store_name.setText(menuItems.get(STORE_NAME));
+    	store_location.setText(menuItems.get(LOCATION));
+    	store_canteen.setText(menuItems.get(CANTEEN_NAME));
     	
     	try {
 			InputStream in;
-			in = new java.net.URL(menuItems.get(store_info).get(IMG_PATH)).openStream();
+			in = new java.net.URL(menuItems.get(IMG_PATH)).openStream();
 			byte [] content = convertInputStreamToByteArray(in);
 			Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
 			store_img.setImageBitmap(bmp);
@@ -462,8 +452,8 @@ public class StoreInfo extends Activity implements OnClickListener, OnItemClickL
 			e.printStackTrace();
 		}
     	
-    	if(!menuItems.get(store_info).get(DIST).equals(null)) 
-    		store_dist.setText(menuItems.get(store_info).get(DIST));
+    	if(!menuItems.get(DIST).equals(null)) 
+    		store_dist.setText(menuItems.get(DIST));
     	else 
     		store_dist.setText("Dist Unknown");
     }
