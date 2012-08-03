@@ -36,9 +36,10 @@ public class SnapShot extends Activity {
 
 				byte [] content = convertInputStreamToByteArray(in);
 				Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
-				bmp = image_resize(bmp);
+				//bmp = image_resize(bmp);
 				
 				view.setImageBitmap(bmp);
+				view.setScaleType(ImageView.ScaleType.FIT_CENTER);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
