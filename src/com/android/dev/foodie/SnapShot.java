@@ -11,8 +11,8 @@ import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class SnapShot extends Activity {
 
@@ -36,6 +36,7 @@ public class SnapShot extends Activity {
 
 				byte [] content = convertInputStreamToByteArray(in);
 				Bitmap bmp = BitmapFactory.decodeByteArray(content, 0, content.length);
+				bmp = image_resize(bmp);
 				
 				view.setImageBitmap(bmp);
 			} catch (MalformedURLException e) {
@@ -69,5 +70,20 @@ public class SnapShot extends Activity {
 		Bundle getMessage = getIntent().getExtras();
 		cam_no = getMessage.getString("cam_no");
 	}
-
+	
+	private Bitmap image_resize(Bitmap bmp) {
+		
+		float scr_width = this.getWindowManager().getDefaultDisplay().getWidth();
+		float img_width = bmp.getWidth();
+		float img_height = bmp.getHeight();
+		
+		//width/height
+		float aspect_ratio = img_width / img_height;
+		
+		int image_ht = Math.round((scr_width * (1/aspect_ratio)));
+		
+		bmp = Bitmap.createScaledBitmap(bmp, (int) scr_width, image_ht, true);
+		
+		return bmp;
+	}
 }
