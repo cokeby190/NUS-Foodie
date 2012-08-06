@@ -79,7 +79,8 @@ public class ServiceLocation extends Service{
 		int counter = intent.getExtras().getInt("counter");
 		new Thread(myThreads, new ServiceWorker(counter), "ServiceLocation").start();
 		
-		return START_STICKY;
+		//return START_STICKY;
+		return START_NOT_STICKY;
 	}
 	
 	/**

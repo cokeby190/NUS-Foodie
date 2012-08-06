@@ -31,6 +31,107 @@
 
                 <!-- ======================= SEARCH TAB START ================================ -->
 
+                  <LinearLayout
+                      android:id="@+id/adv_search_tab"
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical" >
+
+                     <ScrollView
+                    android:id="@+id/scrollView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+                      
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:paddingBottom="20dp"
+                          android:paddingLeft="40dp"
+                          android:paddingRight="20dp" >
+
+                          <TextView
+                              android:id="@+id/tv_search_adv_filter"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:paddingTop="10dp"
+                              android:text="Filters : "
+                              android:textSize="15sp"
+                              android:textStyle="bold" />
+
+                          <RelativeLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content" >
+
+                              <CheckBox
+                                  android:id="@+id/cb_search_adv_halal"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_alignParentLeft="true"
+                                  android:layout_alignParentTop="true"
+                                  android:text="Halal" />
+
+                              <CheckBox
+                                  android:id="@+id/cb_search_adv_aircon"
+                                  android:layout_width="wrap_content"
+                                  android:layout_height="wrap_content"
+                                  android:layout_alignParentRight="true"
+                                  android:layout_alignParentTop="true"
+                                  android:text="Air-conditioned" />
+                          </RelativeLayout>
+
+                          <TextView
+                              android:id="@+id/tv_search_adv_fac"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:paddingTop="10dp"
+                              android:text="Faculty : "
+                              android:textSize="15sp" />
+
+                          <Spinner
+                              android:id="@+id/sp_search_adv_fac"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content" />
+
+                          <TextView
+                              android:id="@+id/tv_search_adv_store"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Store Type : "
+                              android:textSize="15sp" />
+
+                          <Spinner
+                              android:id="@+id/sp_search_adv_store"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content" />
+
+                          <TextView
+                              android:id="@+id/tv_search_adv_cuisine"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Cuisine : "
+                              android:textSize="15sp" />
+
+                          <Spinner
+                              android:id="@+id/sp_search_adv_cuisine"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content" />
+
+                          <Button
+                              android:id="@+id/b_search_adv"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:text="Find Food!" 
+                              android:hapticFeedbackEnabled="true"
+                              android:layout_gravity="center_horizontal"
+                              android:layout_margin="20dp"
+                              android:drawableLeft="@drawable/search"
+                              android:drawablePadding="10dp"/>
+
+                      </LinearLayout>
+                      </ScrollView>
+                  </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/search_tab"
                     android:layout_width="match_parent"
@@ -126,138 +227,6 @@
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
-
-                <ScrollView
-                    android:id="@+id/scrollView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <LinearLayout
-                        android:id="@+id/adv_search_tab"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical" >
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:paddingRight="10dp"
-                            android:paddingTop="10dp" >
-
-                            <TextView
-                                android:id="@+id/tv_search_adv_label"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
-                                android:layout_alignParentTop="true"
-                                android:paddingBottom="10dp"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="10dp"
-                                android:text="Search : "
-                                android:textSize="20sp"
-                                android:textStyle="bold" />
-
-                            <EditText
-                                android:id="@+id/et_search_adv_bar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_alignParentLeft="true"
-                                android:layout_marginLeft="20dp"
-                                android:layout_toLeftOf="@+id/ib_search_adv"
-                                android:ems="10"
-                                android:hint="Search for food! (:" >
-
-                                <requestFocus />
-                            </EditText>
-
-                            <ImageButton
-                                android:id="@+id/ib_search_adv"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="14dp"
-                                android:src="@drawable/search" />
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingBottom="20dp"
-                            android:paddingLeft="40dp"
-                            android:paddingRight="20dp" >
-
-                            <TextView
-                                android:id="@+id/tv_search_adv_filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingTop="10dp"
-                                android:text="Filters : "
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" >
-
-                                <CheckBox
-                                    android:id="@+id/cb_search_adv_halal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_alignParentTop="true"
-                                    android:text="Halal" />
-
-                                <CheckBox
-                                    android:id="@+id/cb_search_adv_aircon"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_alignParentTop="true"
-                                    android:text="Air-conditioned" />
-                            </RelativeLayout>
-
-                            <TextView
-                                android:id="@+id/tv_search_adv_fac"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingTop="10dp"
-                                android:text="Faculty : "
-                                android:textSize="15sp" />
-
-                            <Spinner
-                                android:id="@+id/sp_search_adv_fac"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                android:id="@+id/tv_search_adv_store"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Store Type : "
-                                android:textSize="15sp" />
-
-                            <Spinner
-                                android:id="@+id/sp_search_adv_store"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                android:id="@+id/tv_search_adv_cuisine"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Cuisine : "
-                                android:textSize="15sp" />
-
-                            <Spinner
-                                android:id="@+id/sp_search_adv_cuisine"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </ScrollView>
                 
                 <!-- ======================= SEARCH TAB END ================================ -->
 

@@ -15,6 +15,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -78,8 +79,9 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
     
 	private TabHost tabs;
 	private Spinner fac, store, cuisine, range;
-	private ImageButton search, search_adv;
-	private EditText et_search, et_search_adv;
+	private ImageButton search;
+	private Button search_adv;
+	private EditText et_search;
 	private CheckBox halal, aircon, cb_range;
 	
 	//SPINNER SELECTION POSITION 
@@ -92,9 +94,13 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	boolean receiver_register = false;
 	double ap_lat = 1.296469, ap_lon = 103.776373;
 	
+	private Thread thread;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
       //-------------------------------START CUSTOM MENU SLIDER---------------------------------------------------------//
         //titlebar
@@ -124,11 +130,11 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
         tab_two.setIndicator("Advanced Search"); 
         tabs.addTab(tab_two);
         
-        //Call service to start
-        int counter = 1;
-        Intent intent = new Intent(this, ServiceLocation.class);
-        intent.putExtra("counter", counter++);
-        startService(intent);
+//        //Call service to start
+//        int counter = 1;
+//        Intent intent = new Intent(this, ServiceLocation.class);
+//        intent.putExtra("counter", counter++);
+//        startService(intent);
 
         msg_receive = new receive_service();
         
@@ -206,13 +212,12 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		tabs = (TabHost)findViewById(R.id.tabhost);
 		
 		search = (ImageButton)findViewById(R.id.ib_search_basic);
-		search_adv = (ImageButton)findViewById(R.id.ib_search_adv);
+		search_adv = (Button)findViewById(R.id.b_search_adv);
 		
 		search.setOnClickListener(this);
 		search_adv.setOnClickListener(this);
 		
 		et_search = (EditText) findViewById(R.id.et_search_bar);
-		et_search_adv = (EditText) findViewById(R.id.et_search_adv_bar);
 		
 		range = (Spinner)findViewById(R.id.sp_search_range);
 		
@@ -360,10 +365,6 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		
 			//SEARCH BASIC
 			case R.id.ib_search_basic:
-
-//				//TESTING ONLY!
-//					//CLOSE THREAD
-//					stopService();
 				
 				if(!cb_range.isChecked()) {
 			//------send intent to results page with query---------------------------------//
@@ -375,7 +376,30 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
 					send_intent.putExtras(sending);
 					startActivity(send_intent);
+					
 				} else if (cb_range.isChecked()) {
+					
+					//Call service to start
+			        int counter = 1;
+			        Intent intent = new Intent(this, ServiceLocation.class);
+			        intent.putExtra("counter", counter++);
+			        startService(intent);
+			        
+			        //sleep for 3 seconds
+			        thread =  new Thread(){
+			            @Override
+			            public void run(){
+			                try {
+			                    synchronized(this){
+			                        wait(3000);
+			                    }
+			                }
+			                catch(InterruptedException ex){                    
+			                }        
+			            }
+			        };
+
+			        thread.start();        
 				
 					//new class to accomodate nearby search? or existing?
 					String range = range_list[range_pos];
@@ -397,7 +421,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				break;
 				
 			//SEARCH ADVANCED
-			case R.id.ib_search_adv:
+			case R.id.b_search_adv:
 				
 				//checkbox halal and aircon option
 				String bool_halal = "", bool_aircon = "";
@@ -416,11 +440,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 				
 		//------send intent to results page with query---------------------------------//
 		//------bundle various search conditions with query----------------------------//
-				
-				String adv_message = et_search_adv.getText().toString();
 				Bundle adv_sending = new Bundle();
 				adv_sending.putString("search_type", "advanced");
-				adv_sending.putString("search_intent", adv_message);
 				adv_sending.putString("search_fac", faculty);
 				adv_sending.putString("search_store", store);
 				adv_sending.putString("search_cuisine", cuisine);

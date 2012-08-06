@@ -12,7 +12,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp" 
         android:layout_weight="40">
-
+
         <ImageView
             android:id="@+id/iv_linus_logo"
             android:layout_width="202dp"
@@ -24,8 +24,8 @@
         <Button
 	        android:id="@+id/b_main_rand"
 	        style="?android:attr/buttonStyleSmall"
-	        android:layout_width="298dp"
-	        android:layout_height="348dp"
+	        android:layout_width="202dp"
+	        android:layout_height="245dp"
 	        android:layout_gravity="center"
 	        android:layout_marginLeft="10dp"
 	        android:text=""/>

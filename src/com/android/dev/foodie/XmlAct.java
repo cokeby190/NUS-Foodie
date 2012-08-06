@@ -16,6 +16,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -101,6 +102,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        
 //-------------------------------START CUSTOM MENU SLIDER---------------------------------------------------------//
         //titlebar
         customTitleSupport = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -149,17 +152,17 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
             	//checking if halal and aircon options are checked
             	String query_halal = "", query_aircon = "";
             	
-            	if(!search_string[5].equals("")) {
-            		query_halal = "&halal=" + search_string[5];
+            	if(!search_string[4].equals("")) {
+            		query_halal = "&halal=" + search_string[4];
             	}
             	
-            	if(!search_string[6].equals("")) {
-            		query_aircon = "&aircon=" + search_string[6];
+            	if(!search_string[5].equals("")) {
+            		query_aircon = "&aircon=" + search_string[5];
             	}
             	
             	//TOAST!
-            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + search_string[1] + 
-    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=advanced&search_string=" + 
+    	        		"&location=" + search_string[1] + "&store_type=" + search_string[2] + "&cuisine=" + search_string[3] +
     	        		query_halal + query_aircon, Toast.LENGTH_LONG);
     	        t.show();
     	        
@@ -167,10 +170,9 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	        search_string[1] = search_string[1].replace(" ", "%20");
     	        search_string[2] = search_string[2].replace(" ", "%20");
     	        search_string[3] = search_string[3].replace(" ", "%20");
-    	        search_string[4] = search_string[4].replace(" ", "%20");
     	        
-    	        parse_results(URL_base + "search=advanced&search_string=" + search_string[1] + 
-    	        		"&location=" + search_string[2] + "&store_type=" + search_string[3] + "&cuisine=" + search_string[4] +
+    	        parse_results(URL_base + "search=advanced&search_string=" + 
+    	        		"&location=" + search_string[1] + "&store_type=" + search_string[2] + "&cuisine=" + search_string[3] +
     	        		query_halal + query_aircon);
     	        
     	        setListAdapter(filter_adapter);
@@ -299,9 +301,11 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     private String[] getData() {
 		Bundle getMessage = getIntent().getExtras();
 		
-		if(getMessage.getString("search_type") != null && getMessage.getString("search_intent") != null) {
+		if(getMessage.getString("search_type") != null) {
 			search_type = getMessage.getString("search_type");
-			getMsg = getMessage.getString("search_intent");
+			
+			if(getMessage.getString("search_intent") != null)
+				getMsg = getMessage.getString("search_intent");
 			
 			//RETURN the string array according to what search is required
 			if(search_type.equals("basic")) {
@@ -320,7 +324,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 				store = process_default(store);
 				cuisine = process_default(cuisine);
 				
-				String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
+				String[] return_data = {search_type, fac, store, cuisine, halal, aircon};
 				return return_data;
 			} else if (search_type.equals("nearby")) {
 				
