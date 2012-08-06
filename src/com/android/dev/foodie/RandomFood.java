@@ -19,6 +19,7 @@ import android.hardware.SensorManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -265,6 +266,8 @@ public class RandomFood extends ListActivity implements OnClickListener, OnItemC
 //            in.putExtras(sending);
 //            in.putExtra("menuItems", menuItems);
 //            startActivity(in);
+    		
+    		Log.v("TEST_PRESS", "pressed");
 		}	
     	
     }

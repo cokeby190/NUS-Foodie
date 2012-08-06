@@ -74,7 +74,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
     
     //UI Elements
     ListView lv;
-    ListAdapter filter_adapter;
+    CustomAdapterNearby filter_adapter;
     EditText filterText = null;
     TextView result_count;
     
@@ -334,12 +334,6 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 					
 					//int value to string
 			        result_count.setText("Search returned " + String.valueOf(nl.getLength()) + " results. (;");
-			        
-//			      //CONSTRUCTOR FOR SimpleAdapter
-//			        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-//			        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-//			        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
-//			        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
 				}
 	        	
 	        });
@@ -370,13 +364,7 @@ public class NearbyAct extends ListActivity implements TextWatcher, OnClickListe
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			
-			//CONSTRUCTOR FOR SimpleAdapter
-	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-//	        filter_adapter = new SimpleAdapter(NearbyAct.this, menuItems, R.layout.nearby_view, 
-//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
-//			
+
 			filter_adapter = new CustomAdapterNearby(NearbyAct.this, R.layout.nearby_view, menuItems);
 			
 			setListAdapter(filter_adapter);

@@ -11,8 +11,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import sg.edu.nus.ami.wifilocation.APLocation;
 
-//import com.geoserver.nus.GetBuilding.receive_service;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;

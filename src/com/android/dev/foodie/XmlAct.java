@@ -198,6 +198,13 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
     	        
     	        setListAdapter(filter_adapter_nearby);
+            } else {
+            	
+            	search_string[0] = search_string[0].replace(" ", "%20");
+            	
+            	parse_results(URL_base + "location=" + search_string[0]);
+            	
+            	setListAdapter(filter_adapter);
             }
         }
     }
@@ -291,35 +298,43 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 	 */
     private String[] getData() {
 		Bundle getMessage = getIntent().getExtras();
-		search_type = getMessage.getString("search_type");
-		getMsg = getMessage.getString("search_intent");
 		
-		//RETURN the string array according to what search is required
-		if(search_type.equals("basic")) {
-			String[] return_data = {search_type, getMsg};
-			return return_data;
-		} else if (search_type.equals("advanced")) {
+		if(getMessage.getString("search_type") != null && getMessage.getString("search_intent") != null) {
+			search_type = getMessage.getString("search_type");
+			getMsg = getMessage.getString("search_intent");
 			
-			String fac = getMessage.getString("search_fac");
-			String store = getMessage.getString("search_store");
-			String cuisine = getMessage.getString("search_cuisine");
+			//RETURN the string array according to what search is required
+			if(search_type.equals("basic")) {
+				String[] return_data = {search_type, getMsg};
+				return return_data;
+			} else if (search_type.equals("advanced")) {
+				
+				String fac = getMessage.getString("search_fac");
+				String store = getMessage.getString("search_store");
+				String cuisine = getMessage.getString("search_cuisine");
+				
+				String halal = getMessage.getString("search_halal");
+				String aircon = getMessage.getString("search_aircon");
 			
-			String halal = getMessage.getString("search_halal");
-			String aircon = getMessage.getString("search_aircon");
-		
-	        fac = process_default(fac);
-			store = process_default(store);
-			cuisine = process_default(cuisine);
+		        fac = process_default(fac);
+				store = process_default(store);
+				cuisine = process_default(cuisine);
+				
+				String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
+				return return_data;
+			} else if (search_type.equals("nearby")) {
+				
+				String range = getMessage.getString("range");
+				String lat = getMessage.getString("lat");
+				String lon = getMessage.getString("lon");
+				
+				String[] return_data = {search_type, getMsg, range, lat, lon};
+				return return_data;
+			}
+		} else {
+			String location = getMessage.getString("directory");
 			
-			String[] return_data = {search_type, getMsg, fac, store, cuisine, halal, aircon};
-			return return_data;
-		} else if (search_type.equals("nearby")) {
-			
-			String range = getMessage.getString("range");
-			String lat = getMessage.getString("lat");
-			String lon = getMessage.getString("lon");
-			
-			String[] return_data = {search_type, getMsg, range, lat, lon};
+			String[] return_data = {location};
 			return return_data;
 		}
 		
@@ -491,15 +506,8 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
               
         if(test_nearby.equals("nearby")){    
         	filter_adapter_nearby = new CustomAdapterNearby(this, R.layout.nearby_view, menuItems);
-//        	filter_adapter = new SimpleAdapter(this, menuItems, R.layout.nearby_view, 
-//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME, DIST }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3, R.id.tv_nearby_dist});
+
         } else {
-	        //CONSTRUCTOR FOR SimpleAdapter
-	        //SimpleAdapter(Context context, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to)
-	        	//takes another XML layout row_view.xml to populate the UI layout for 1 list item in the ListView
-//	        filter_adapter = new SimpleAdapter(this, menuItems, R.layout.row_view, 
-//	        		new String[] { STORE_NAME, LOCATION, CANTEEN_NAME }, new int[] {R.id.textView1, R.id.textView2, R.id.textView3});
-        	
         	filter_adapter = new CustomAdapter(this, R.layout.row_view, menuItems);
         	
         }

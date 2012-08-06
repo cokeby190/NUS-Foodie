@@ -93,7 +93,7 @@ public class NUSFoodieActivity extends Activity implements OnClickListener{
 				break;
 				
 			case R.id.b_main_dir:
-				Intent open_dir = new Intent(NUSFoodieActivity.this, Directory.class);
+				Intent open_dir = new Intent(NUSFoodieActivity.this, TestDirectory.class);
 				startActivity(open_dir);
 				break;
 				
