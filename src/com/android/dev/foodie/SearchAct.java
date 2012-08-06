@@ -9,7 +9,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import sg.edu.nus.ami.wifilocation.APLocation;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -127,7 +126,7 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 
         TabSpec tab_two = tabs.newTabSpec("advanced_search_tab");
         tab_two.setContent(R.id.adv_search_tab);
-        tab_two.setIndicator("Advanced Search"); 
+        tab_two.setIndicator("Advanced Filter"); 
         tabs.addTab(tab_two);
         
 //        //Call service to start
@@ -136,13 +135,13 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 //        intent.putExtra("counter", counter++);
 //        startService(intent);
 
-        msg_receive = new receive_service();
-        
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ServiceLocation.BROADCAST_ACTION);
-        registerReceiver(msg_receive, filter);
-        
-        receiver_register = true;
+//        msg_receive = new receive_service();
+//        
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+//        registerReceiver(msg_receive, filter);
+//        
+//        receiver_register = true;
     }
 
 	/*FUNCTION* =============================================================================//
@@ -259,84 +258,15 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			aircon = (CheckBox) findViewById(R.id.cb_search_adv_aircon);
 			
 			//make first option invisible after spinner is selected by User
-			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location")) {
-				
-				@Override
-			    public View getDropDownView(int position, View convertView, ViewGroup parent)
-			    {
-			        View v = null;
-
-			        // If this is the initial dummy entry, make it hidden
-			        if (position == 0) {
-			            TextView tv = new TextView(getContext());
-			            tv.setHeight(0);
-			            tv.setVisibility(View.GONE);
-			            v = tv;
-			        }
-			        else {
-			            // Pass convertView as null to prevent reuse of special case views
-			            v = super.getDropDownView(position, null, parent);
-			        }
-
-			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
-			        parent.setVerticalScrollBarEnabled(false);
-			        return v;
-			    }
-			}; 
+			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location"), fac_list, "location"));  
 			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			fac.setAdapter(adapter_fac);
 			
-			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type")) {
-				
-				@Override
-			    public View getDropDownView(int position, View convertView, ViewGroup parent)
-			    {
-			        View v = null;
-
-			        // If this is the initial dummy entry, make it hidden
-			        if (position == 0) {
-			            TextView tv = new TextView(getContext());
-			            tv.setHeight(0);
-			            tv.setVisibility(View.GONE);
-			            v = tv;
-			        }
-			        else {
-			            // Pass convertView as null to prevent reuse of special case views
-			            v = super.getDropDownView(position, null, parent);
-			        }
-
-			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
-			        parent.setVerticalScrollBarEnabled(false);
-			        return v;
-			    }
-			}; 
+			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type"), store_list, "store_type"));
 			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
 			store.setAdapter(adapter_store);
 			
-			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine")) {
-				
-				@Override
-			    public View getDropDownView(int position, View convertView, ViewGroup parent)
-			    {
-			        View v = null;
-
-			        // If this is the initial dummy entry, make it hidden
-			        if (position == 0) {
-			            TextView tv = new TextView(getContext());
-			            tv.setHeight(0);
-			            tv.setVisibility(View.GONE);
-			            v = tv;
-			        }
-			        else {
-			            // Pass convertView as null to prevent reuse of special case views
-			            v = super.getDropDownView(position, null, parent);
-			        }
-
-			        // Hide scroll bar because it appears sometimes unnecessarily, this does not prevent scrolling 
-			        parent.setVerticalScrollBarEnabled(false);
-			        return v;
-			    }
-			}; 
+			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine"), cuisine_list, "cuisine"));
 			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
 			cuisine.setAdapter(adapter_cuisine);
 			
@@ -384,6 +314,14 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 			        Intent intent = new Intent(this, ServiceLocation.class);
 			        intent.putExtra("counter", counter++);
 			        startService(intent);
+			        
+			        msg_receive = new receive_service();
+			        
+			        IntentFilter filter = new IntentFilter();
+			        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+			        registerReceiver(msg_receive, filter);
+			        
+			        receiver_register = true;
 			        
 			        //sleep for 3 seconds
 			        thread =  new Thread(){
@@ -506,6 +444,32 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		cuisine_pos = cuisine.getSelectedItemPosition();
 		
 		range_pos = range.getSelectedItemPosition();
+		
+		if(fac_pos > 0) {
+			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type&location=" + fac_list.get(fac_pos)), store_list, "store_type"));
+			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			store.setAdapter(adapter_store);
+			
+			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + fac_list.get(fac_pos)), cuisine_list, "cuisine"));
+			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			cuisine.setAdapter(adapter_cuisine);
+		} else if(store_pos > 0) {
+			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + store_list.get(store_pos)), fac_list, "location"));
+			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			fac.setAdapter(adapter_fac);
+			
+			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + store_list.get(store_pos)), cuisine_list, "cuisine"));
+			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			cuisine.setAdapter(adapter_cuisine);
+		} else if(cuisine_pos > 0) {
+			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + cuisine_list.get(cuisine_pos)), fac_list, "location"));
+			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			fac.setAdapter(adapter_fac);
+			
+			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + cuisine_list.get(cuisine_pos)), store_list, "store"));
+			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+			store.setAdapter(adapter_store);
+		}
 	}
 
 	@Override
