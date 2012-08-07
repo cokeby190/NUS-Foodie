@@ -88,10 +88,10 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	private ArrayAdapter <String> adapter_fac, adapter_store, adapter_cuisine, adapter_range;
 //-------------------------------END SPINNER-----------------------------------------------------------//
 	
-	//for Service
-	receive_service msg_receive;
-	boolean receiver_register = false;
-	double ap_lat = 1.296469, ap_lon = 103.776373;
+//	//for Service
+//	receive_service msg_receive;
+//	boolean receiver_register = false;
+//	double ap_lat = 1.296469, ap_lon = 103.776373;
 	
 	private Thread thread;
 	
@@ -309,35 +309,35 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 					
 				} else if (cb_range.isChecked()) {
 					
-					//Call service to start
-			        int counter = 1;
-			        Intent intent = new Intent(this, ServiceLocation.class);
-			        intent.putExtra("counter", counter++);
-			        startService(intent);
+//					//Call service to start
+//			        int counter = 1;
+//			        Intent intent = new Intent(this, ServiceLocation.class);
+//			        intent.putExtra("counter", counter++);
+//			        startService(intent);
+//			        
+//			        msg_receive = new receive_service();
+//			        
+//			        IntentFilter filter = new IntentFilter();
+//			        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+//			        registerReceiver(msg_receive, filter);
+//			        
+//			        receiver_register = true;
 			        
-			        msg_receive = new receive_service();
-			        
-			        IntentFilter filter = new IntentFilter();
-			        filter.addAction(ServiceLocation.BROADCAST_ACTION);
-			        registerReceiver(msg_receive, filter);
-			        
-			        receiver_register = true;
-			        
-			        //sleep for 3 seconds
-			        thread =  new Thread(){
-			            @Override
-			            public void run(){
-			                try {
-			                    synchronized(this){
-			                        wait(3000);
-			                    }
-			                }
-			                catch(InterruptedException ex){                    
-			                }        
-			            }
-			        };
-
-			        thread.start();        
+//			        //sleep for 3 seconds
+//			        thread =  new Thread(){
+//			            @Override
+//			            public void run(){
+//			                try {
+//			                    synchronized(this){
+//			                        wait(3000);
+//			                    }
+//			                }
+//			                catch(InterruptedException ex){                    
+//			                }        
+//			            }
+//			        };
+//
+//			        thread.start();        
 				
 					//new class to accomodate nearby search? or existing?
 					String range = range_list[range_pos];
@@ -349,8 +349,8 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 					sending.putString("search_type", "nearby");
 					sending.putString("search_intent", message);
 					sending.putString("range", range);
-					sending.putString("lat", String.valueOf(ap_lat));
-					sending.putString("lon", String.valueOf(ap_lon));
+					//sending.putString("lat", String.valueOf(ap_lat));
+					//sending.putString("lon", String.valueOf(ap_lon));
 					Intent send_intent = new Intent(SearchAct.this, XmlAct.class);
 					send_intent.putExtras(sending);
 					startActivity(send_intent);
@@ -500,61 +500,5 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 	public void onNothingSelected(AdapterView<?> parent) {
 		
 	}
-	
-	public class receive_service extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-
-			String action = intent.getAction();
-			
-			APLocation return_location = new APLocation();
-			
-			//if(action.equals("LOCATION")) {
-				Bundle extra = intent.getExtras();
-				String location = extra.getString("ap_location");
-				location = location.replace("APLocation [", "");
-				location = location.replace("]", "");
-				
-				//PARSE string from APLocation object retrieved
-				String[] location_split = location.split(", ");
-				for(int i=0; i< location_split.length; i++) {
-					int end  = location_split[i].length();
-					int index = location_split[i].indexOf("=");
-										if(location_split[i].substring(0, index).equals("building")) {
-						return_location.setBuilding(location_split[i].substring(index+1, end));
-					}
-					if(location_split[i].substring(0, index).equals("ap_name")) {
-						return_location.setAp_name(location_split[i].substring(index+1, end));
-					}
-					if(location_split[i].substring(0, index).equals("ap_location")) {
-						return_location.setAp_location(location_split[i].substring(index+1, end));
-					}
-					if(location_split[i].substring(0, index).equals("accuracy")) {
-						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
-					}
-					if(location_split[i].substring(0, index).equals("ap_lat")) {
-						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
-					}
-					if(location_split[i].substring(0, index).equals("ap_long")) {
-						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
-					}
-				}
-				
-				ap_lat = return_location.getAp_lat();
-				ap_lon = return_location.getAp_long();
-				
-				Log.v("RETURN_MSG", return_location.getAp_location());
-				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
-				
-				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
-				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
-				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
-				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
-			//}
-		}
-		
-	}
-
 }
 

@@ -11,11 +11,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import sg.edu.nus.ami.wifilocation.APLocation;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -83,6 +87,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     
     //search information extracted from SearchAct
     String getMsg, search_type;
+    String[] search_string;
     
     //OnItemClickListener class
     listener onclick_obj;
@@ -97,6 +102,11 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     
     //wifi_check
     WifiManager wifimgr;
+    
+    //for Service
+  	receive_service msg_receive;
+  	boolean receiver_register = false;
+  	double ap_lat = 1.296469, ap_lon = 103.776373;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +141,7 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
         } else {
         		
     		//getting back returned data, passed from SearchAct
-            String[] search_string = getData();
+            search_string = getData();
             
             //to store the list of stores to show as results
             menuItems = new ArrayList<HashMap<String, String>>();
@@ -143,8 +153,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
             if(search_string[0].equals("basic")) {
             	
             	parse_results(URL_base + "search=basic&search_string=" + search_string[1]);
-            	
-            	setListAdapter(filter_adapter);
     	
     //------ADVANCED SEARCH FUNCTION--------------------------------------------------------------------------//
             } else if (search_string[0].equals("advanced")) {
@@ -175,38 +183,34 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
     	        		"&location=" + search_string[1] + "&store_type=" + search_string[2] + "&cuisine=" + search_string[3] +
     	        		query_halal + query_aircon);
     	        
-    	        setListAdapter(filter_adapter);
-    	        
-            }  else if (search_string[0].equals("nearby")) {
-            	
-            	search_string[2] = search_string[2].replace("m", "");
-            	
-            	Log.v("RANGE_XML", search_string[2]);
-            	Log.v("RANGE_LAT", search_string[3]);
-            	Log.v("RANGE_LON", search_string[4]);
-            	
-            	 //TOAST!
-            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
-    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
-    	        t.show();
-    	        
-    	        //URL encoding white spaces to its ASCII equivalent
-    	        search_string[1] = search_string[1].replace(" ", "%20");
-    	        search_string[2] = search_string[2].replace(" ", "%20");
-    	        search_string[3] = search_string[3].replace(" ", "%20");
-    	        search_string[4] = search_string[4].replace(" ", "%20");
-
-    	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
-    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
-    	        
-    	        setListAdapter(filter_adapter_nearby);
+//            }  else if (search_string[0].equals("nearby")) {
+//            	
+//            	search_string[2] = search_string[2].replace("m", "");
+//            	
+//            	Log.v("RANGE_XML", search_string[2]);
+//            	Log.v("RANGE_LAT", search_string[3]);
+//            	Log.v("RANGE_LON", search_string[4]);
+//            	
+//            	 //TOAST!
+//            	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
+//    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
+//    	        t.show();
+//    	        
+//    	        //URL encoding white spaces to its ASCII equivalent
+//    	        search_string[1] = search_string[1].replace(" ", "%20");
+//    	        search_string[2] = search_string[2].replace(" ", "%20");
+//    	        search_string[3] = search_string[3].replace(" ", "%20");
+//    	        search_string[4] = search_string[4].replace(" ", "%20");
+//
+//    	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
+//    	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
+//    	        
+//    	        setListAdapter(filter_adapter_nearby);
             } else {
             	
             	search_string[0] = search_string[0].replace(" ", "%20");
             	
             	parse_results(URL_base + "location=" + search_string[0]);
-            	
-            	setListAdapter(filter_adapter);
             }
         }
     }
@@ -328,11 +332,28 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 				return return_data;
 			} else if (search_type.equals("nearby")) {
 				
-				String range = getMessage.getString("range");
-				String lat = getMessage.getString("lat");
-				String lon = getMessage.getString("lon");
+				//--service start--//
+				//Call service to start
+		        int counter = 1;
+		        Intent intent = new Intent(this, ServiceLocation.class);
+		        intent.putExtra("counter", counter++);
+		        startService(intent);
+		        
+		        msg_receive = new receive_service();
+		        
+		        IntentFilter filter = new IntentFilter();
+		        filter.addAction(ServiceLocation.BROADCAST_ACTION);
+		        registerReceiver(msg_receive, filter);
+		        //--service start--//
 				
-				String[] return_data = {search_type, getMsg, range, lat, lon};
+				String range = getMessage.getString("range");
+				//String lat = getMessage.getString("lat");
+				//String lon = getMessage.getString("lon");
+				
+				//process string
+				range = range.replace("m", "");
+				
+				String[] return_data = {search_type, getMsg, range};
 				return return_data;
 			}
 		} else {
@@ -489,7 +510,6 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 
 			return null;
 		}
-
 	}
 	
 	//function to parse XML results into ListView for User to view
@@ -510,11 +530,11 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
               
         if(test_nearby.equals("nearby")){    
         	filter_adapter_nearby = new CustomAdapterNearby(this, R.layout.nearby_view, menuItems);
-
+        	setListAdapter(filter_adapter_nearby);
         } else {
         	filter_adapter = new CustomAdapter(this, R.layout.row_view, menuItems);
-        	
-        }
+        	setListAdapter(filter_adapter);
+        } 
 	}
 	
 	public static byte[] convertInputStreamToByteArray(InputStream is)
@@ -528,5 +548,116 @@ public class XmlAct extends ListActivity implements TextWatcher, OnClickListener
 			result = bis.read();
 		}
 		return buf.toByteArray();
+	}
+	
+	public class receive_service extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			String action = intent.getAction();
+			
+			APLocation return_location = new APLocation();
+			
+			//if(action.equals("LOCATION")) {
+				Bundle extra = intent.getExtras();
+				String location = extra.getString("ap_location");
+				location = location.replace("APLocation [", "");
+				location = location.replace("]", "");
+				
+				//PARSE string from APLocation object retrieved
+				String[] location_split = location.split(", ");
+				for(int i=0; i< location_split.length; i++) {
+					int end  = location_split[i].length();
+					int index = location_split[i].indexOf("=");
+										if(location_split[i].substring(0, index).equals("building")) {
+						return_location.setBuilding(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_name")) {
+						return_location.setAp_name(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("ap_location")) {
+						return_location.setAp_location(location_split[i].substring(index+1, end));
+					}
+					if(location_split[i].substring(0, index).equals("accuracy")) {
+						return_location.setAccuracy(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_lat")) {
+						return_location.setAp_lat(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+					if(location_split[i].substring(0, index).equals("ap_long")) {
+						return_location.setAp_long(Double.valueOf(location_split[i].substring(index+1, end)));
+					}
+				}
+				
+//				ap_lat = return_location.getAp_lat();
+//				ap_lon = return_location.getAp_long();
+//				
+//				Log.v("RETURN_MSG", return_location.getAp_location());
+//				Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+//				
+//				Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+//				Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+//				Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+//				Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+			//}
+				
+			//store existing lat lon to check
+			double temp_lat, temp_lon;
+			temp_lat = ap_lat;
+			temp_lon = ap_lon;
+			
+			ap_lat = return_location.getAp_lat();
+			ap_lon = return_location.getAp_long();
+			
+			if (search_string[0].equals("nearby")) {
+				if(temp_lat != ap_lat || temp_lon != ap_lon) {
+					Log.v("RETURN_MSG", return_location.getAp_location());
+					Toast.makeText(getApplicationContext(), "I am at : " + return_location.getAp_location(), Toast.LENGTH_LONG).show();
+					
+					Log.v("RETURN_MSG LAT", String.valueOf(return_location.getAp_lat()));
+					Toast.makeText(getApplicationContext(), "Current Lat : " + return_location.getAp_lat(), Toast.LENGTH_LONG).show();
+					Log.v("RETURN_MSG LONG", String.valueOf(return_location.getAp_long()));
+					Toast.makeText(getApplicationContext(), "Current Long : " + return_location.getAp_long(), Toast.LENGTH_LONG).show();
+					
+	                //creating new parser class
+	                parser = new XmlFunction();
+	
+	                parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
+	    	        		"&range=" + search_string[2] + "&lat=" + ap_lat + "&lon=" + ap_lon);
+	                
+	                Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
+	    	        		"&range=" + search_string[2] + "&lat=" + ap_lat + "&lon=" + ap_lon, Toast.LENGTH_SHORT).show();
+	                
+	                Log.v("TEST", URL_base + "search=nearby&search_string=" + search_string[1] + 
+	    	        		"&range=" + search_string[2] + "&lat=" + ap_lat + "&lon=" + ap_lon);
+				}
+			}
+				
+//		}  else if (search_string[0].equals("nearby")) {
+//        	
+//        	search_string[2] = search_string[2].replace("m", "");
+//        	
+//        	Log.v("RANGE_XML", search_string[2]);
+//        	Log.v("RANGE_LAT", search_string[3]);
+//        	Log.v("RANGE_LON", search_string[4]);
+//        	
+//        	 //TOAST!
+//        	Toast t = Toast.makeText(getApplicationContext(), URL_base + "search=nearby&search_string=" + search_string[1] + 
+//	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4], Toast.LENGTH_LONG);
+//	        t.show();
+//	        
+//	        //URL encoding white spaces to its ASCII equivalent
+//	        search_string[1] = search_string[1].replace(" ", "%20");
+//	        search_string[2] = search_string[2].replace(" ", "%20");
+//	        search_string[3] = search_string[3].replace(" ", "%20");
+//	        search_string[4] = search_string[4].replace(" ", "%20");
+//
+//	        parse_results(URL_base + "search=nearby&search_string=" + search_string[1] + 
+//	        		"&range=" + search_string[2] + "&lat=" + search_string[3] + "&lon=" + search_string[4]);
+//	        
+//	        setListAdapter(filter_adapter_nearby);
+		}
+		
 	}
 }    
