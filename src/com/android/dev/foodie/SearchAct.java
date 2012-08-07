@@ -443,33 +443,57 @@ public class SearchAct extends Activity implements OnClickListener, OnItemSelect
 		store_pos = store.getSelectedItemPosition();
 		cuisine_pos = cuisine.getSelectedItemPosition();
 		
-		range_pos = range.getSelectedItemPosition();
-		
-		if(fac_pos > 0) {
-			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type&location=" + fac_list.get(fac_pos)), store_list, "store_type"));
-			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			store.setAdapter(adapter_store);
-			
-			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + fac_list.get(fac_pos)), cuisine_list, "cuisine"));
-			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			cuisine.setAdapter(adapter_cuisine);
-		} else if(store_pos > 0) {
-			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + store_list.get(store_pos)), fac_list, "location"));
-			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			fac.setAdapter(adapter_fac);
-			
-			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + store_list.get(store_pos)), cuisine_list, "cuisine"));
-			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			cuisine.setAdapter(adapter_cuisine);
-		} else if(cuisine_pos > 0) {
-			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + cuisine_list.get(cuisine_pos)), fac_list, "location"));
-			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			fac.setAdapter(adapter_fac);
-			
-			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + cuisine_list.get(cuisine_pos)), store_list, "store"));
-			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
-			store.setAdapter(adapter_store);
-		}
+//		range_pos = range.getSelectedItemPosition();
+//		
+//		if(fac_pos > 0) {
+//			
+//			Log.v("FACULTY", String.valueOf(fac_pos));
+//			
+//			String fac = fac_list.get(fac_pos);
+//			fac = fac.replace(" ", "%20");
+//			
+//			Log.v("FACULTY", fac);
+//			
+//			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=store_type&location=" + fac), store_list, "store_type"));
+//			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			store.setAdapter(adapter_store);
+//			
+//			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + fac), cuisine_list, "cuisine"));
+//			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			cuisine.setAdapter(adapter_cuisine);
+//		} else if(store_pos > 0) {
+//			
+//			Log.v("STORE", String.valueOf(store_pos));
+//			
+//			String store = store_list.get(store_pos);
+//			store = store.replace(" ", "%20");
+//			
+//			Log.v("STORE", store);
+//			
+//			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + store_list.get(store_pos)), fac_list, "location"));
+//			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			fac.setAdapter(adapter_fac);
+//			
+//			adapter_cuisine = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + store_list.get(store_pos)), cuisine_list, "cuisine"));
+//			adapter_cuisine.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			cuisine.setAdapter(adapter_cuisine);
+//		} else if(cuisine_pos > 0) {
+//			
+//			Log.v("CUISINE", String.valueOf(cuisine_pos));
+//			
+//			String cuisine = cuisine_list.get(cuisine_pos);
+//			cuisine = cuisine.replace(" ", "%20");
+//			
+//			Log.v("CUISINE", cuisine);
+//			
+//			adapter_fac = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=location&location=" + cuisine_list.get(cuisine_pos)), fac_list, "location"));
+//			adapter_fac.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			fac.setAdapter(adapter_fac);
+//			
+//			adapter_store = new ArrayAdapter <String> (SearchAct.this, android.R.layout.simple_spinner_item, populate_spinner((URL_base + "distinct=distinct&query_key=cuisine&location=" + cuisine_list.get(cuisine_pos)), store_list, "store"));
+//			adapter_store.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
+//			store.setAdapter(adapter_store);
+//		}
 	}
 
 	@Override
